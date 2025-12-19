@@ -1,16 +1,16 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950">
+  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950">
     <div class="max-w-6xl mx-auto p-6">
       <div class="flex items-center justify-between mb-8">
         <div>
-          <NuxtLink to="/host" class="text-gray-400 hover:text-white transition-colors inline-flex items-center gap-2 mb-2">
+          <NuxtLink to="/host" class="text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-2 mb-2">
             <UIcon name="i-heroicons-arrow-left" />
             Back
           </NuxtLink>
           <h1 class="text-3xl font-bold text-white">{{ sessionStore.name }}</h1>
         </div>
         <div class="text-right">
-          <div class="text-sm text-gray-400">Session Code</div>
+          <div class="text-sm text-neutral-400">Session Code</div>
           <div class="text-4xl font-mono font-bold text-indigo-400 tracking-wider">
             {{ sessionStore.code }}
           </div>
@@ -27,7 +27,7 @@
             <div class="bg-white p-4 rounded-xl inline-block">
               <canvas ref="qrCanvas" width="200" height="200"></canvas>
             </div>
-            <p class="text-sm text-gray-400 mt-4">
+            <p class="text-sm text-neutral-400 mt-4">
               Scan to join at<br>
               <span class="text-indigo-400">{{ joinUrl }}</span>
             </p>
@@ -47,12 +47,12 @@
               <div
                 v-for="participant in sessionStore.participants"
                 :key="participant.id"
-                class="flex items-center justify-between p-2 bg-gray-800/50 rounded-lg"
+                class="flex items-center justify-between p-2 bg-neutral-800/50 rounded-lg"
               >
                 <div class="flex items-center gap-2">
                   <div 
                     class="w-2 h-2 rounded-full"
-                    :class="participant.isConnected ? 'bg-green-500' : 'bg-gray-600'"
+                    :class="participant.isConnected ? 'bg-green-500' : 'bg-neutral-600'"
                   ></div>
                   <span class="text-white">{{ participant.name }}</span>
                   <span 
@@ -72,7 +72,7 @@
                   <UIcon name="i-heroicons-x-mark" />
                 </UButton>
               </div>
-              <div v-if="sessionStore.participantCount === 0" class="text-center text-gray-500 py-4">
+              <div v-if="sessionStore.participantCount === 0" class="text-center text-neutral-500 py-4">
                 Waiting for participants to join...
               </div>
             </div>
@@ -113,7 +113,7 @@
                     :key="memberId"
                     class="flex items-center justify-between text-sm"
                   >
-                    <span class="text-gray-300">{{ getParticipantName(memberId) }}</span>
+                    <span class="text-neutral-300">{{ getParticipantName(memberId) }}</span>
                     <div class="flex items-center gap-1">
                       <UButton
                         v-if="!isTeamDevice(memberId)"
@@ -131,14 +131,14 @@
                       />
                     </div>
                   </div>
-                  <div v-if="team.memberIds.length === 0" class="text-gray-500 text-sm">
+                  <div v-if="team.memberIds.length === 0" class="text-neutral-500 text-sm">
                     No members
                   </div>
                 </div>
               </div>
 
-              <div v-if="sessionStore.unassignedParticipants.length > 0" class="p-3 rounded-lg bg-gray-800/50">
-                <div class="font-medium text-gray-400 mb-2">Unassigned</div>
+              <div v-if="sessionStore.unassignedParticipants.length > 0" class="p-3 rounded-lg bg-neutral-800/50">
+                <div class="font-medium text-neutral-400 mb-2">Unassigned</div>
                 <div class="flex flex-wrap gap-2">
                   <UBadge
                     v-for="p in sessionStore.unassignedParticipants"
@@ -164,7 +164,7 @@
               <div
                 v-for="game in games"
                 :key="game.id"
-                class="p-3 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors cursor-pointer group"
+                class="p-3 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors cursor-pointer group"
                 @click="startGame(game.id)"
               >
                 <div class="flex items-start justify-between">
@@ -175,8 +175,8 @@
                         {{ game.name }}
                       </span>
                     </div>
-                    <p class="text-sm text-gray-500 mt-1">{{ game.description }}</p>
-                    <div class="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                    <p class="text-sm text-neutral-500 mt-1">{{ game.description }}</p>
+                    <div class="flex items-center gap-3 mt-2 text-xs text-neutral-500">
                       <span>{{ game.duration }}</span>
                       <span v-if="game.teamMode !== 'none'" class="flex items-center gap-1">
                         <UIcon name="i-heroicons-user-group" />
@@ -198,7 +198,7 @@
                     <UIcon 
                       v-else
                       name="i-heroicons-arrow-right-circle"
-                      class="text-gray-600 group-hover:text-indigo-400 text-xl transition-colors"
+                      class="text-neutral-600 group-hover:text-indigo-400 text-xl transition-colors"
                     />
                   </div>
                 </div>
@@ -236,13 +236,24 @@
 <script setup lang="ts">
 import QRCode from 'qrcode'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useSessionStore } from '~/stores/session'
-import { GAMES, type GameId } from '~/types'
+import { 
+  GAMES, 
+  type GameId, 
+  type WSMessage,
+  type HostSyncRequestPayload,
+  type HostSyncResponsePayload,
+  type HostNavigatePayload
+} from '~/types'
 
 const route = useRoute()
+const router = useRouter()
 const sessionStore = useSessionStore()
+const ws = useWebSocket()
 
+const hostId = ref(Math.random().toString(36).substring(2, 10))
 const qrCanvas = ref<HTMLCanvasElement>()
 const showAddParticipant = ref(false)
 const newParticipantName = ref('')
@@ -259,7 +270,6 @@ const joinUrl = computed(() => {
 onMounted(async () => {
   const code = route.query.code as string | undefined
 
-  // On hard refresh, session store starts empty – hydrate from storage
   if (!sessionStore.code) {
     let loaded = false
 
@@ -271,12 +281,51 @@ onMounted(async () => {
       loaded = sessionStore.hydrateFromStorage()
     }
 
-    // If we still don't have a session, send host back to create screen
     if (!loaded || !sessionStore.code) {
       navigateTo('/host')
       return
     }
   }
+
+  ws.connect(sessionStore.code)
+
+  ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
+    if (message.payload.hostId !== hostId.value) {
+      const payload: HostSyncResponsePayload = {
+        hostId: hostId.value,
+        currentRoute: route.fullPath,
+        gameId: null,
+        phase: '',
+        step: 0,
+        totalSteps: 0,
+        hostContext: '',
+        gameData: {}
+      }
+      ws.send('host:sync_response', payload)
+    }
+  })
+
+  ws.on('host:sync_response', (message: WSMessage<HostSyncResponsePayload>) => {
+    const payload = message.payload
+    if (payload.hostId === hostId.value) return
+    
+    if (payload.currentRoute !== route.fullPath && payload.currentRoute.startsWith('/host/game/')) {
+      router.push(payload.currentRoute)
+    }
+  })
+
+  ws.on('host:navigate', (message: WSMessage<HostNavigatePayload>) => {
+    const payload = message.payload
+    if (payload.hostId === hostId.value) return
+    
+    if (payload.route !== route.fullPath) {
+      router.push(payload.route)
+    }
+  })
+
+  setTimeout(() => {
+    ws.send('host:sync_request', { hostId: hostId.value } as HostSyncRequestPayload)
+  }, 500)
 
   await generateQR()
 })
@@ -338,7 +387,16 @@ function getGameStatus(gameId: GameId): string {
 
 function startGame(gameId: GameId) {
   sessionStore.updateGameStatus(gameId, 'in_progress')
-  navigateTo(`/host/game/${gameId}`)
+  
+  const targetRoute = `/host/game/${gameId}`
+  
+  const payload: HostNavigatePayload = {
+    hostId: hostId.value,
+    route: targetRoute,
+    gameId
+  }
+  ws.send('host:navigate', payload)
+  
+  navigateTo(targetRoute)
 }
 </script>
-

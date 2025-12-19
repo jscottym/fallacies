@@ -215,7 +215,7 @@ function updateHostContext() {
     gameStore.setHostContext('Warm-Up Round - Introduction')
   } else if (phase.value === 'quote') {
     const prefix = isComplex.value ? 'Complex Example' : 'Quote'
-    gameStore.setHostContext(`${prefix} ${displayIndex.value}: "${currentQuote.value?.text?.slice(0, 50)}..."`)
+    gameStore.setHostContext(`${prefix} ${displayIndex.value}: "${currentQuote.value?.text}"`)
   } else {
     gameStore.setHostContext('Warm-Up Complete!')
   }

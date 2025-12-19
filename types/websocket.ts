@@ -16,6 +16,9 @@ export type WSEventType =
   | 'game:topic_claimed'
   | 'game:timer_tick'
   | 'game:results'
+  | 'host:sync_request'
+  | 'host:sync_response'
+  | 'host:navigate'
   | 'ping'
   | 'pong'
 
@@ -81,3 +84,23 @@ export interface TimerTickPayload {
   total: number
 }
 
+export interface HostSyncRequestPayload {
+  hostId: string
+}
+
+export interface HostSyncResponsePayload {
+  hostId: string
+  currentRoute: string
+  gameId: string | null
+  phase: string
+  step: number
+  totalSteps: number
+  hostContext: string
+  gameData: Record<string, unknown>
+}
+
+export interface HostNavigatePayload {
+  hostId: string
+  route: string
+  gameId?: string
+}

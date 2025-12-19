@@ -14,7 +14,7 @@
         <UButton 
           variant="ghost" 
           :disabled="gameStore.step === 0"
-          @click="gameStore.prevStep()"
+          @click="handlePrevStep"
         >
           <UIcon name="i-heroicons-arrow-left" class="mr-2" />
           Back
@@ -38,7 +38,7 @@
         <UButton 
           color="primary"
           :disabled="gameStore.step >= gameStore.totalSteps - 1"
-          @click="gameStore.nextStep()"
+          @click="handleNextStep"
         >
           Next
           <UIcon name="i-heroicons-arrow-right" class="ml-2" />
@@ -49,23 +49,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useTimer } from '~/composables/useTimer'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { GAMES, type GameId, type StateUpdatePayload, type VotePayload, type WSMessage } from '~/types'
+import { 
+  GAMES, 
+  type GameId, 
+  type StateUpdatePayload, 
+  type VotePayload, 
+  type WSMessage,
+  type HostSyncRequestPayload,
+  type HostSyncResponsePayload,
+  type HostNavigatePayload
+} from '~/types'
 
 definePageMeta({
   layout: 'game'
 })
 
 const route = useRoute()
+const router = useRouter()
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const timer = useTimer()
 const ws = useWebSocket()
+
+const hostId = ref(Math.random().toString(36).substring(2, 10))
+const isReceivingRemoteUpdate = ref(false)
 
 const gameId = computed(() => route.params.gameId as GameId)
 
@@ -83,7 +96,7 @@ const gameComponent = computed(() => {
 })
 
 function broadcastState() {
-  if (!gameStore.currentGameId || !sessionStore.code) return
+  if (!gameStore.currentGameId || !sessionStore.code || isReceivingRemoteUpdate.value) return
 
   const payload: StateUpdatePayload = {
     gameId: gameStore.currentGameId,
@@ -94,6 +107,60 @@ function broadcastState() {
   }
 
   ws.send('game:state_update', payload)
+}
+
+function handleNextStep() {
+  gameStore.nextStep()
+  broadcastState()
+}
+
+function handlePrevStep() {
+  gameStore.prevStep()
+  broadcastState()
+}
+
+function sendSyncResponse() {
+  const payload: HostSyncResponsePayload = {
+    hostId: hostId.value,
+    currentRoute: route.fullPath,
+    gameId: gameStore.currentGameId,
+    phase: gameStore.phase,
+    step: gameStore.step,
+    totalSteps: gameStore.totalSteps,
+    hostContext: gameStore.hostContext,
+    gameData: { ...gameStore.gameData }
+  }
+  ws.send('host:sync_response', payload)
+}
+
+function applyRemoteHostState(payload: HostSyncResponsePayload | StateUpdatePayload) {
+  isReceivingRemoteUpdate.value = true
+  
+  if ('totalSteps' in payload && payload.totalSteps) {
+    gameStore.totalSteps = payload.totalSteps
+  }
+  
+  if (payload.gameId) {
+    gameStore.currentGameId = payload.gameId as GameId
+  }
+  gameStore.phase = payload.phase
+  gameStore.step = payload.step
+  
+  if ('hostContext' in payload) {
+    gameStore.hostContext = payload.hostContext
+  } else if ('context' in payload) {
+    gameStore.hostContext = payload.context
+  }
+  
+  if ('gameData' in payload && payload.gameData) {
+    gameStore.gameData = { ...gameStore.gameData, ...payload.gameData }
+  } else if ('data' in payload && payload.data) {
+    gameStore.gameData = { ...gameStore.gameData, ...payload.data }
+  }
+  
+  setTimeout(() => {
+    isReceivingRemoteUpdate.value = false
+  }, 100)
 }
 
 onMounted(() => {
@@ -113,10 +180,39 @@ onMounted(() => {
     gameStore.startGame(sessionStore.code, gameId.value, totalSteps)
   }
 
-  // Send initial state to participants
-  broadcastState()
+  ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
+    if (message.payload.hostId !== hostId.value) {
+      sendSyncResponse()
+    }
+  })
 
-  // Listen for votes from participants (used in Warm-Up Round)
+  ws.on('host:sync_response', (message: WSMessage<HostSyncResponsePayload>) => {
+    const payload = message.payload
+    if (payload.hostId === hostId.value) return
+    
+    if (payload.currentRoute !== route.fullPath) {
+      router.push(payload.currentRoute)
+    }
+    
+    applyRemoteHostState(payload)
+  })
+
+  ws.on('game:state_update', (message: WSMessage<StateUpdatePayload>) => {
+    const payload = message.payload
+    if (!payload || payload.gameId !== gameId.value) return
+    
+    applyRemoteHostState(payload)
+  })
+
+  ws.on('host:navigate', (message: WSMessage<HostNavigatePayload>) => {
+    const payload = message.payload
+    if (payload.hostId === hostId.value) return
+    
+    if (payload.route !== route.fullPath) {
+      router.push(payload.route)
+    }
+  })
+
   ws.on('game:vote', (message: WSMessage<VotePayload>) => {
     const payload = message.payload
     if (!payload || payload.gameId !== gameId.value) return
@@ -128,12 +224,22 @@ onMounted(() => {
       submittedAt: new Date().toISOString()
     })
   })
+
+  setTimeout(() => {
+    ws.send('host:sync_request', { hostId: hostId.value } as HostSyncRequestPayload)
+  }, 500)
+
+  setTimeout(() => {
+    broadcastState()
+  }, 1000)
 })
 
 watch(
-  () => [gameStore.phase, gameStore.step, gameStore.hostContext, gameStore.gameData],
+  () => [gameStore.phase, gameStore.hostContext, gameStore.gameData],
   () => {
-    broadcastState()
+    if (!isReceivingRemoteUpdate.value) {
+      broadcastState()
+    }
   },
   { deep: true }
 )
