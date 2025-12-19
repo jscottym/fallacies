@@ -20,21 +20,54 @@ interface SessionState {
 
 const STORAGE_KEY = 'fallacies:current-session'
 
+function coerceParticipants(value: unknown): Participant[] {
+  return Array.isArray(value) ? (value as Participant[]) : []
+}
+
+function coerceTeams(value: unknown): Team[] {
+  return Array.isArray(value) ? (value as Team[]) : []
+}
+
+function coerceGamesState(value: unknown): Record<string, GameStatus> {
+  return value && typeof value === 'object'
+    ? (value as Record<string, GameStatus>)
+    : {}
+}
+
+function normalizeStoredSession(raw: unknown): SessionData | null {
+  if (!raw || typeof raw !== 'object') return null
+  const value = raw as Partial<SessionData> & Record<string, unknown>
+
+  if (typeof value.code !== 'string') return null
+
+  return {
+    code: value.code,
+    name: typeof value.name === 'string' ? value.name : '',
+    createdAt: typeof value.createdAt === 'string' ? value.createdAt : '',
+    lastAccessedAt: typeof value.lastAccessedAt === 'string' ? value.lastAccessedAt : '',
+    participants: coerceParticipants((value as Record<string, unknown>).participants),
+    teams: coerceTeams((value as Record<string, unknown>).teams),
+    gamesState: coerceGamesState((value as Record<string, unknown>).gamesState)
+  }
+}
+
 export const useSessionStore = defineStore('session', () => {
   const stored = useLocalStorage<SessionData | null>(STORAGE_KEY, null, {
     deep: true,
     listenToStorageChanges: true
   })
   const storage = useStorage()
+
+  const initialStored = normalizeStoredSession(stored.value)
   
   const state = reactive<SessionState>({
-    code: stored.value?.code ?? '',
-    name: stored.value?.name ?? '',
-    createdAt: stored.value?.createdAt ?? '',
-    lastAccessedAt: stored.value?.lastAccessedAt ?? '',
-    participants: stored.value?.participants ?? [],
-    teams: stored.value?.teams ?? [],
-    gamesState: stored.value?.gamesState ?? {},
+    code: initialStored?.code ?? '',
+    name: initialStored?.name ?? '',
+    createdAt: initialStored?.createdAt ?? '',
+    lastAccessedAt: initialStored?.lastAccessedAt ?? '',
+    participants: initialStored?.participants ?? [],
+    teams: initialStored?.teams ?? [],
+    gamesState: initialStored?.gamesState ?? {},
     isHost: false,
     currentParticipantId: null,
     isConnected: false
@@ -103,15 +136,16 @@ export const useSessionStore = defineStore('session', () => {
   )
 
   function hydrateFromStorage(): boolean {
-    if (!stored.value) return false
+    const normalized = normalizeStoredSession(stored.value)
+    if (!normalized) return false
 
-    state.code = stored.value.code
-    state.name = stored.value.name
-    state.createdAt = stored.value.createdAt
-    state.lastAccessedAt = stored.value.lastAccessedAt
-    state.participants = [...stored.value.participants]
-    state.teams = [...stored.value.teams]
-    state.gamesState = { ...stored.value.gamesState }
+    state.code = normalized.code
+    state.name = normalized.name
+    state.createdAt = normalized.createdAt
+    state.lastAccessedAt = normalized.lastAccessedAt
+    state.participants = [...normalized.participants]
+    state.teams = [...normalized.teams]
+    state.gamesState = { ...normalized.gamesState }
 
     return true
   }
@@ -136,7 +170,8 @@ export const useSessionStore = defineStore('session', () => {
 
   function loadSession(code: string, asHost: boolean = false): boolean {
     const fromStorage = storage.getSession(code)
-    const session = fromStorage || (stored.value?.code === code ? stored.value : null)
+    const fallback = normalizeStoredSession(stored.value)
+    const session = fromStorage || (fallback && fallback.code === code ? fallback : null)
 
     if (!session || session.code !== code) {
       return false
@@ -251,12 +286,16 @@ export const useSessionStore = defineStore('session', () => {
     
     shuffled.forEach((participant, index) => {
       const teamIndex = index % teamCount
-      assignToTeam(participant.id, state.teams[teamIndex].id)
+      const team = state.teams[teamIndex]
+      if (team) {
+        assignToTeam(participant.id, team.id)
+      }
     })
     
     state.teams.forEach(team => {
-      if (team.memberIds.length > 0) {
-        setTeamDevice(team.memberIds[0])
+      const firstMemberId = team.memberIds[0]
+      if (firstMemberId) {
+        setTeamDevice(firstMemberId)
       }
     })
   }
