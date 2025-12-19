@@ -85,13 +85,8 @@ const ws = useWebSocket()
 const hostId = useHostId()
 const isReceivingRemoteUpdate = ref(false)
 
+const code = computed(() => (route.params.code as string).toUpperCase())
 const gameId = computed(() => route.params.gameId as GameId)
-
-// Prefer code from URL query when available so refresh works
-const sessionCode = computed(() => {
-  const fromQuery = (route.query.code as string) || ''
-  return fromQuery || sessionStore.code || ''
-})
 
 const gameComponent = computed(() => {
   const components: Record<string, ReturnType<typeof defineAsyncComponent>> = {
@@ -107,7 +102,7 @@ const gameComponent = computed(() => {
 })
 
 function broadcastState() {
-  if (!gameStore.currentGameId || !sessionCode.value || isReceivingRemoteUpdate.value) return
+  if (!gameStore.currentGameId || !code.value || isReceivingRemoteUpdate.value) return
 
   const payload: StateUpdatePayload = {
     gameId: gameStore.currentGameId,
@@ -183,24 +178,27 @@ function applyRemoteHostState(payload: HostSyncResponsePayload | StateUpdatePayl
 }
 
 onMounted(() => {
-  if (sessionCode.value) {
-    // Ensure session store is hydrated for this code
-    if (!sessionStore.code || sessionStore.code !== sessionCode.value) {
-      sessionStore.loadSession(sessionCode.value, true)
+  // Hydrate session for this host from code in URL
+  if (!sessionStore.code || sessionStore.code !== code.value) {
+    const loaded = sessionStore.loadSession(code.value, true) || sessionStore.hydrateFromStorage()
+    if (!loaded) {
+      navigateTo('/host')
+      return
     }
-    ws.connect(sessionCode.value)
   }
+
+  ws.connect(code.value)
 
   const game = GAMES.find(g => g.id === gameId.value)
   if (!game) {
-    navigateTo(`/host/lobby?code=${sessionCode.value}`)
+    navigateTo(`/host/${code.value}`)
     return
   }
 
-  const existingState = gameStore.loadState(sessionCode.value, gameId.value)
+  const existingState = gameStore.loadState(code.value, gameId.value)
   if (!existingState) {
     const totalSteps = getTotalSteps(gameId.value)
-    gameStore.startGame(sessionCode.value, gameId.value, totalSteps)
+    gameStore.startGame(code.value, gameId.value, totalSteps)
   }
 
   ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
@@ -322,3 +320,5 @@ function getTotalSteps(gameId: GameId): number {
   }
 }
 </script>
+
+

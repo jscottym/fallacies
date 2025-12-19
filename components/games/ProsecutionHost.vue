@@ -478,7 +478,7 @@ function startNewRound() {
 function finishGame() {
   sessionStore.updateGameStatus('prosecution', 'completed')
   gameStore.endGame()
-  navigateTo(`/host/lobby?code=${sessionStore.code}`)
+  navigateTo(`/host/${sessionStore.code}`)
 }
 
 function getFallacyName(id: string): string {

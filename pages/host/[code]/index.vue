@@ -12,7 +12,7 @@
         <div class="text-right">
           <div class="text-sm text-neutral-400">Session Code</div>
           <div class="text-4xl font-mono font-bold text-indigo-400 tracking-wider">
-            {{ sessionStore.code }}
+            {{ code }}
           </div>
         </div>
       </div>
@@ -207,29 +207,29 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <UModal v-model:open="showAddParticipant">
-      <template #content>
-        <div class="p-6 space-y-6">
-          <h3 class="text-xl font-semibold text-white">Add Participant</h3>
-          <UFormField label="Name">
-            <UInput
-              v-model="newParticipantName"
-              placeholder="Enter participant name"
-              size="lg"
-              @keyup.enter="addParticipant"
-            />
-          </UFormField>
-          <div class="flex gap-3 justify-end">
-            <UButton variant="ghost" @click="showAddParticipant = false">Cancel</UButton>
-            <UButton color="primary" :disabled="!newParticipantName.trim()" @click="addParticipant">
-              Add
-            </UButton>
+      <UModal v-model:open="showAddParticipant">
+        <template #content>
+          <div class="p-6 space-y-6">
+            <h3 class="text-xl font-semibold text-white">Add Participant</h3>
+            <UFormField label="Name">
+              <UInput
+                v-model="newParticipantName"
+                placeholder="Enter participant name"
+                size="lg"
+                @keyup.enter="addParticipant"
+              />
+            </UFormField>
+            <div class="flex gap-3 justify-end">
+              <UButton variant="ghost" @click="showAddParticipant = false">Cancel</UButton>
+              <UButton color="primary" :disabled="!newParticipantName.trim()" @click="addParticipant">
+                Add
+              </UButton>
+            </div>
           </div>
-        </div>
-      </template>
-    </UModal>
+        </template>
+      </UModal>
+    </div>
   </div>
 </template>
 
@@ -260,36 +260,24 @@ const qrCanvas = ref<HTMLCanvasElement>()
 const showAddParticipant = ref(false)
 const newParticipantName = ref('')
 
+const code = computed(() => (route.params.code as string).toUpperCase())
 const games = GAMES
 
 const joinUrl = computed(() => {
   if (typeof window === 'undefined') return ''
-  const codeFromRoute = (route.query.code as string) || ''
-  const code = sessionStore.code || codeFromRoute
-  return code ? `${window.location.origin}/play/${code}` : ''
+  return `${window.location.origin}/play/${code.value}`
 })
 
 onMounted(async () => {
-  const code = route.query.code as string | undefined
-
-  if (!sessionStore.code) {
-    let loaded = false
-
-    if (code) {
-      loaded = sessionStore.loadSession(code, true)
-    }
-
+  if (!sessionStore.code || sessionStore.code !== code.value) {
+    const loaded = sessionStore.loadSession(code.value, true) || sessionStore.hydrateFromStorage()
     if (!loaded) {
-      loaded = sessionStore.hydrateFromStorage()
-    }
-
-    if (!loaded || !sessionStore.code) {
       navigateTo('/host')
       return
     }
   }
 
-  ws.connect(sessionStore.code)
+  ws.connect(code.value)
 
   function broadcastSessionState() {
     const payload: SessionTeamsUpdatedPayload = {
@@ -325,7 +313,7 @@ onMounted(async () => {
     const payload = message.payload
     if (payload.hostId === hostId.value) return
     
-    if (payload.currentRoute !== route.fullPath && payload.currentRoute.startsWith('/host/game/')) {
+    if (payload.currentRoute !== route.fullPath && payload.currentRoute.startsWith('/host/')) {
       router.push(payload.currentRoute)
     }
   })
@@ -350,7 +338,7 @@ onMounted(async () => {
   await generateQR()
 })
 
-watch(() => sessionStore.code, async () => {
+watch(code, async () => {
   await generateQR()
 })
 
@@ -372,20 +360,17 @@ function addParticipant() {
     sessionStore.addParticipant(newParticipantName.value.trim())
     newParticipantName.value = ''
     showAddParticipant.value = false
-    broadcastSessionState()
   }
 }
 
 function addTeam() {
   const teamNumber = sessionStore.teams.length + 1
   sessionStore.createTeam(`Team ${String.fromCharCode(64 + teamNumber)}`)
-  broadcastSessionState()
 }
 
 function randomizeTeams() {
   const teamCount = Math.max(2, Math.ceil(sessionStore.participantCount / 3))
   sessionStore.randomizeTeams(teamCount, 3)
-  broadcastSessionState()
 }
 
 function getParticipantName(id: string): string {
@@ -411,8 +396,7 @@ function getGameStatus(gameId: GameId): string {
 function startGame(gameId: GameId) {
   sessionStore.updateGameStatus(gameId, 'in_progress')
   
-  const code = sessionStore.code || (route.query.code as string) || ''
-  const targetRoute = code ? `/host/game/${gameId}?code=${code}` : `/host/game/${gameId}`
+  const targetRoute = `/host/${code.value}/game/${gameId}`
   
   const payload: HostNavigatePayload = {
     hostId: hostId.value,
@@ -424,3 +408,5 @@ function startGame(gameId: GameId) {
   navigateTo(targetRoute)
 }
 </script>
+
+

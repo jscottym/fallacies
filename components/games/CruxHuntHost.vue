@@ -222,7 +222,7 @@ function getPairStatus(index: number): string {
 function finishGame() {
   sessionStore.updateGameStatus('crux-hunt', 'completed')
   gameStore.endGame()
-  navigateTo(`/host/lobby?code=${sessionStore.code}`)
+  navigateTo(`/host/${sessionStore.code}`)
 }
 
 function extendTimer(seconds: number) {

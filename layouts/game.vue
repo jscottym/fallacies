@@ -74,7 +74,7 @@ const gameInfo = computed(() => {
 })
 
 function exitGame() {
-  const targetRoute = `/host/lobby?code=${sessionStore.code}`
+  const targetRoute = `/host/${sessionStore.code}`
 
   const payload: HostNavigatePayload = {
     hostId: hostId.value || '',

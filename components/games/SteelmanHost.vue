@@ -235,7 +235,7 @@ function nextComparison() {
 function finishGame() {
   sessionStore.updateGameStatus('steelman', 'completed')
   gameStore.endGame()
-  navigateTo(`/host/lobby?code=${sessionStore.code}`)
+  navigateTo(`/host/${sessionStore.code}`)
 }
 
 function extendTimer(seconds: number) {

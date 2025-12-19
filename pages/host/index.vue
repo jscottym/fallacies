@@ -71,12 +71,12 @@ onMounted(() => {
 
 function createSession() {
   const code = sessionStore.createSession(sessionName.value)
-  navigateTo(`/host/lobby?code=${code}`)
+  navigateTo(`/host/${code}`)
 }
 
 function resumeSession(code: string) {
   sessionStore.loadSession(code, true)
-  navigateTo(`/host/lobby?code=${code}`)
+  navigateTo(`/host/${code}`)
 }
 
 function formatDate(dateString: string): string {

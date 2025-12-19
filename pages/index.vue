@@ -88,7 +88,7 @@ function joinSession() {
 }
 
 function resumeSession(code: string) {
-  navigateTo(`/host/lobby?code=${code}`)
+  navigateTo(`/host/${code}`)
 }
 
 function formatDate(dateString: string): string {

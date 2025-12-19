@@ -180,7 +180,7 @@ function createSafeWord() {
 function finishSession() {
   sessionStore.updateGameStatus('reflection', 'completed')
   gameStore.endGame()
-  navigateTo(`/host/lobby?code=${sessionStore.code}`)
+  navigateTo(`/host/${sessionStore.code}`)
 }
 </script>
 
