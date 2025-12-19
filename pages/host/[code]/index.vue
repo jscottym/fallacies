@@ -237,18 +237,18 @@
 import QRCode from 'qrcode'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useWebSocket } from '~/composables/useWebSocket'
 import { useHostId } from '~/composables/useHostId'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useSessionStore } from '~/stores/session'
-import { 
-  GAMES, 
-  type GameId, 
-  type WSMessage,
-  type HostSyncRequestPayload,
-  type HostSyncResponsePayload,
-  type HostNavigatePayload,
-  type SessionTeamsUpdatedPayload,
-  type SessionSyncRequestPayload
+import {
+    GAMES,
+    type GameId,
+    type HostNavigatePayload,
+    type HostSyncRequestPayload,
+    type HostSyncResponsePayload,
+    type SessionSyncRequestPayload,
+    type SessionTeamsUpdatedPayload,
+    type WSMessage
 } from '~/types'
 
 const route = useRoute()

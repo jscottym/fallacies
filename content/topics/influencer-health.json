@@ -1,6 +1,7 @@
 {
   "id": "influencer-health",
   "name": "Influencer Health Claims",
+  "explanation": "Social media influencers often promote supplements, diets, and health practices without scientific backing. The debate is whether this should be regulated to prevent harm, or whether regulation threatens free speech and personal choice.",
   "positionA": {
     "label": "Influencers should be regulated",
     "statement": "Health influencers should be held legally accountable for unsubstantiated claims.",

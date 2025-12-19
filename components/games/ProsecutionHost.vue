@@ -9,7 +9,7 @@
         <ol class="list-decimal list-inside text-neutral-300 space-y-2">
           <li>Each team picks a topic (first-come, first-served!)</li>
           <li>Build an argument <strong>packed with fallacies</strong></li>
-          <li>Other teams try to identify your tricks</li>
+          <li>All teams review each other's arguments simultaneously</li>
           <li>Points for sneaky fallacies AND for catching them!</li>
         </ol>
       </div>
@@ -17,7 +17,7 @@
 
     <div v-else-if="roundPhase === 'topic_selection'" class="space-y-8">
       <div class="flex items-center justify-between">
-        <h2 class="text-3xl font-bold text-white">Select Your Topics</h2>
+        <h2 class="text-3xl font-bold text-white">Step 1: Select Your Topics</h2>
         <Timer 
           v-if="timerActive"
           :remaining="timerRemaining"
@@ -26,7 +26,7 @@
           @stop="stopTimer"
         />
       </div>
-      <p class="text-neutral-400">First to pick claims it!</p>
+      <p class="text-neutral-400">First to pick claims it! Teams tap on their devices to claim a topic.</p>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
@@ -36,12 +36,13 @@
           :class="getTopicClaimClass(topic.id)"
         >
           <div class="font-semibold text-white text-lg">{{ topic.name }}</div>
-          <div v-if="isTopicClaimed(topic.id)" class="mt-2 text-sm">
+          <div class="text-sm text-neutral-400 mt-1">{{ topic.explanation }}</div>
+          <div v-if="isTopicClaimed(topic.id)" class="mt-3">
             <UBadge :style="{ backgroundColor: getClaimingTeamColor(topic.id) + '30', color: getClaimingTeamColor(topic.id) }">
               Claimed by {{ getClaimingTeamName(topic.id) }}
             </UBadge>
           </div>
-          <div v-else class="mt-2 text-sm text-neutral-500">Available</div>
+          <div v-else class="mt-3 text-sm text-neutral-500">Available</div>
         </div>
       </div>
 
@@ -51,14 +52,14 @@
           :disabled="!allTeamsSelected"
           @click="startBuilding"
         >
-          All Topics Selected → Start Building
+          {{ allTeamsSelected ? 'All Topics Selected → Start Building' : `Waiting for ${teamsWithoutTopics} more team(s)...` }}
         </UButton>
       </div>
     </div>
 
     <div v-else-if="roundPhase === 'building'" class="space-y-8">
       <div class="flex items-center justify-between">
-        <h2 class="text-3xl font-bold text-white">Build Your Arguments</h2>
+        <h2 class="text-3xl font-bold text-white">Step 2: Build Your Arguments</h2>
         <Timer 
           v-if="timerActive"
           :remaining="timerRemaining"
@@ -69,23 +70,23 @@
       </div>
       <p class="text-neutral-400">All teams building simultaneously. Pack in those fallacies!</p>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="grid md:grid-cols-2 gap-6">
         <div
           v-for="team in sessionStore.teams"
           :key="team.id"
           class="game-card"
           :style="{ borderColor: team.color + '50' }"
         >
-          <div class="font-semibold mb-2" :style="{ color: team.color }">{{ team.name }}</div>
-          <div class="text-sm text-neutral-400">{{ getTeamTopic(team.id) }}</div>
-          <div class="mt-3 flex items-center gap-2">
-            <div 
-              class="h-2 flex-1 bg-neutral-800 rounded-full overflow-hidden"
-            >
+          <div class="font-semibold text-lg mb-2" :style="{ color: team.color }">{{ team.name }}</div>
+          <div class="text-sm text-neutral-300 font-medium">{{ getTeamTopicName(team.id) }}</div>
+          <div class="text-xs text-neutral-500 mt-1">{{ getTeamTopicExplanation(team.id) }}</div>
+          <div class="text-sm text-indigo-400 mt-2">Position: {{ getTeamPosition(team.id) }}</div>
+          <div class="mt-4 flex items-center gap-2">
+            <div class="h-2 flex-1 bg-neutral-800 rounded-full overflow-hidden">
               <div 
                 class="h-full transition-all duration-300"
-                :class="hasSubmitted(team.id) ? 'bg-success-500' : 'bg-neutral-600'"
-                :style="{ width: hasSubmitted(team.id) ? '100%' : '50%'}"
+                :class="hasSubmitted(team.id) ? 'bg-green-500' : 'bg-neutral-600'"
+                :style="{ width: hasSubmitted(team.id) ? '100%' : '30%'}"
               ></div>
             </div>
             <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-neutral-500'">
@@ -99,19 +100,16 @@
         <UButton 
           size="lg" 
           :disabled="!allTeamsSubmitted"
-          @click="startReviewing"
+          @click="startAllReviewing"
         >
-          {{ allTeamsSubmitted ? 'Start Review Phase' : 'Waiting for submissions...' }}
+          {{ allTeamsSubmitted ? 'All Arguments Submitted → Start Review Phase' : `Waiting for ${teamsWithoutArguments} more team(s)...` }}
         </UButton>
       </div>
     </div>
 
-    <div v-else-if="roundPhase === 'reviewing'" class="space-y-8">
+    <div v-else-if="roundPhase === 'all_reviewing'" class="space-y-8">
       <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-2xl font-bold text-white">Review {{ currentReviewTeam?.name }}'s Argument</h2>
-          <p class="text-neutral-400">Topic: {{ getTeamTopic(currentReviewTeam?.id || '') }}</p>
-        </div>
+        <h2 class="text-3xl font-bold text-white">Step 3: Review All Arguments</h2>
         <Timer 
           v-if="timerActive"
           :remaining="timerRemaining"
@@ -120,92 +118,160 @@
           @stop="stopTimer"
         />
       </div>
+      <p class="text-neutral-400">All teams are reviewing each other's arguments simultaneously. Teams identify the fallacies they think were used.</p>
 
-      <div class="game-card border-indigo-500/30">
-        <p class="text-xl text-white leading-relaxed italic">
-          "{{ currentReviewArgument }}"
-        </p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div
+          v-for="team in sessionStore.teams"
+          :key="team.id"
+          class="game-card"
+          :style="{ borderColor: team.color + '30' }"
+        >
+          <div class="font-semibold mb-2" :style="{ color: team.color }">{{ team.name }}'s Argument</div>
+          <div class="text-xs text-neutral-500 mb-2">Topic: {{ getTeamTopicName(team.id) }}</div>
+          <p class="text-sm text-neutral-300 italic line-clamp-3">"{{ getTeamArgument(team.id) }}"</p>
+          <div class="mt-3 flex items-center justify-between text-xs text-neutral-400">
+            <span>Reviews received:</span>
+            <span class="font-medium text-white">{{ getReviewCountForTeam(team.id) }} / {{ sessionStore.teams.length - 1 }}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="flex items-center justify-between">
-        <span class="text-neutral-400">Teams reviewing:</span>
-        <span class="text-white">{{ reviewsSubmitted }} / {{ sessionStore.teams.length - 1 }}</span>
+      <div class="game-card text-center">
+        <div class="text-lg font-semibold text-white mb-2">Review Progress</div>
+        <div class="text-3xl font-bold text-indigo-400">{{ totalReviewsSubmitted }} / {{ totalReviewsExpected }}</div>
+        <div class="text-sm text-neutral-400 mt-1">reviews submitted</div>
       </div>
 
       <div class="text-center">
-        <UButton size="lg" @click="revealResults">
-          <UIcon name="i-heroicons-eye" class="mr-2" />
-          Reveal Results
+        <UButton 
+          size="lg" 
+          :disabled="!allReviewsComplete"
+          @click="startReveal"
+        >
+          {{ allReviewsComplete ? 'All Reviews In → Reveal Results' : 'Waiting for reviews...' }}
+        </UButton>
+        <UButton 
+          v-if="!allReviewsComplete && totalReviewsSubmitted > 0"
+          variant="soft"
+          class="ml-3"
+          @click="startReveal"
+        >
+          Skip Waiting
         </UButton>
       </div>
     </div>
 
-    <div v-else-if="roundPhase === 'scoring'" class="space-y-8">
-      <h2 class="text-3xl font-bold text-white text-center">Results: {{ currentReviewTeam?.name }}</h2>
+    <div v-else-if="roundPhase === 'reveal'" class="space-y-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Results: {{ currentRevealTeam?.name }}</h2>
+          <p class="text-neutral-400">{{ currentRevealIndex + 1 }} of {{ sessionStore.teams.length }} teams</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <UButton 
+            v-if="currentRevealIndex > 0"
+            variant="ghost" 
+            size="sm"
+            @click="prevReveal"
+          >
+            <UIcon name="i-heroicons-arrow-left" />
+          </UButton>
+          <UButton 
+            v-if="hasMoreReveals"
+            variant="ghost" 
+            size="sm"
+            @click="nextReveal"
+          >
+            <UIcon name="i-heroicons-arrow-right" />
+          </UButton>
+        </div>
+      </div>
 
       <div class="game-card border-indigo-500/30">
-        <div class="text-xs text-neutral-500 uppercase tracking-wide mb-2">Argument</div>
-        <p class="text-neutral-100 leading-relaxed">
-          "{{ currentReviewArgument }}"
-        </p>
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-xs text-neutral-500 uppercase tracking-wide">Argument</div>
+          <div class="text-xs text-neutral-500">Topic: {{ getTeamTopicName(currentRevealTeam?.id || '') }}</div>
+        </div>
+        <p class="text-neutral-100 leading-relaxed italic">"{{ currentRevealArgument }}"</p>
       </div>
 
       <div class="game-card border-purple-500/30">
-        <h3 class="font-semibold text-purple-400 mb-3">Fallacies Used</h3>
+        <h3 class="font-semibold text-purple-400 mb-3">Fallacies They Used</h3>
         <div class="flex flex-wrap gap-2">
           <UBadge 
-            v-for="fallacyId in currentArgumentFallacies" 
+            v-for="fallacyId in currentRevealFallacies" 
             :key="fallacyId"
-            color="purple"
+            class="border border-purple-500/40 bg-purple-500/10 text-purple-300"
             size="lg"
           >
             {{ getFallacyName(fallacyId) }}
           </UBadge>
+          <span v-if="currentRevealFallacies.length === 0" class="text-neutral-500 text-sm">No fallacies declared</span>
         </div>
       </div>
 
       <div class="game-card">
-        <h3 class="font-semibold text-white mb-4">Team Catches</h3>
+        <h3 class="font-semibold text-white mb-4">What Other Teams Guessed</h3>
         <div class="space-y-4">
           <div 
-            v-for="team in reviewingTeams" 
+            v-for="team in getReviewingTeamsFor(currentRevealTeam?.id || '')" 
             :key="team.id"
             class="p-3 bg-neutral-800/50 rounded-lg"
           >
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-2">
               <span class="font-medium" :style="{ color: team.color }">{{ team.name }}</span>
               <div class="text-right">
                 <div class="text-xs text-neutral-400">
-                  Caught {{ getTeamCatches(team.id) }} / {{ currentArgumentFallacies.length }} ·
-                  False positives {{ getFalsePositives(team.id) }}
+                  Caught {{ getTeamCatches(team.id, currentRevealTeam?.id || '') }} / {{ currentRevealFallacies.length }} ·
+                  False positives {{ getFalsePositives(team.id, currentRevealTeam?.id || '') }}
                 </div>
                 <div class="text-lg font-bold text-green-400">
-                  +{{ calculateTeamPoints(team.id) }}
+                  +{{ calculateCatchPoints(team.id, currentRevealTeam?.id || '') }}
                 </div>
               </div>
             </div>
-            <div class="mt-3">
-              <div class="text-xs text-neutral-500 mb-1">Guessed fallacies</div>
-              <div class="flex flex-wrap gap-2">
-                <UBadge
-                  v-for="fallacyId in getTeamReviewFallacies(team.id)"
-                  :key="fallacyId"
-                  size="sm"
-                  :class="currentArgumentFallacies.includes(fallacyId)
-                    ? 'border-green-500/60 bg-green-500/10 text-green-300'
-                    : 'border-red-500/60 bg-red-500/10 text-red-300'"
-                >
-                  {{ getFallacyName(fallacyId) }}
-                </UBadge>
-              </div>
+            <div class="flex flex-wrap gap-2">
+              <UBadge
+                v-for="fallacyId in getTeamGuesses(team.id, currentRevealTeam?.id || '')"
+                :key="fallacyId"
+                size="sm"
+                :class="currentRevealFallacies.includes(fallacyId)
+                  ? 'border border-green-500/60 bg-green-500/10 text-green-300'
+                  : 'border border-red-500/60 bg-red-500/10 text-red-300'"
+              >
+                {{ getFallacyName(fallacyId) }}
+              </UBadge>
+              <span v-if="getTeamGuesses(team.id, currentRevealTeam?.id || '').length === 0" class="text-neutral-500 text-sm">No guesses submitted</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center">
-        <UButton size="lg" @click="nextReview">
-          {{ hasMoreReviews ? 'Next Team\'s Argument' : 'View Final Scores' }}
+      <div class="text-center space-x-3">
+        <UButton 
+          v-if="hasMoreReveals"
+          size="lg" 
+          @click="nextReveal"
+        >
+          Next Team's Results
+          <UIcon name="i-heroicons-arrow-right" class="ml-2" />
+        </UButton>
+        <UButton 
+          v-if="hasMoreReveals && sessionStore.teams.length > 2"
+          variant="soft"
+          size="lg"
+          @click="finishReveals"
+        >
+          Skip to Final Scores
+        </UButton>
+        <UButton 
+          v-if="!hasMoreReveals"
+          size="lg"
+          color="primary"
+          @click="finishReveals"
+        >
+          View Final Scores
         </UButton>
       </div>
     </div>
@@ -214,14 +280,14 @@
       <div class="text-6xl mb-6">🏆</div>
       <h1 class="text-4xl font-bold text-white">Round Complete!</h1>
 
-      <div class="flex justify-center gap-6">
+      <div class="flex justify-center gap-6 flex-wrap">
         <div 
           v-for="(team, index) in sortedTeams" 
           :key="team.id"
           class="game-card w-48"
           :class="index === 0 ? 'border-yellow-500/50 scale-110' : ''"
         >
-          <div class="text-4xl mb-2">{{ index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉' }}</div>
+          <div class="text-4xl mb-2">{{ index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅' }}</div>
           <div class="font-bold text-xl" :style="{ color: team.color }">{{ team.name }}</div>
           <div class="text-3xl font-bold text-white mt-2">{{ scores[team.id] || 0 }}</div>
           <div class="text-sm text-neutral-400">points</div>
@@ -281,40 +347,53 @@ const allTeamsSelected = computed(() => {
   return sessionStore.teams.every(t => currentRound.value?.topicSelections[t.id])
 })
 
+const teamsWithoutTopics = computed(() => {
+  if (!currentRound.value) return sessionStore.teams.length
+  return sessionStore.teams.filter(t => !currentRound.value?.topicSelections[t.id]).length
+})
+
 const allTeamsSubmitted = computed(() => {
   if (!currentRound.value) return false
   return sessionStore.teams.every(t => currentRound.value?.arguments[t.id])
 })
 
-const currentReviewTargetIndex = computed(() => currentRound.value?.currentReviewTargetIndex || 0)
-
-const currentReviewTeam = computed((): Team | undefined => {
-  return sessionStore.teams[currentReviewTargetIndex.value]
+const teamsWithoutArguments = computed(() => {
+  if (!currentRound.value) return sessionStore.teams.length
+  return sessionStore.teams.filter(t => !currentRound.value?.arguments[t.id]).length
 })
 
-const currentReviewArgument = computed(() => {
-  if (!currentReviewTeam.value || !currentRound.value) return ''
-  return currentRound.value.arguments[currentReviewTeam.value.id]?.text || ''
+const totalReviewsExpected = computed(() => {
+  const teamCount = sessionStore.teams.length
+  return teamCount * (teamCount - 1)
 })
 
-const currentArgumentFallacies = computed(() => {
-  if (!currentReviewTeam.value || !currentRound.value) return []
-  return currentRound.value.arguments[currentReviewTeam.value.id]?.fallaciesUsed || []
+const totalReviewsSubmitted = computed(() => {
+  if (!currentRound.value) return 0
+  return currentRound.value.reviews.length
 })
 
-const reviewingTeams = computed(() => {
-  return sessionStore.teams.filter(t => t.id !== currentReviewTeam.value?.id)
+const allReviewsComplete = computed(() => {
+  return totalReviewsSubmitted.value >= totalReviewsExpected.value
 })
 
-const reviewsSubmitted = computed(() => {
-  if (!currentRound.value || !currentReviewTeam.value) return 0
-  return currentRound.value.reviews.filter(
-    r => r.targetTeamId === currentReviewTeam.value?.id
-  ).length
+const currentRevealIndex = computed(() => currentRound.value?.currentRevealIndex || 0)
+
+const currentRevealTeam = computed((): Team | undefined => {
+  return sessionStore.teams[currentRevealIndex.value]
 })
 
-const hasMoreReviews = computed(() => {
-  return currentReviewTargetIndex.value < sessionStore.teams.length - 1
+const currentRevealArgument = computed(() => {
+  if (!currentRevealTeam.value || !currentRound.value) return ''
+  return currentRound.value.arguments[currentRevealTeam.value.id]?.text || ''
+})
+
+const currentRevealFallacies = computed(() => {
+  if (!currentRevealTeam.value || !currentRound.value) return []
+  return currentRound.value.arguments[currentRevealTeam.value.id]?.fallaciesUsed || []
+})
+
+const hasMoreReveals = computed(() => {
+  return currentRevealIndex.value < sessionStore.teams.length - 1
 })
 
 const sortedTeams = computed(() => {
@@ -338,7 +417,7 @@ function initRound() {
   const teamIds = sessionStore.teams.map(t => t.id)
   gameStore.initProsecutionRound(topicIds, teamIds)
   timer.start(60)
-  gameStore.setHostContext('Topic Selection - Pick your topic!')
+  gameStore.setHostContext('Step 1: Topic Selection')
 }
 
 function isTopicClaimed(topicId: string): boolean {
@@ -366,13 +445,36 @@ function getTopicClaimClass(topicId: string): string {
   if (isTopicClaimed(topicId)) {
     return 'opacity-75'
   }
-  return 'hover:border-indigo-500/50 cursor-pointer'
+  return 'hover:border-indigo-500/50'
 }
 
-function getTeamTopic(teamId: string): string {
+function getTeamTopicId(teamId: string): string | undefined {
+  if (!currentRound.value) return undefined
+  return currentRound.value.topicSelections[teamId]?.topicId
+}
+
+function getTeamTopicName(teamId: string): string {
+  const topicId = getTeamTopicId(teamId)
+  if (!topicId) return 'Not selected'
+  return contentStore.getTopicById(topicId)?.name || 'Unknown'
+}
+
+function getTeamTopicExplanation(teamId: string): string {
+  const topicId = getTeamTopicId(teamId)
+  if (!topicId) return ''
+  return contentStore.getTopicById(topicId)?.explanation || ''
+}
+
+function getTeamPosition(teamId: string): string {
+  const topicId = getTeamTopicId(teamId)
+  if (!topicId) return ''
+  const topic = contentStore.getTopicById(topicId)
+  return topic?.positionA.label || ''
+}
+
+function getTeamArgument(teamId: string): string {
   if (!currentRound.value) return ''
-  const topicId = currentRound.value.topicSelections[teamId]?.topicId
-  return contentStore.getTopicById(topicId)?.name || 'Not selected'
+  return currentRound.value.arguments[teamId]?.text || ''
 }
 
 function hasSubmitted(teamId: string): boolean {
@@ -380,94 +482,115 @@ function hasSubmitted(teamId: string): boolean {
   return !!currentRound.value.arguments[teamId]
 }
 
+function getReviewCountForTeam(targetTeamId: string): number {
+  if (!currentRound.value) return 0
+  return currentRound.value.reviews.filter(r => r.targetTeamId === targetTeamId).length
+}
+
+function getReviewingTeamsFor(targetTeamId: string): Team[] {
+  return sessionStore.teams.filter(t => t.id !== targetTeamId)
+}
+
+function getTeamGuesses(reviewingTeamId: string, targetTeamId: string): string[] {
+  if (!currentRound.value) return []
+  const review = currentRound.value.reviews.find(
+    r => r.reviewingTeamId === reviewingTeamId && r.targetTeamId === targetTeamId
+  )
+  return review?.identifiedFallacies || []
+}
+
+function getTeamCatches(reviewingTeamId: string, targetTeamId: string): number {
+  const guesses = getTeamGuesses(reviewingTeamId, targetTeamId)
+  const actual = currentRound.value?.arguments[targetTeamId]?.fallaciesUsed || []
+  return guesses.filter(g => actual.includes(g)).length
+}
+
+function getFalsePositives(reviewingTeamId: string, targetTeamId: string): number {
+  const guesses = getTeamGuesses(reviewingTeamId, targetTeamId)
+  const actual = currentRound.value?.arguments[targetTeamId]?.fallaciesUsed || []
+  return guesses.filter(g => !actual.includes(g)).length
+}
+
+function calculateCatchPoints(reviewingTeamId: string, targetTeamId: string): number {
+  const catches = getTeamCatches(reviewingTeamId, targetTeamId)
+  const falsePos = getFalsePositives(reviewingTeamId, targetTeamId)
+  return Math.max(0, catches * 2 - falsePos)
+}
+
 function startBuilding() {
   if (!currentRound.value) return
   currentRound.value.phase = 'building'
-  gameStore.saveState()
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
   timer.start(180)
-  gameStore.setHostContext('Building Phase - Pack in those fallacies!')
+  gameStore.setHostContext('Step 2: Build Your Arguments')
 }
 
-function startReviewing() {
+function startAllReviewing() {
   if (!currentRound.value) return
-  currentRound.value.phase = 'reviewing'
-  currentRound.value.currentReviewTargetIndex = 0
-  gameStore.saveState()
-  timer.start(120)
-  gameStore.setHostContext(`Reviewing ${currentReviewTeam.value?.name}'s argument`)
+  currentRound.value.phase = 'all_reviewing'
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
+  timer.start(180)
+  gameStore.setHostContext('Step 3: Review All Arguments')
 }
 
-function getTeamCatches(teamId: string): number {
-  if (!currentRound.value || !currentReviewTeam.value) return 0
-  const review = currentRound.value.reviews.find(
-    r => r.reviewingTeamId === teamId && r.targetTeamId === currentReviewTeam.value?.id
-  )
-  if (!review) return 0
-  return review.identifiedFallacies.filter(f => currentArgumentFallacies.value.includes(f)).length
-}
-
-function calculateTeamPoints(teamId: string): number {
-  const catches = getTeamCatches(teamId)
-  const falsePositives = getFalsePositives(teamId)
-  return Math.max(0, catches * 2 - falsePositives)
-}
-
-function getFalsePositives(teamId: string): number {
-  if (!currentRound.value || !currentReviewTeam.value) return 0
-  const review = currentRound.value.reviews.find(
-    r => r.reviewingTeamId === teamId && r.targetTeamId === currentReviewTeam.value?.id
-  )
-  if (!review) return 0
-  return review.identifiedFallacies.filter(f => !currentArgumentFallacies.value.includes(f)).length
-}
-
-function getTeamReviewFallacies(teamId: string): string[] {
-  if (!currentRound.value || !currentReviewTeam.value) return []
-  const review = currentRound.value.reviews.find(
-    r => r.reviewingTeamId === teamId && r.targetTeamId === currentReviewTeam.value?.id
-  )
-  return review ? review.identifiedFallacies : []
-}
-
-function revealResults() {
+function startReveal() {
   if (!currentRound.value) return
-  currentRound.value.phase = 'scoring'
+  currentRound.value.phase = 'reveal'
+  currentRound.value.currentRevealIndex = 0
+  calculateAllScores()
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
+  timer.stop()
+  gameStore.setHostContext(`Results: ${currentRevealTeam.value?.name}`)
+}
+
+function calculateAllScores() {
+  if (!currentRound.value) return
   
   const newScores = { ...scores.value }
-  reviewingTeams.value.forEach(team => {
-    newScores[team.id] = (newScores[team.id] || 0) + calculateTeamPoints(team.id)
-  })
   
-  const uncaughtFallacies = currentArgumentFallacies.value.filter(f => {
-    const caughtCount = reviewingTeams.value.filter(t => {
-      const review = currentRound.value?.reviews.find(
-        r => r.reviewingTeamId === t.id && r.targetTeamId === currentReviewTeam.value?.id
-      )
-      return review?.identifiedFallacies.includes(f)
-    }).length
-    return caughtCount < reviewingTeams.value.length / 2
+  sessionStore.teams.forEach(targetTeam => {
+    const targetFallacies = currentRound.value?.arguments[targetTeam.id]?.fallaciesUsed || []
+    
+    sessionStore.teams.forEach(reviewingTeam => {
+      if (reviewingTeam.id === targetTeam.id) return
+      const points = calculateCatchPoints(reviewingTeam.id, targetTeam.id)
+      newScores[reviewingTeam.id] = (newScores[reviewingTeam.id] || 0) + points
+    })
+    
+    const uncaughtFallacies = targetFallacies.filter(f => {
+      const catchCount = sessionStore.teams.filter(t => {
+        if (t.id === targetTeam.id) return false
+        const guesses = getTeamGuesses(t.id, targetTeam.id)
+        return guesses.includes(f)
+      }).length
+      const reviewingTeamCount = sessionStore.teams.length - 1
+      return catchCount < reviewingTeamCount / 2
+    })
+    newScores[targetTeam.id] = (newScores[targetTeam.id] || 0) + uncaughtFallacies.length
   })
-  newScores[currentReviewTeam.value!.id] = (newScores[currentReviewTeam.value!.id] || 0) + uncaughtFallacies.length
   
   gameStore.updateGameData({ scores: newScores })
-  timer.stop()
-  gameStore.setHostContext(`Results: ${currentReviewTeam.value?.name}`)
 }
 
-function nextReview() {
+function nextReveal() {
+  if (!currentRound.value || !hasMoreReveals.value) return
+  currentRound.value.currentRevealIndex++
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
+  gameStore.setHostContext(`Results: ${currentRevealTeam.value?.name}`)
+}
+
+function prevReveal() {
+  if (!currentRound.value || currentRevealIndex.value <= 0) return
+  currentRound.value.currentRevealIndex--
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
+  gameStore.setHostContext(`Results: ${currentRevealTeam.value?.name}`)
+}
+
+function finishReveals() {
   if (!currentRound.value) return
-  
-  if (hasMoreReviews.value) {
-    currentRound.value.currentReviewTargetIndex++
-    currentRound.value.phase = 'reviewing'
-    gameStore.saveState()
-    timer.start(120)
-    gameStore.setHostContext(`Reviewing ${currentReviewTeam.value?.name}'s argument`)
-  } else {
-    currentRound.value.phase = 'final'
-    gameStore.saveState()
-    gameStore.setHostContext('Round Complete!')
-  }
+  currentRound.value.phase = 'final'
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
+  gameStore.setHostContext('Round Complete!')
 }
 
 function startNewRound() {
@@ -493,4 +616,3 @@ function stopTimer() {
   timer.stop()
 }
 </script>
-

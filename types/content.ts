@@ -41,6 +41,7 @@ export interface TopicPosition {
 export interface Topic {
   id: string
   name: string
+  explanation: string
   positionA: TopicPosition
   positionB: TopicPosition
   cruxQuestions: string[]

@@ -1,6 +1,7 @@
 {
   "id": "housing-market",
   "name": "Housing & Economic Opportunity",
+  "explanation": "Home ownership has become increasingly difficult for younger generations. The debate is whether this is primarily due to individual choices (spending habits, priorities) or systemic factors (wage stagnation, housing policy, market conditions).",
   "positionA": {
     "label": "Personal responsibility is key",
     "statement": "Housing affordability is primarily about personal choices and financial discipline.",

@@ -1,6 +1,7 @@
 {
   "id": "prison-reform",
   "name": "Prison Sentencing & Justice",
+  "explanation": "The U.S. has the highest incarceration rate in the world. The debate is whether long sentences protect public safety through deterrence and incapacitation, or whether rehabilitation-focused approaches are more effective at reducing crime.",
   "positionA": {
     "label": "Longer sentences protect communities",
     "statement": "Longer sentences deter crime and keep dangerous people away from potential victims.",

@@ -51,25 +51,25 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useHostId } from '~/composables/useHostId'
 import { useTimer } from '~/composables/useTimer'
 import { useWebSocket } from '~/composables/useWebSocket'
-import { useHostId } from '~/composables/useHostId'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { 
-  GAMES, 
-  type GameId, 
-  type StateUpdatePayload, 
-  type VotePayload, 
-  type WSMessage,
-  type HostSyncRequestPayload,
-  type HostSyncResponsePayload,
-  type HostNavigatePayload,
-  type SessionTeamsUpdatedPayload,
-  type SessionSyncRequestPayload,
-  type SubmitPayload,
-  type TopicSelectPayload,
-  type ReviewSubmitPayload
+import {
+    GAMES,
+    type GameId,
+    type HostNavigatePayload,
+    type HostSyncRequestPayload,
+    type HostSyncResponsePayload,
+    type ReviewSubmitPayload,
+    type SessionSyncRequestPayload,
+    type SessionTeamsUpdatedPayload,
+    type StateUpdatePayload,
+    type SubmitPayload,
+    type TopicSelectPayload,
+    type VotePayload,
+    type WSMessage
 } from '~/types'
 
 definePageMeta({

@@ -128,7 +128,7 @@ export interface WarmupState extends GameState {
 
 export interface ProsecutionRound {
   roundNumber: number
-  phase: 'topic_selection' | 'building' | 'reviewing' | 'scoring'
+  phase: 'topic_selection' | 'building' | 'all_reviewing' | 'reveal' | 'final'
   topicSelections: Record<string, { topicId: string; selectedAt: string }>
   arguments: Record<string, { text: string; fallaciesUsed: string[]; submittedAt: string }>
   reviews: Array<{
@@ -137,7 +137,7 @@ export interface ProsecutionRound {
     identifiedFallacies: string[]
     submittedAt: string
   }>
-  currentReviewTargetIndex: number
+  currentRevealIndex: number
 }
 
 export interface ProsecutionState extends GameState {

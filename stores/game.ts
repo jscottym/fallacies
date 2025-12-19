@@ -220,7 +220,7 @@ export const useGameStore = defineStore('game', () => {
       topicSelections: {},
       arguments: {},
       reviews: [],
-      currentReviewTargetIndex: 0
+      currentRevealIndex: 0
     }
     rounds.push(newRound)
     
