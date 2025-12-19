@@ -199,7 +199,7 @@ import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { useWebSocket } from '~/composables/useWebSocket'
-import type { ProsecutionRound, TopicSelectPayload, SubmitPayload } from '~/types'
+import type { ProsecutionRound, TopicSelectPayload, SubmitPayload, ReviewSubmitPayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -348,7 +348,15 @@ function toggleReviewSelection(id: string) {
 
 function submitReview() {
   if (!myTeamId.value || !currentReviewTeamId.value) return
-  gameStore.submitReview(myTeamId.value, currentReviewTeamId.value, reviewSelections.value)
+
+  const payload: ReviewSubmitPayload = {
+    gameId: gameStore.currentGameId || 'prosecution',
+    reviewingTeamId: myTeamId.value,
+    targetTeamId: currentReviewTeamId.value,
+    identifiedFallacies: [...reviewSelections.value]
+  }
+
+  ws.send('game:review_submit', payload)
   reviewSelections.value = []
 }
 

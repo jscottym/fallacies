@@ -13,6 +13,7 @@ export type WSEventType =
   | 'game:vote'
   | 'game:submit'
   | 'game:topic_select'
+  | 'game:review_submit'
   | 'game:state_update'
   | 'game:vote_received'
   | 'game:submission_received'
@@ -72,6 +73,13 @@ export interface TopicSelectPayload {
   gameId: string
   teamId: string
   topicId: string
+}
+
+export interface ReviewSubmitPayload {
+  gameId: string
+  reviewingTeamId: string
+  targetTeamId: string
+  identifiedFallacies: string[]
 }
 
 export interface StateUpdatePayload {

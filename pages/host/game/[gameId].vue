@@ -68,7 +68,8 @@ import {
   type SessionTeamsUpdatedPayload,
   type SessionSyncRequestPayload,
   type SubmitPayload,
-  type TopicSelectPayload
+  type TopicSelectPayload,
+  type ReviewSubmitPayload
 } from '~/types'
 
 definePageMeta({
@@ -262,6 +263,17 @@ onMounted(() => {
     if (claimed) {
       broadcastState()
     }
+  })
+
+  ws.on('game:review_submit', (message: WSMessage<ReviewSubmitPayload>) => {
+    const payload = message.payload
+    if (!payload || payload.gameId !== gameId.value) return
+
+    gameStore.submitReview(
+      payload.reviewingTeamId,
+      payload.targetTeamId,
+      payload.identifiedFallacies
+    )
   })
 
   setTimeout(() => {

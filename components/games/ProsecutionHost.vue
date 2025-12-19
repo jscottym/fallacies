@@ -84,7 +84,8 @@
             >
               <div 
                 class="h-full transition-all duration-300"
-                :style="{ width: hasSubmitted(team.id) ? '100%' : '50%', backgroundColor: team.color }"
+                :class="hasSubmitted(team.id) ? 'bg-success-500' : 'bg-neutral-600'"
+                :style="{ width: hasSubmitted(team.id) ? '100%' : '50%'}"
               ></div>
             </div>
             <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-neutral-500'">
@@ -142,6 +143,13 @@
     <div v-else-if="roundPhase === 'scoring'" class="space-y-8">
       <h2 class="text-3xl font-bold text-white text-center">Results: {{ currentReviewTeam?.name }}</h2>
 
+      <div class="game-card border-indigo-500/30">
+        <div class="text-xs text-neutral-500 uppercase tracking-wide mb-2">Argument</div>
+        <p class="text-neutral-100 leading-relaxed">
+          "{{ currentReviewArgument }}"
+        </p>
+      </div>
+
       <div class="game-card border-purple-500/30">
         <h3 class="font-semibold text-purple-400 mb-3">Fallacies Used</h3>
         <div class="flex flex-wrap gap-2">
@@ -158,20 +166,38 @@
 
       <div class="game-card">
         <h3 class="font-semibold text-white mb-4">Team Catches</h3>
-        <div class="space-y-3">
+        <div class="space-y-4">
           <div 
             v-for="team in reviewingTeams" 
             :key="team.id"
-            class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg"
+            class="p-3 bg-neutral-800/50 rounded-lg"
           >
-            <span :style="{ color: team.color }">{{ team.name }}</span>
-            <div class="flex items-center gap-2">
-              <span class="text-sm text-neutral-400">
-                {{ getTeamCatches(team.id) }} / {{ currentArgumentFallacies.length }} caught
-              </span>
-              <span class="font-bold text-green-400">
-                +{{ calculateTeamPoints(team.id) }}
-              </span>
+            <div class="flex items-center justify-between">
+              <span class="font-medium" :style="{ color: team.color }">{{ team.name }}</span>
+              <div class="text-right">
+                <div class="text-xs text-neutral-400">
+                  Caught {{ getTeamCatches(team.id) }} / {{ currentArgumentFallacies.length }} ·
+                  False positives {{ getFalsePositives(team.id) }}
+                </div>
+                <div class="text-lg font-bold text-green-400">
+                  +{{ calculateTeamPoints(team.id) }}
+                </div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-xs text-neutral-500 mb-1">Guessed fallacies</div>
+              <div class="flex flex-wrap gap-2">
+                <UBadge
+                  v-for="fallacyId in getTeamReviewFallacies(team.id)"
+                  :key="fallacyId"
+                  size="sm"
+                  :class="currentArgumentFallacies.includes(fallacyId)
+                    ? 'border-green-500/60 bg-green-500/10 text-green-300'
+                    : 'border-red-500/60 bg-red-500/10 text-red-300'"
+                >
+                  {{ getFallacyName(fallacyId) }}
+                </UBadge>
+              </div>
             </div>
           </div>
         </div>
@@ -393,6 +419,14 @@ function getFalsePositives(teamId: string): number {
   )
   if (!review) return 0
   return review.identifiedFallacies.filter(f => !currentArgumentFallacies.value.includes(f)).length
+}
+
+function getTeamReviewFallacies(teamId: string): string[] {
+  if (!currentRound.value || !currentReviewTeam.value) return []
+  const review = currentRound.value.reviews.find(
+    r => r.reviewingTeamId === teamId && r.targetTeamId === currentReviewTeam.value?.id
+  )
+  return review ? review.identifiedFallacies : []
 }
 
 function revealResults() {
