@@ -64,7 +64,9 @@ import {
   type WSMessage,
   type HostSyncRequestPayload,
   type HostSyncResponsePayload,
-  type HostNavigatePayload
+  type HostNavigatePayload,
+  type SessionTeamsUpdatedPayload,
+  type SessionSyncRequestPayload
 } from '~/types'
 
 definePageMeta({
@@ -133,6 +135,14 @@ function sendSyncResponse() {
   ws.send('host:sync_response', payload)
 }
 
+function broadcastSessionState() {
+  const payload: SessionTeamsUpdatedPayload = {
+    participants: [...sessionStore.participants],
+    teams: [...sessionStore.teams]
+  }
+  ws.send('session:teams_updated', payload)
+}
+
 function applyRemoteHostState(payload: HostSyncResponsePayload | StateUpdatePayload) {
   isReceivingRemoteUpdate.value = true
   
@@ -186,6 +196,12 @@ onMounted(() => {
     }
   })
 
+  ws.on('session:sync_request', (message: WSMessage<SessionSyncRequestPayload>) => {
+    if (message.payload.source === 'participant') {
+      broadcastSessionState()
+    }
+  })
+
   ws.on('host:sync_response', (message: WSMessage<HostSyncResponsePayload>) => {
     const payload = message.payload
     if (payload.hostId === hostId.value) return
@@ -232,6 +248,10 @@ onMounted(() => {
   setTimeout(() => {
     broadcastState()
   }, 1000)
+
+  setTimeout(() => {
+    broadcastSessionState()
+  }, 1200)
 })
 
 watch(

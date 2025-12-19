@@ -135,7 +135,7 @@ import ReferencePanel from '~/components/game/ReferencePanel.vue'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { StateUpdatePayload } from '~/types'
+import type { StateUpdatePayload, SessionTeamsUpdatedPayload, SessionSyncRequestPayload } from '~/types'
 
 const route = useRoute()
 const sessionStore = useSessionStore()
@@ -172,6 +172,8 @@ const currentGameComponent = computed(() => {
 })
 
 onMounted(() => {
+  ws.connect(sessionCode.value)
+
   if (!sessionStore.loadSession(sessionCode.value, false)) {
     console.warn('Session not found, creating new one for participant')
   }
@@ -193,6 +195,18 @@ onMounted(() => {
       gameStore.applyRemoteState(payload, sessionCode.value)
     }
   })
+
+  ws.on('session:teams_updated', (message) => {
+    const payload = message.payload as SessionTeamsUpdatedPayload
+    if (!payload) return
+    sessionStore.participants = [...payload.participants]
+    sessionStore.teams = [...payload.teams]
+  })
+
+  setTimeout(() => {
+    const payload: SessionSyncRequestPayload = { source: 'participant' }
+    ws.send('session:sync_request', payload)
+  }, 500)
 })
 
 function assignToRandomTeam(participantId: string) {
@@ -229,7 +243,6 @@ function performJoin(existingParticipantId?: string) {
   hasJoined.value = true
   participantStorage.value = participant.name
 
-  ws.connect(sessionCode.value)
   ws.send('session:join', {
     participantName: participant.name,
     participantId: participant.id

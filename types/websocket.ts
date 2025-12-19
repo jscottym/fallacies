@@ -1,9 +1,12 @@
+import type { Participant, Team } from './session'
+
 export type WSEventType =
   | 'session:join'
   | 'session:leave'
   | 'session:participant_joined'
   | 'session:participant_left'
   | 'session:teams_updated'
+  | 'session:sync_request'
   | 'game:start'
   | 'game:advance'
   | 'game:end'
@@ -103,4 +106,13 @@ export interface HostNavigatePayload {
   hostId: string
   route: string
   gameId?: string
+}
+
+export interface SessionTeamsUpdatedPayload {
+  participants: Participant[]
+  teams: Team[]
+}
+
+export interface SessionSyncRequestPayload {
+  source: 'participant' | 'host'
 }

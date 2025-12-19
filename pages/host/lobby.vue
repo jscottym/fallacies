@@ -246,7 +246,9 @@ import {
   type WSMessage,
   type HostSyncRequestPayload,
   type HostSyncResponsePayload,
-  type HostNavigatePayload
+  type HostNavigatePayload,
+  type SessionTeamsUpdatedPayload,
+  type SessionSyncRequestPayload
 } from '~/types'
 
 const route = useRoute()
@@ -289,6 +291,14 @@ onMounted(async () => {
 
   ws.connect(sessionStore.code)
 
+  function broadcastSessionState() {
+    const payload: SessionTeamsUpdatedPayload = {
+      participants: [...sessionStore.participants],
+      teams: [...sessionStore.teams]
+    }
+    ws.send('session:teams_updated', payload)
+  }
+
   ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
     if (message.payload.hostId !== hostId.value) {
       const payload: HostSyncResponsePayload = {
@@ -302,6 +312,12 @@ onMounted(async () => {
         gameData: {}
       }
       ws.send('host:sync_response', payload)
+    }
+  })
+
+  ws.on('session:sync_request', (message: WSMessage<SessionSyncRequestPayload>) => {
+    if (message.payload.source === 'participant') {
+      broadcastSessionState()
     }
   })
 
@@ -326,6 +342,10 @@ onMounted(async () => {
   setTimeout(() => {
     ws.send('host:sync_request', { hostId: hostId.value } as HostSyncRequestPayload)
   }, 500)
+
+  setTimeout(() => {
+    broadcastSessionState()
+  }, 700)
 
   await generateQR()
 })
@@ -352,17 +372,20 @@ function addParticipant() {
     sessionStore.addParticipant(newParticipantName.value.trim())
     newParticipantName.value = ''
     showAddParticipant.value = false
+    broadcastSessionState()
   }
 }
 
 function addTeam() {
   const teamNumber = sessionStore.teams.length + 1
   sessionStore.createTeam(`Team ${String.fromCharCode(64 + teamNumber)}`)
+  broadcastSessionState()
 }
 
 function randomizeTeams() {
   const teamCount = Math.max(2, Math.ceil(sessionStore.participantCount / 3))
   sessionStore.randomizeTeams(teamCount, 3)
+  broadcastSessionState()
 }
 
 function getParticipantName(id: string): string {

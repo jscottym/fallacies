@@ -198,11 +198,13 @@ import { computed, ref } from 'vue'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { ProsecutionRound } from '~/types'
+import { useWebSocket } from '~/composables/useWebSocket'
+import type { ProsecutionRound, TopicSelectPayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const contentStore = useContentStore()
+const ws = useWebSocket()
 
 const argumentText = ref('')
 const selectedFallacies = ref<string[]>([])
@@ -301,7 +303,14 @@ function getTopicButtonClass(topicId: string): string {
 
 function selectTopic(topicId: string) {
   if (!myTeamId.value || isTopicClaimed(topicId)) return
-  gameStore.selectTopic(myTeamId.value, topicId)
+
+  const payload: TopicSelectPayload = {
+    gameId: gameStore.currentGameId || 'prosecution',
+    teamId: myTeamId.value,
+    topicId
+  }
+
+  ws.send('game:topic_select', payload)
 }
 
 function toggleFallacy(id: string) {

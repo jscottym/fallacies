@@ -82,7 +82,7 @@
               <div class="flex-1 h-6 bg-neutral-800 rounded overflow-hidden">
                 <div 
                   class="h-full transition-all duration-500"
-                  :class="isCorrect(fallacyId as string) ? 'bg-green-500' : 'bg-neutral-600'"
+                  :class="isCorrect(fallacyId as string) ? 'bg-success-500' : 'bg-error-600'"
                   :style="{ width: `${(count / Math.max(votesReceived, 1)) * 100}%` }"
                 ></div>
               </div>
