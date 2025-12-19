@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useLocalStorage } from '@vueuse/core'
+import { useLocalStorage, watchDebounced } from '@vueuse/core'
 import type { SessionData, Participant, Team, GameStatus, GameId } from '~/types'
 import { generateSessionCode, generateId, TEAM_COLORS } from '~/types'
 
@@ -16,21 +16,52 @@ interface SessionState {
   isConnected: boolean
 }
 
+const STORAGE_KEY = 'fallacies:current-session'
+
 export const useSessionStore = defineStore('session', () => {
-  const stored = useLocalStorage<SessionData | null>('fallacies:current-session', null)
+  const stored = useLocalStorage<SessionData | null>(STORAGE_KEY, null, {
+    deep: true,
+    listenToStorageChanges: true
+  })
   
   const state = reactive<SessionState>({
-    code: '',
-    name: '',
-    createdAt: '',
-    lastAccessedAt: '',
-    participants: [],
-    teams: [],
-    gamesState: {},
+    code: stored.value?.code ?? '',
+    name: stored.value?.name ?? '',
+    createdAt: stored.value?.createdAt ?? '',
+    lastAccessedAt: stored.value?.lastAccessedAt ?? '',
+    participants: stored.value?.participants ?? [],
+    teams: stored.value?.teams ?? [],
+    gamesState: stored.value?.gamesState ?? {},
     isHost: false,
     currentParticipantId: null,
     isConnected: false
   })
+
+  watchDebounced(
+    () => ({
+      code: state.code,
+      name: state.name,
+      createdAt: state.createdAt,
+      lastAccessedAt: state.lastAccessedAt,
+      participants: [...state.participants],
+      teams: [...state.teams],
+      gamesState: { ...state.gamesState }
+    }),
+    (newState) => {
+      if (newState.code) {
+        stored.value = {
+          code: newState.code,
+          name: newState.name,
+          createdAt: newState.createdAt,
+          lastAccessedAt: new Date().toISOString(),
+          participants: newState.participants,
+          teams: newState.teams,
+          gamesState: newState.gamesState
+        }
+      }
+    },
+    { debounce: 100, deep: true }
+  )
 
   const currentParticipant = computed((): Participant | null => {
     if (!state.currentParticipantId) return null
@@ -65,26 +96,15 @@ export const useSessionStore = defineStore('session', () => {
       .map(([id]) => id)
   )
 
-  function syncToStorage() {
-    stored.value = {
-      code: state.code,
-      name: state.name,
-      createdAt: state.createdAt,
-      lastAccessedAt: new Date().toISOString(),
-      participants: state.participants,
-      teams: state.teams,
-      gamesState: state.gamesState
-    }
-  }
-
-  function loadFromStorage(): boolean {
+  function hydrateFromStorage(): boolean {
     if (stored.value) {
-      Object.assign(state, {
-        ...stored.value,
-        isHost: false,
-        currentParticipantId: null,
-        isConnected: false
-      })
+      state.code = stored.value.code
+      state.name = stored.value.name
+      state.createdAt = stored.value.createdAt
+      state.lastAccessedAt = stored.value.lastAccessedAt
+      state.participants = [...stored.value.participants]
+      state.teams = [...stored.value.teams]
+      state.gamesState = { ...stored.value.gamesState }
       return true
     }
     return false
@@ -94,50 +114,29 @@ export const useSessionStore = defineStore('session', () => {
     const code = generateSessionCode()
     const now = new Date().toISOString()
     
-    Object.assign(state, {
-      code,
-      name: name || `Session ${code}`,
-      createdAt: now,
-      lastAccessedAt: now,
-      participants: [],
-      teams: [],
-      gamesState: {},
-      isHost: true,
-      currentParticipantId: null,
-      isConnected: true
-    })
+    state.code = code
+    state.name = name || `Session ${code}`
+    state.createdAt = now
+    state.lastAccessedAt = now
+    state.participants = []
+    state.teams = []
+    state.gamesState = {}
+    state.isHost = true
+    state.currentParticipantId = null
+    state.isConnected = true
 
-    syncToStorage()
     return code
   }
 
   function loadSession(code: string, asHost: boolean = false): boolean {
-    const allSessions = useLocalStorage<Record<string, SessionData>>('fallacies:sessions', {})
-    const session = allSessions.value[code] || stored.value
-    
-    if (!session || session.code !== code) {
-      if (stored.value?.code === code) {
-        Object.assign(state, {
-          ...stored.value,
-          lastAccessedAt: new Date().toISOString(),
-          isHost: asHost,
-          isConnected: true
-        })
-        syncToStorage()
-        return true
-      }
-      return false
+    if (stored.value?.code === code) {
+      hydrateFromStorage()
+      state.isHost = asHost
+      state.isConnected = true
+      state.lastAccessedAt = new Date().toISOString()
+      return true
     }
-
-    Object.assign(state, {
-      ...session,
-      lastAccessedAt: new Date().toISOString(),
-      isHost: asHost,
-      isConnected: true
-    })
-
-    syncToStorage()
-    return true
+    return false
   }
 
   function addParticipant(name: string): Participant {
@@ -150,26 +149,23 @@ export const useSessionStore = defineStore('session', () => {
       isConnected: true
     }
     
-    state.participants.push(participant)
-    syncToStorage()
+    state.participants = [...state.participants, participant]
     
     return participant
   }
 
   function removeParticipant(participantId: string) {
     state.participants = state.participants.filter(p => p.id !== participantId)
-    state.teams.forEach(team => {
-      team.memberIds = team.memberIds.filter(id => id !== participantId)
-    })
-    syncToStorage()
+    state.teams = state.teams.map(team => ({
+      ...team,
+      memberIds: team.memberIds.filter(id => id !== participantId)
+    }))
   }
 
   function updateParticipant(participantId: string, updates: Partial<Participant>) {
-    const index = state.participants.findIndex(p => p.id === participantId)
-    if (index !== -1) {
-      state.participants[index] = { ...state.participants[index], ...updates }
-      syncToStorage()
-    }
+    state.participants = state.participants.map(p => 
+      p.id === participantId ? { ...p, ...updates } : p
+    )
   }
 
   function setParticipantConnected(participantId: string, connected: boolean) {
@@ -187,41 +183,32 @@ export const useSessionStore = defineStore('session', () => {
       color: availableColor
     }
     
-    state.teams.push(team)
-    syncToStorage()
+    state.teams = [...state.teams, team]
     
     return team
   }
 
   function assignToTeam(participantId: string, teamId: string) {
-    state.teams.forEach(team => {
-      team.memberIds = team.memberIds.filter(id => id !== participantId)
-    })
+    state.teams = state.teams.map(team => ({
+      ...team,
+      memberIds: team.id === teamId 
+        ? [...team.memberIds.filter(id => id !== participantId), participantId]
+        : team.memberIds.filter(id => id !== participantId)
+    }))
     
-    const team = state.teams.find(t => t.id === teamId)
-    if (team) {
-      team.memberIds.push(participantId)
-    }
-    
-    const participant = state.participants.find(p => p.id === participantId)
-    if (participant) {
-      participant.teamId = teamId
-    }
-    
-    syncToStorage()
+    state.participants = state.participants.map(p =>
+      p.id === participantId ? { ...p, teamId } : p
+    )
   }
 
   function setTeamDevice(participantId: string) {
     const participant = state.participants.find(p => p.id === participantId)
     if (!participant?.teamId) return
     
-    state.participants
-      .filter(p => p.teamId === participant.teamId)
-      .forEach(p => {
-        p.isTeamDevice = p.id === participantId
-      })
-    
-    syncToStorage()
+    state.participants = state.participants.map(p => ({
+      ...p,
+      isTeamDevice: p.teamId === participant.teamId ? p.id === participantId : p.isTeamDevice
+    }))
   }
 
   function randomizeTeams(teamCount: number = 2, teamSize: number = 3) {
@@ -247,35 +234,31 @@ export const useSessionStore = defineStore('session', () => {
 
   function updateGameStatus(gameId: GameId, status: GameStatus['status']) {
     const now = new Date().toISOString()
-    if (!state.gamesState[gameId]) {
-      state.gamesState[gameId] = { status }
-    }
+    const existing = state.gamesState[gameId] || { status: 'not_started' }
     
-    state.gamesState[gameId].status = status
-    
-    if (status === 'in_progress' && !state.gamesState[gameId].startedAt) {
-      state.gamesState[gameId].startedAt = now
+    state.gamesState = {
+      ...state.gamesState,
+      [gameId]: {
+        ...existing,
+        status,
+        startedAt: status === 'in_progress' && !existing.startedAt ? now : existing.startedAt,
+        completedAt: status === 'completed' ? now : existing.completedAt
+      }
     }
-    if (status === 'completed') {
-      state.gamesState[gameId].completedAt = now
-    }
-    
-    syncToStorage()
   }
 
   function reset() {
-    Object.assign(state, {
-      code: '',
-      name: '',
-      createdAt: '',
-      lastAccessedAt: '',
-      participants: [],
-      teams: [],
-      gamesState: {},
-      isHost: false,
-      currentParticipantId: null,
-      isConnected: false
-    })
+    state.code = ''
+    state.name = ''
+    state.createdAt = ''
+    state.lastAccessedAt = ''
+    state.participants = []
+    state.teams = []
+    state.gamesState = {}
+    state.isHost = false
+    state.currentParticipantId = null
+    state.isConnected = false
+    stored.value = null
   }
 
   return {
@@ -291,7 +274,7 @@ export const useSessionStore = defineStore('session', () => {
     getGameStatus,
     createSession,
     loadSession,
-    loadFromStorage,
+    hydrateFromStorage,
     addParticipant,
     removeParticipant,
     updateParticipant,
@@ -301,7 +284,6 @@ export const useSessionStore = defineStore('session', () => {
     setTeamDevice,
     randomizeTeams,
     updateGameStatus,
-    syncToStorage,
     reset
   }
 })

@@ -1,7 +1,7 @@
-import { useLocalStorage } from '@vueuse/core'
 import type { SessionData, GameState, GameId } from '~/types'
 
 const STORAGE_PREFIX = 'fallacies'
+const CURRENT_SESSION_KEY = 'fallacies:current-session'
 
 function deepMerge<T extends Record<string, unknown>>(target: T, source: Partial<T>): T {
   const result = { ...target }
@@ -53,6 +53,12 @@ export function useStorage() {
     if (typeof window === 'undefined') return null
     const key = getSessionKey(code)
     const data = localStorage.getItem(key)
+    return data ? JSON.parse(data) : null
+  }
+
+  function getCurrentSession(): SessionData | null {
+    if (typeof window === 'undefined') return null
+    const data = localStorage.getItem(CURRENT_SESSION_KEY)
     return data ? JSON.parse(data) : null
   }
 
@@ -110,16 +116,33 @@ export function useStorage() {
   }
 
   function getRecentSessions(limit = 5): SessionData[] {
+    if (typeof window === 'undefined') return []
+    
+    const sessions: SessionData[] = []
+    
+    const currentSession = getCurrentSession()
+    if (currentSession) {
+      sessions.push(currentSession)
+    }
+    
     const codes = getAllSessionCodes()
-    const sessions = codes
-      .map(code => getSession(code))
-      .filter((s): s is SessionData => s !== null)
+    for (const code of codes) {
+      if (!sessions.find(s => s.code === code)) {
+        const session = getSession(code)
+        if (session) {
+          sessions.push(session)
+        }
+      }
+    }
+    
+    return sessions
       .sort((a, b) => new Date(b.lastAccessedAt).getTime() - new Date(a.lastAccessedAt).getTime())
-    return sessions.slice(0, limit)
+      .slice(0, limit)
   }
 
   return {
     getSession,
+    getCurrentSession,
     saveSession,
     updateSession,
     deleteSession,
@@ -130,4 +153,3 @@ export function useStorage() {
     getRecentSessions
   }
 }
-
