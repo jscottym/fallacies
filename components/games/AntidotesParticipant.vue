@@ -3,9 +3,9 @@
     <div class="text-center space-y-6">
       <div class="text-5xl">💊</div>
       <h2 class="text-xl font-bold text-white">The Antidotes</h2>
-      <p class="text-gray-400">Follow along on the main screen</p>
+      <p class="text-neutral-400">Follow along on the main screen</p>
       <div class="game-card">
-        <div class="text-sm text-gray-500">Currently viewing</div>
+        <div class="text-sm text-neutral-500">Currently viewing</div>
         <div class="text-lg text-white">{{ gameStore.hostContext }}</div>
       </div>
       <UButton variant="soft" @click="$emit('openReference')">

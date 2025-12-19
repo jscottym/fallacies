@@ -3,10 +3,10 @@
     <div v-if="phase === 'intro'" class="text-center space-y-6">
       <div class="text-6xl mb-6">🔍</div>
       <h1 class="text-4xl font-bold text-white">The Crux Hunt</h1>
-      <p class="text-xl text-gray-400">Find the ONE thing you actually disagree about</p>
+      <p class="text-xl text-neutral-400">Find the ONE thing you actually disagree about</p>
       <div class="game-card max-w-2xl mx-auto text-left space-y-4">
         <h3 class="font-semibold text-white">What's a Crux?</h3>
-        <p class="text-gray-300">
+        <p class="text-neutral-300">
           The core question that, if answered, would resolve the whole disagreement.
           Often we argue past each other—this exercise helps us find what we're really debating.
         </p>
@@ -22,7 +22,7 @@
           class="game-card"
         >
           <div class="flex items-center justify-between mb-3">
-            <span class="text-gray-400">Pair {{ index + 1 }}</span>
+            <span class="text-neutral-400">Pair {{ index + 1 }}</span>
             <UBadge variant="soft">{{ pair.topic }}</UBadge>
           </div>
           <div class="flex items-center gap-4">
@@ -30,7 +30,7 @@
               <div class="text-lg font-medium text-white">{{ pair.person1 }}</div>
               <div class="text-sm text-indigo-400">Position A</div>
             </div>
-            <div class="text-2xl text-gray-600">↔</div>
+            <div class="text-2xl text-neutral-600">↔</div>
             <div class="text-center flex-1">
               <div class="text-lg font-medium text-white">{{ pair.person2 }}</div>
               <div class="text-sm text-purple-400">Position B</div>
@@ -58,7 +58,7 @@
       </div>
 
       <div class="game-card max-w-2xl mx-auto">
-        <div class="text-sm text-gray-400 mb-2">Current Prompt ({{ currentPromptIndex + 1 }}/4)</div>
+        <div class="text-sm text-neutral-400 mb-2">Current Prompt ({{ currentPromptIndex + 1 }}/4)</div>
         <p class="text-xl text-white">{{ currentPrompt }}</p>
       </div>
 
@@ -68,8 +68,8 @@
           :key="index"
           class="game-card"
         >
-          <div class="text-gray-400 mb-2">Pair {{ index + 1 }}: {{ pair.topic }}</div>
-          <div class="text-sm text-gray-500">
+          <div class="text-neutral-400 mb-2">Pair {{ index + 1 }}: {{ pair.topic }}</div>
+          <div class="text-sm text-neutral-500">
             Status: {{ getPairStatus(index) }}
           </div>
         </div>
@@ -111,7 +111,7 @@
       <div class="text-center space-y-4">
         <div class="game-card max-w-xl mx-auto">
           <h3 class="font-semibold text-white mb-2">Discussion Questions</h3>
-          <ul class="text-gray-300 text-sm space-y-1 text-left">
+          <ul class="text-neutral-300 text-sm space-y-1 text-left">
             <li>• Were you closer than you thought?</li>
             <li>• Is your crux factual (can look it up) or value-based?</li>
             <li>• What would resolve your crux?</li>

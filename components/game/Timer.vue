@@ -48,7 +48,7 @@ const statusClass = computed(() => ({
   'text-white': status.value === 'normal',
   'text-yellow-500': status.value === 'warning',
   'text-red-500 animate-pulse': status.value === 'critical',
-  'text-gray-500': status.value === 'expired'
+  'text-neutral-500': status.value === 'expired'
 }))
 </script>
 

@@ -3,10 +3,10 @@
     <div v-if="roundPhase === 'intro'" class="text-center space-y-6">
       <div class="text-6xl mb-6">⚖️</div>
       <h1 class="text-4xl font-bold text-white">Fallacy Prosecution</h1>
-      <p class="text-xl text-gray-400">Build sneaky arguments. Catch the tricks.</p>
+      <p class="text-xl text-neutral-400">Build sneaky arguments. Catch the tricks.</p>
       <div class="game-card max-w-2xl mx-auto text-left space-y-4">
         <h3 class="font-semibold text-white">How it works:</h3>
-        <ol class="list-decimal list-inside text-gray-300 space-y-2">
+        <ol class="list-decimal list-inside text-neutral-300 space-y-2">
           <li>Each team picks a topic (first-come, first-served!)</li>
           <li>Build an argument <strong>packed with fallacies</strong></li>
           <li>Other teams try to identify your tricks</li>
@@ -26,7 +26,7 @@
           @stop="stopTimer"
         />
       </div>
-      <p class="text-gray-400">First to pick claims it!</p>
+      <p class="text-neutral-400">First to pick claims it!</p>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
@@ -41,7 +41,7 @@
               Claimed by {{ getClaimingTeamName(topic.id) }}
             </UBadge>
           </div>
-          <div v-else class="mt-2 text-sm text-gray-500">Available</div>
+          <div v-else class="mt-2 text-sm text-neutral-500">Available</div>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
           @stop="stopTimer"
         />
       </div>
-      <p class="text-gray-400">All teams building simultaneously. Pack in those fallacies!</p>
+      <p class="text-neutral-400">All teams building simultaneously. Pack in those fallacies!</p>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
@@ -77,17 +77,17 @@
           :style="{ borderColor: team.color + '50' }"
         >
           <div class="font-semibold mb-2" :style="{ color: team.color }">{{ team.name }}</div>
-          <div class="text-sm text-gray-400">{{ getTeamTopic(team.id) }}</div>
+          <div class="text-sm text-neutral-400">{{ getTeamTopic(team.id) }}</div>
           <div class="mt-3 flex items-center gap-2">
             <div 
-              class="h-2 flex-1 bg-gray-800 rounded-full overflow-hidden"
+              class="h-2 flex-1 bg-neutral-800 rounded-full overflow-hidden"
             >
               <div 
                 class="h-full transition-all duration-300"
                 :style="{ width: hasSubmitted(team.id) ? '100%' : '50%', backgroundColor: team.color }"
               ></div>
             </div>
-            <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-gray-500'">
+            <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-neutral-500'">
               {{ hasSubmitted(team.id) ? '✓ Submitted' : 'Building...' }}
             </span>
           </div>
@@ -109,7 +109,7 @@
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-2xl font-bold text-white">Review {{ currentReviewTeam?.name }}'s Argument</h2>
-          <p class="text-gray-400">Topic: {{ getTeamTopic(currentReviewTeam?.id || '') }}</p>
+          <p class="text-neutral-400">Topic: {{ getTeamTopic(currentReviewTeam?.id || '') }}</p>
         </div>
         <Timer 
           v-if="timerActive"
@@ -127,7 +127,7 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <span class="text-gray-400">Teams reviewing:</span>
+        <span class="text-neutral-400">Teams reviewing:</span>
         <span class="text-white">{{ reviewsSubmitted }} / {{ sessionStore.teams.length - 1 }}</span>
       </div>
 
@@ -162,11 +162,11 @@
           <div 
             v-for="team in reviewingTeams" 
             :key="team.id"
-            class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg"
+            class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg"
           >
             <span :style="{ color: team.color }">{{ team.name }}</span>
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-400">
+              <span class="text-sm text-neutral-400">
                 {{ getTeamCatches(team.id) }} / {{ currentArgumentFallacies.length }} caught
               </span>
               <span class="font-bold text-green-400">
@@ -198,7 +198,7 @@
           <div class="text-4xl mb-2">{{ index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉' }}</div>
           <div class="font-bold text-xl" :style="{ color: team.color }">{{ team.name }}</div>
           <div class="text-3xl font-bold text-white mt-2">{{ scores[team.id] || 0 }}</div>
-          <div class="text-sm text-gray-400">points</div>
+          <div class="text-sm text-neutral-400">points</div>
         </div>
       </div>
 

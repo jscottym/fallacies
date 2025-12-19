@@ -3,10 +3,10 @@
     <div v-if="phase === 'intro'" class="text-center space-y-6">
       <div class="text-6xl mb-6">🛡️</div>
       <h1 class="text-4xl font-bold text-white">Steelman Showdown</h1>
-      <p class="text-xl text-gray-400">Now argue the OTHER side—with sound logic!</p>
+      <p class="text-xl text-neutral-400">Now argue the OTHER side—with sound logic!</p>
       <div class="game-card max-w-2xl mx-auto text-left space-y-4">
         <h3 class="font-semibold text-white">The Challenge:</h3>
-        <ol class="list-decimal list-inside text-gray-300 space-y-2">
+        <ol class="list-decimal list-inside text-neutral-300 space-y-2">
           <li>You'll argue the <strong>opposite</strong> position from before</li>
           <li>Use antidotes and sound reasoning—<strong>no fallacies!</strong></li>
           <li>Others will judge: Was it more persuasive than the fallacious version?</li>
@@ -25,7 +25,7 @@
           @stop="stopTimer"
         />
       </div>
-      <p class="text-gray-400">Use antidotes. No fallacies. Make it compelling!</p>
+      <p class="text-neutral-400">Use antidotes. No fallacies. Make it compelling!</p>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
@@ -35,10 +35,10 @@
           :style="{ borderColor: team.color + '50' }"
         >
           <div class="font-semibold mb-2" :style="{ color: team.color }">{{ team.name }}</div>
-          <div class="text-sm text-gray-400">{{ getTeamTopic(team.id) }}</div>
+          <div class="text-sm text-neutral-400">{{ getTeamTopic(team.id) }}</div>
           <div class="text-xs text-green-400 mt-1">Arguing: {{ getOppositePosition(team.id) }}</div>
           <div class="mt-3 flex items-center gap-2">
-            <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-gray-500'">
+            <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-neutral-500'">
               {{ hasSubmitted(team.id) ? '✓ Submitted' : 'Building...' }}
             </span>
           </div>
@@ -62,24 +62,24 @@
       <div class="grid md:grid-cols-2 gap-6">
         <div class="game-card border-red-500/30">
           <h3 class="text-lg font-semibold text-red-400 mb-3">❌ Fallacious Version</h3>
-          <p class="text-gray-300 italic text-sm">"{{ getFallaciousArgument(currentComparisonTeam?.id || '') }}"</p>
+          <p class="text-neutral-300 italic text-sm">"{{ getFallaciousArgument(currentComparisonTeam?.id || '') }}"</p>
         </div>
         <div class="game-card border-green-500/30">
           <h3 class="text-lg font-semibold text-green-400 mb-3">✓ Steelmanned Version</h3>
-          <p class="text-gray-300 italic text-sm">"{{ getSteelmanArgument(currentComparisonTeam?.id || '') }}"</p>
+          <p class="text-neutral-300 italic text-sm">"{{ getSteelmanArgument(currentComparisonTeam?.id || '') }}"</p>
         </div>
       </div>
 
       <div class="text-center space-y-4">
-        <p class="text-gray-400">Which was more persuasive?</p>
+        <p class="text-neutral-400">Which was more persuasive?</p>
         <div class="flex justify-center gap-4">
           <div class="text-center">
             <div class="text-3xl font-bold text-red-400">{{ fallaciousVotes }}</div>
-            <div class="text-sm text-gray-500">Fallacious</div>
+            <div class="text-sm text-neutral-500">Fallacious</div>
           </div>
           <div class="text-center">
             <div class="text-3xl font-bold text-green-400">{{ steelmanVotes }}</div>
-            <div class="text-sm text-gray-500">Steelmanned</div>
+            <div class="text-sm text-neutral-500">Steelmanned</div>
           </div>
         </div>
         <UButton size="lg" @click="nextComparison">
@@ -94,7 +94,7 @@
       
       <div class="game-card max-w-xl mx-auto">
         <h3 class="font-semibold text-white mb-4">Key Insight</h3>
-        <p class="text-gray-300">
+        <p class="text-neutral-300">
           Sound arguments often feel more persuasive because they're credible, show understanding, 
           and invite genuine engagement rather than defensiveness.
         </p>

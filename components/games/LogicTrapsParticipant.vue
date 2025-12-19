@@ -4,11 +4,11 @@
       <div class="text-center space-y-6">
         <div class="text-6xl animate-bounce">🎯</div>
         <h2 class="text-2xl font-bold text-white">You're Up!</h2>
-        <p class="text-gray-400 max-w-xs mx-auto">
+        <p class="text-neutral-400 max-w-xs mx-auto">
           The group is waiting for your thoughts. Take your time!
         </p>
         <div class="game-card">
-          <p class="text-lg text-gray-300">{{ discussionPrompt }}</p>
+          <p class="text-lg text-neutral-300">{{ discussionPrompt }}</p>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
       <div class="text-center space-y-6">
         <div class="text-5xl">{{ currentFallacyIcon }}</div>
         <h2 class="text-xl font-bold text-white">{{ currentFallacyName }}</h2>
-        <p class="text-gray-400">Follow along on the main screen</p>
+        <p class="text-neutral-400">Follow along on the main screen</p>
         <UButton variant="soft" @click="$emit('openReference')">
           <UIcon name="i-heroicons-book-open" class="mr-2" />
           View All Fallacies

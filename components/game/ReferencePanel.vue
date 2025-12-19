@@ -1,8 +1,8 @@
 <template>
   <USlideover v-model:open="isOpen" side="right">
     <template #content>
-      <div class="h-full flex flex-col bg-gray-900">
-        <div class="p-4 border-b border-gray-800 flex items-center justify-between">
+      <div class="h-full flex flex-col bg-neutral-900">
+        <div class="p-4 border-b border-neutral-800 flex items-center justify-between">
           <h2 class="text-lg font-semibold text-white">Reference</h2>
           <UButton size="xs" variant="ghost" @click="isOpen = false">
             <UIcon name="i-heroicons-x-mark" />
@@ -15,7 +15,7 @@
               <div
                 v-for="fallacy in contentStore.fallacies"
                 :key="fallacy.id"
-                class="p-3 bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-800 transition-colors"
+                class="p-3 bg-neutral-800/50 rounded-lg cursor-pointer hover:bg-neutral-800 transition-colors"
                 @click="toggleExpanded(fallacy.id)"
               >
                 <div class="flex items-center justify-between">
@@ -25,14 +25,14 @@
                   </div>
                   <UIcon 
                     :name="expanded === fallacy.id ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
-                    class="text-gray-500"
+                    class="text-neutral-500"
                   />
                 </div>
-                <div v-if="expanded === fallacy.id" class="mt-3 pt-3 border-t border-gray-700">
-                  <p class="text-gray-300 text-sm">{{ fallacy.definition }}</p>
+                <div v-if="expanded === fallacy.id" class="mt-3 pt-3 border-t border-neutral-700">
+                  <p class="text-neutral-300 text-sm">{{ fallacy.definition }}</p>
                   <div class="mt-2">
-                    <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Why it works</div>
-                    <p class="text-gray-400 text-sm">{{ fallacy.whyItWorks }}</p>
+                    <div class="text-xs text-neutral-500 uppercase tracking-wide mb-1">Why it works</div>
+                    <p class="text-neutral-400 text-sm">{{ fallacy.whyItWorks }}</p>
                   </div>
                 </div>
               </div>
@@ -44,7 +44,7 @@
               <div
                 v-for="antidote in contentStore.antidotes"
                 :key="antidote.id"
-                class="p-3 bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-800 transition-colors"
+                class="p-3 bg-neutral-800/50 rounded-lg cursor-pointer hover:bg-neutral-800 transition-colors"
                 @click="toggleExpanded(antidote.id)"
               >
                 <div class="flex items-center justify-between">
@@ -54,14 +54,14 @@
                   </div>
                   <UIcon 
                     :name="expanded === antidote.id ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
-                    class="text-gray-500"
+                    class="text-neutral-500"
                   />
                 </div>
-                <div v-if="expanded === antidote.id" class="mt-3 pt-3 border-t border-gray-700">
-                  <p class="text-gray-300 text-sm">{{ antidote.definition }}</p>
+                <div v-if="expanded === antidote.id" class="mt-3 pt-3 border-t border-neutral-700">
+                  <p class="text-neutral-300 text-sm">{{ antidote.definition }}</p>
                   <div class="mt-2">
-                    <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">How to apply</div>
-                    <ul class="text-gray-400 text-sm space-y-1">
+                    <div class="text-xs text-neutral-500 uppercase tracking-wide mb-1">How to apply</div>
+                    <ul class="text-neutral-400 text-sm space-y-1">
                       <li v-for="step in antidote.howToApply" :key="step" class="flex items-start gap-2">
                         <span class="text-green-500">•</span>
                         <span>{{ step }}</span>

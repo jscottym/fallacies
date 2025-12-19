@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950 flex items-center justify-center p-6">
+  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950 flex items-center justify-center p-6">
     <div class="max-w-2xl w-full text-center space-y-12">
       <div class="space-y-4">
         <div class="text-6xl mb-6">🧠</div>
         <h1 class="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
           Logic & Truth
         </h1>
-        <p class="text-xl text-gray-400">
+        <p class="text-xl text-neutral-400">
           An interactive journey through logical fallacies and sound reasoning
         </p>
       </div>
@@ -15,18 +15,18 @@
         <div class="game-card cursor-pointer group" @click="navigateTo('/host')">
           <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🎬</div>
           <h2 class="text-2xl font-semibold text-white mb-2">Host a Session</h2>
-          <p class="text-gray-400">Create a new session and run the presentation for your group</p>
+          <p class="text-neutral-400">Create a new session and run the presentation for your group</p>
         </div>
 
         <div class="game-card cursor-pointer group" @click="showJoinModal = true">
           <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">📱</div>
           <h2 class="text-2xl font-semibold text-white mb-2">Join a Session</h2>
-          <p class="text-gray-400">Enter a session code to participate from your device</p>
+          <p class="text-neutral-400">Enter a session code to participate from your device</p>
         </div>
       </div>
 
-      <div v-if="recentSessions.length > 0" class="pt-8 border-t border-gray-800">
-        <h3 class="text-lg font-medium text-gray-400 mb-4">Recent Sessions</h3>
+      <div v-if="recentSessions.length > 0" class="pt-8 border-t border-neutral-800">
+        <h3 class="text-lg font-medium text-neutral-400 mb-4">Recent Sessions</h3>
         <div class="flex flex-wrap justify-center gap-3">
           <UButton
             v-for="session in recentSessions"
@@ -36,7 +36,7 @@
             @click="resumeSession(session.code)"
           >
             {{ session.name || session.code }}
-            <span class="text-gray-500 ml-2">{{ formatDate(session.lastAccessedAt) }}</span>
+            <span class="text-neutral-500 ml-2">{{ formatDate(session.lastAccessedAt) }}</span>
           </UButton>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <div class="slide-content">
     <div v-if="currentSlide.type === 'title'" class="text-center space-y-6">
       <h1 class="text-5xl font-bold text-white">{{ currentSlide.title }}</h1>
-      <p v-if="currentSlide.subtitle" class="text-2xl text-gray-400">{{ currentSlide.subtitle }}</p>
+      <p v-if="currentSlide.subtitle" class="text-2xl text-neutral-400">{{ currentSlide.subtitle }}</p>
     </div>
 
     <div v-else-if="currentSlide.type === 'intro'" class="space-y-8">
@@ -10,16 +10,16 @@
       <div class="grid md:grid-cols-2 gap-8">
         <div class="game-card">
           <h3 class="text-xl font-semibold text-indigo-400 mb-4">Valid Argument</h3>
-          <p class="text-gray-300">If the premises are true, the conclusion <strong>must</strong> follow. The structure is correct.</p>
+          <p class="text-neutral-300">If the premises are true, the conclusion <strong>must</strong> follow. The structure is correct.</p>
         </div>
         <div class="game-card">
           <h3 class="text-xl font-semibold text-green-400 mb-4">Sound Argument</h3>
-          <p class="text-gray-300">Valid <strong>AND</strong> the premises are actually true. This is what we're aiming for.</p>
+          <p class="text-neutral-300">Valid <strong>AND</strong> the premises are actually true. This is what we're aiming for.</p>
         </div>
       </div>
       <div class="game-card border-red-500/30">
         <h3 class="text-xl font-semibold text-red-400 mb-4">Fallacy</h3>
-        <p class="text-gray-300">A flaw in reasoning that makes an argument <strong>invalid</strong>—the conclusion doesn't actually follow, even if it sounds persuasive.</p>
+        <p class="text-neutral-300">A flaw in reasoning that makes an argument <strong>invalid</strong>—the conclusion doesn't actually follow, even if it sounds persuasive.</p>
       </div>
     </div>
 
@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="game-card">
-        <p class="text-xl text-gray-300">{{ currentFallacy?.definition }}</p>
+        <p class="text-xl text-neutral-300">{{ currentFallacy?.definition }}</p>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
         <h2 class="text-3xl font-bold text-white">Why It Works</h2>
       </div>
       <div class="game-card">
-        <p class="text-xl text-gray-300 leading-relaxed">{{ currentFallacy?.whyItWorks }}</p>
+        <p class="text-xl text-neutral-300 leading-relaxed">{{ currentFallacy?.whyItWorks }}</p>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
       </div>
       <div v-if="showAnalysis" class="game-card border-green-500/30 animate-fade-in">
         <h3 class="text-lg font-semibold text-green-400 mb-3">Analysis</h3>
-        <p class="text-gray-300">{{ currentExample?.analysis }}</p>
+        <p class="text-neutral-300">{{ currentExample?.analysis }}</p>
       </div>
       <div v-else class="text-center">
         <UButton size="lg" @click="showAnalysis = true">
@@ -71,12 +71,12 @@
       <h2 class="text-3xl font-bold text-white">Discussion</h2>
       
       <div v-if="selectedParticipant" class="game-card inline-block">
-        <div class="text-sm text-gray-500 mb-2">Randomly selected</div>
+        <div class="text-sm text-neutral-500 mb-2">Randomly selected</div>
         <div class="text-3xl font-bold text-indigo-400">{{ selectedParticipant.name }}</div>
       </div>
 
       <div class="game-card max-w-2xl mx-auto">
-        <p class="text-xl text-gray-300">{{ currentSlide.prompt }}</p>
+        <p class="text-xl text-neutral-300">{{ currentSlide.prompt }}</p>
       </div>
 
       <div class="flex justify-center gap-4">

@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950 flex items-center justify-center p-6">
+  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950 flex items-center justify-center p-6">
     <div class="max-w-xl w-full">
       <div class="text-center mb-8">
-        <NuxtLink to="/" class="text-gray-400 hover:text-white transition-colors inline-flex items-center gap-2 mb-6">
+        <NuxtLink to="/" class="text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-2 mb-6">
           <UIcon name="i-heroicons-arrow-left" />
           Back to Home
         </NuxtLink>
         <h1 class="text-4xl font-bold text-white">Create Session</h1>
-        <p class="text-gray-400 mt-2">Set up a new session for your group</p>
+        <p class="text-neutral-400 mt-2">Set up a new session for your group</p>
       </div>
 
       <div class="game-card space-y-6">
@@ -31,7 +31,7 @@
       </div>
 
       <div v-if="recentSessions.length > 0" class="mt-8">
-        <h3 class="text-lg font-medium text-gray-400 mb-4 text-center">Or Resume a Previous Session</h3>
+        <h3 class="text-lg font-medium text-neutral-400 mb-4 text-center">Or Resume a Previous Session</h3>
         <div class="space-y-3">
           <div
             v-for="session in recentSessions"
@@ -41,7 +41,7 @@
           >
             <div>
               <div class="font-medium text-white">{{ session.name || session.code }}</div>
-              <div class="text-sm text-gray-500">
+              <div class="text-sm text-neutral-500">
                 {{ session.participants.length }} participants • 
                 {{ formatDate(session.lastAccessedAt) }}
               </div>

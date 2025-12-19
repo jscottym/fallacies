@@ -3,35 +3,35 @@
     <div v-if="phase === 'intro'" class="text-center space-y-6">
       <div class="text-6xl mb-6">🌟</div>
       <h1 class="text-4xl font-bold text-white">Closing Reflection</h1>
-      <p class="text-xl text-gray-400">What are we taking away?</p>
+      <p class="text-xl text-neutral-400">What are we taking away?</p>
     </div>
 
     <div v-else-if="phase === 'commitments'" class="space-y-8 text-center">
       <h2 class="text-3xl font-bold text-white">Personal Commitments</h2>
       
       <div v-if="currentParticipant" class="game-card inline-block">
-        <div class="text-sm text-gray-500 mb-2">Your turn</div>
+        <div class="text-sm text-neutral-500 mb-2">Your turn</div>
         <div class="text-3xl font-bold text-indigo-400">{{ currentParticipant.name }}</div>
       </div>
 
       <div class="game-card max-w-2xl mx-auto">
-        <p class="text-xl text-gray-300">
+        <p class="text-xl text-neutral-300">
           "What's ONE thing you'll do differently in arguments or discussions after today?"
         </p>
       </div>
 
       <div v-if="sharedCommitments.length > 0" class="max-w-2xl mx-auto text-left">
-        <div class="text-sm text-gray-500 mb-3">Already shared:</div>
+        <div class="text-sm text-neutral-500 mb-3">Already shared:</div>
         <div class="space-y-2">
           <div 
             v-for="c in sharedCommitments" 
             :key="c.name"
-            class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg"
+            class="flex items-start gap-3 p-3 bg-neutral-800/50 rounded-lg"
           >
             <UIcon name="i-heroicons-check-circle" class="text-green-500 mt-0.5" />
             <div>
               <div class="font-medium text-white">{{ c.name }}</div>
-              <div class="text-sm text-gray-400">{{ c.commitment }}</div>
+              <div class="text-sm text-neutral-400">{{ c.commitment }}</div>
             </div>
           </div>
         </div>
@@ -59,21 +59,21 @@
       <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
         <div class="game-card">
           <div class="text-4xl font-bold text-indigo-400">7</div>
-          <div class="text-gray-400">Fallacies Learned</div>
+          <div class="text-neutral-400">Fallacies Learned</div>
         </div>
         <div class="game-card">
           <div class="text-4xl font-bold text-green-400">5</div>
-          <div class="text-gray-400">Antidotes Mastered</div>
+          <div class="text-neutral-400">Antidotes Mastered</div>
         </div>
         <div class="game-card">
           <div class="text-4xl font-bold text-purple-400">{{ sessionStore.participants.length }}</div>
-          <div class="text-gray-400">Truth Seekers</div>
+          <div class="text-neutral-400">Truth Seekers</div>
         </div>
       </div>
 
       <div class="game-card max-w-2xl mx-auto">
         <h3 class="font-semibold text-white mb-4">Remember:</h3>
-        <p class="text-gray-300 text-lg italic">
+        <p class="text-neutral-300 text-lg italic">
           "The goal isn't to win arguments. The goal is to have fewer false beliefs 
           tomorrow than you have today."
         </p>
@@ -91,7 +91,7 @@
 
     <div v-else-if="phase === 'safeword'" class="space-y-8 text-center">
       <h2 class="text-3xl font-bold text-white">Family Safe Word</h2>
-      <p class="text-gray-400">A gentle way to flag when someone might be using a fallacy</p>
+      <p class="text-neutral-400">A gentle way to flag when someone might be using a fallacy</p>
       
       <div class="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
         <button

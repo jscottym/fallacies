@@ -2,22 +2,22 @@
   <div class="h-full flex flex-col p-4">
     <div v-if="phase === 'building'" class="flex-1 flex flex-col">
       <div class="mb-4">
-        <div class="text-sm text-gray-400">Your Challenge</div>
+        <div class="text-sm text-neutral-400">Your Challenge</div>
         <div class="font-semibold text-white">Argue the OPPOSITE side—with sound logic!</div>
         <div class="text-sm text-green-400 mt-1">Position: {{ oppositePosition }}</div>
       </div>
 
       <div class="flex-1 flex flex-col">
-        <label class="text-sm text-gray-400 mb-2">Your Sound Argument (no fallacies!)</label>
+        <label class="text-sm text-neutral-400 mb-2">Your Sound Argument (no fallacies!)</label>
         <textarea
           v-model="argumentText"
-          class="flex-1 bg-gray-800 border border-gray-700 rounded-lg p-3 text-white resize-none focus:border-green-500 focus:outline-none"
+          class="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg p-3 text-white resize-none focus:border-green-500 focus:outline-none"
           placeholder="Build a compelling, fallacy-free argument..."
           :disabled="hasSubmitted"
         ></textarea>
 
         <div class="mt-4">
-          <div class="text-sm text-gray-400 mb-2">Antidotes Used (select techniques you applied)</div>
+          <div class="text-sm text-neutral-400 mb-2">Antidotes Used (select techniques you applied)</div>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="antidote in contentStore.antidotes"
@@ -25,7 +25,7 @@
               class="px-3 py-1.5 rounded-full text-sm border transition-all"
               :class="selectedAntidotes.includes(antidote.id)
                 ? 'border-green-500 bg-green-500/20 text-white'
-                : 'border-gray-700 text-gray-400 hover:border-gray-600'"
+                : 'border-neutral-700 text-neutral-400 hover:border-neutral-600'"
               :disabled="hasSubmitted"
               @click="toggleAntidote(antidote.id)"
             >
@@ -55,20 +55,20 @@
       <div class="flex-1 flex flex-col gap-4">
         <button
           class="flex-1 p-4 rounded-lg border transition-all text-left"
-          :class="vote === 'fallacious' ? 'border-red-500 bg-red-500/20' : 'border-gray-700 hover:border-gray-600'"
+          :class="vote === 'fallacious' ? 'border-red-500 bg-red-500/20' : 'border-neutral-700 hover:border-neutral-600'"
           @click="castVote('fallacious')"
         >
           <div class="font-medium text-red-400 mb-2">Fallacious Version</div>
-          <p class="text-gray-400 text-sm">The argument with hidden fallacies</p>
+          <p class="text-neutral-400 text-sm">The argument with hidden fallacies</p>
         </button>
 
         <button
           class="flex-1 p-4 rounded-lg border transition-all text-left"
-          :class="vote === 'steelman' ? 'border-green-500 bg-green-500/20' : 'border-gray-700 hover:border-gray-600'"
+          :class="vote === 'steelman' ? 'border-green-500 bg-green-500/20' : 'border-neutral-700 hover:border-neutral-600'"
           @click="castVote('steelman')"
         >
           <div class="font-medium text-green-400 mb-2">Steelmanned Version</div>
-          <p class="text-gray-400 text-sm">The sound, fallacy-free argument</p>
+          <p class="text-neutral-400 text-sm">The sound, fallacy-free argument</p>
         </button>
       </div>
 
@@ -81,7 +81,7 @@
       <div class="text-center space-y-4">
         <div class="text-5xl">🛡️</div>
         <h2 class="text-xl font-bold text-white">Steelman Showdown</h2>
-        <p class="text-gray-400">{{ gameStore.hostContext }}</p>
+        <p class="text-neutral-400">{{ gameStore.hostContext }}</p>
       </div>
     </div>
   </div>

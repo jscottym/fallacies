@@ -1,19 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950 flex flex-col">
-    <header class="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 px-6 py-4">
+  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950 flex flex-col">
+    <header class="bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-800 px-6 py-4">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-4">
           <span class="text-3xl">{{ gameInfo?.icon }}</span>
           <div>
             <h1 class="text-xl font-bold text-white">{{ gameInfo?.name }}</h1>
-            <div class="text-sm text-gray-400">
+            <div class="text-sm text-neutral-400">
               Step {{ gameStore.step + 1 }} of {{ gameStore.totalSteps }}
             </div>
           </div>
         </div>
 
         <div class="flex items-center gap-4">
-          <div class="w-48 h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div class="w-48 h-2 bg-neutral-800 rounded-full overflow-hidden">
             <div 
               class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
               :style="{ width: `${gameStore.progress}%` }"
@@ -36,7 +36,7 @@
       <slot />
     </main>
 
-    <footer class="bg-gray-900/80 backdrop-blur-sm border-t border-gray-800 px-6 py-4">
+    <footer class="bg-neutral-900/80 backdrop-blur-sm border-t border-neutral-800 px-6 py-4">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <UButton 
           variant="ghost" 
@@ -83,7 +83,7 @@
           <UIcon name="i-heroicons-exclamation-triangle" class="text-5xl text-yellow-500" />
           <div>
             <h3 class="text-xl font-semibold text-white mb-2">End this game?</h3>
-            <p class="text-gray-400">Your progress will be saved. You can resume later.</p>
+            <p class="text-neutral-400">Your progress will be saved. You can resume later.</p>
           </div>
           <div class="flex gap-3 justify-center">
             <UButton variant="ghost" size="lg" @click="showExitConfirm = false">

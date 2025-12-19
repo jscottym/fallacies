@@ -4,13 +4,13 @@
       <div class="text-center space-y-4">
         <div class="text-5xl">⚖️</div>
         <h2 class="text-xl font-bold text-white">Fallacy Prosecution</h2>
-        <p class="text-gray-400">Get ready to build sneaky arguments!</p>
+        <p class="text-neutral-400">Get ready to build sneaky arguments!</p>
       </div>
     </div>
 
     <div v-else-if="roundPhase === 'topic_selection'" class="flex-1 flex flex-col">
       <h3 class="font-semibold text-white mb-4">Pick Your Topic</h3>
-      <p class="text-sm text-gray-400 mb-4">First to pick wins! Tap fast!</p>
+      <p class="text-sm text-neutral-400 mb-4">First to pick wins! Tap fast!</p>
       
       <div class="space-y-3 flex-1 overflow-y-auto">
         <button
@@ -24,7 +24,7 @@
           <div class="font-medium text-white">{{ topic.name }}</div>
           <div v-if="isTopicClaimed(topic.id)" class="text-sm mt-1">
             <span v-if="isOurTopic(topic.id)" class="text-green-400">✓ Your selection</span>
-            <span v-else class="text-gray-500">Claimed</span>
+            <span v-else class="text-neutral-500">Claimed</span>
           </div>
         </button>
       </div>
@@ -32,22 +32,22 @@
 
     <div v-else-if="roundPhase === 'building'" class="flex-1 flex flex-col">
       <div class="mb-4">
-        <div class="text-sm text-gray-400">Your Topic</div>
+        <div class="text-sm text-neutral-400">Your Topic</div>
         <div class="font-semibold text-white">{{ ourTopicName }}</div>
         <div class="text-sm text-indigo-400 mt-1">{{ ourPosition }}</div>
       </div>
 
       <div class="flex-1 flex flex-col">
-        <label class="text-sm text-gray-400 mb-2">Your Argument (pack in fallacies!)</label>
+        <label class="text-sm text-neutral-400 mb-2">Your Argument (pack in fallacies!)</label>
         <textarea
           v-model="argumentText"
-          class="flex-1 bg-gray-800 border border-gray-700 rounded-lg p-3 text-white resize-none focus:border-indigo-500 focus:outline-none"
+          class="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg p-3 text-white resize-none focus:border-indigo-500 focus:outline-none"
           placeholder="Write your fallacy-packed argument here..."
           :disabled="hasSubmitted"
         ></textarea>
 
         <div class="mt-4">
-          <div class="text-sm text-gray-400 mb-2">Fallacies Used (select all you included)</div>
+          <div class="text-sm text-neutral-400 mb-2">Fallacies Used (select all you included)</div>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="fallacy in contentStore.fallacies"
@@ -55,7 +55,7 @@
               class="px-3 py-1.5 rounded-full text-sm border transition-all"
               :class="selectedFallacies.includes(fallacy.id)
                 ? 'border-indigo-500 bg-indigo-500/20 text-white'
-                : 'border-gray-700 text-gray-400 hover:border-gray-600'"
+                : 'border-neutral-700 text-neutral-400 hover:border-neutral-600'"
               :disabled="hasSubmitted"
               @click="toggleFallacy(fallacy.id)"
             >
@@ -87,7 +87,7 @@
 
     <div v-else-if="roundPhase === 'reviewing'" class="flex-1 flex flex-col">
       <div class="game-card mb-4">
-        <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Reviewing</div>
+        <div class="text-xs text-neutral-500 uppercase tracking-wide mb-2">Reviewing</div>
         <p class="text-white text-sm">"{{ truncatedArgument }}"</p>
         <UButton 
           v-if="fullArgument.length > 150" 
@@ -101,7 +101,7 @@
       </div>
 
       <div v-if="!hasReviewed && isReviewingTeam" class="flex-1 overflow-y-auto">
-        <div class="text-sm text-gray-400 mb-3">Which fallacies did they use?</div>
+        <div class="text-sm text-neutral-400 mb-3">Which fallacies did they use?</div>
         <div class="space-y-2">
           <button
             v-for="fallacy in contentStore.fallacies"
@@ -109,14 +109,14 @@
             class="w-full p-3 rounded-lg border transition-all text-left"
             :class="reviewSelections.includes(fallacy.id)
               ? 'border-indigo-500 bg-indigo-500/20 text-white'
-              : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-gray-600'"
+              : 'border-neutral-700 bg-neutral-800/50 text-neutral-300 hover:border-neutral-600'"
             @click="toggleReviewSelection(fallacy.id)"
           >
             <div class="font-medium">{{ fallacy.name }}</div>
-            <div class="text-sm text-gray-500">"{{ fallacy.nickname }}"</div>
+            <div class="text-sm text-neutral-500">"{{ fallacy.nickname }}"</div>
           </button>
         </div>
-        <div class="mt-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-2 -mx-2">
+        <div class="mt-4 sticky bottom-0 bg-neutral-900/90 backdrop-blur-sm p-2 -mx-2">
           <UButton 
             color="primary" 
             block 
@@ -130,7 +130,7 @@
       <div v-else-if="!isReviewingTeam" class="flex-1 flex items-center justify-center">
         <div class="text-center space-y-4">
           <UIcon name="i-heroicons-eye" class="text-5xl text-indigo-500" />
-          <p class="text-gray-400">This is your team's argument.<br>Watch others try to catch your fallacies!</p>
+          <p class="text-neutral-400">This is your team's argument.<br>Watch others try to catch your fallacies!</p>
         </div>
       </div>
 
@@ -138,7 +138,7 @@
         <div class="text-center space-y-4">
           <UIcon name="i-heroicons-check-circle" class="text-5xl text-green-500" />
           <h3 class="text-xl font-bold text-white">Review Submitted!</h3>
-          <p class="text-gray-400">Waiting for results...</p>
+          <p class="text-neutral-400">Waiting for results...</p>
         </div>
       </div>
     </div>
@@ -166,7 +166,7 @@
       <template #content>
         <div class="p-6 space-y-4">
           <h3 class="text-lg font-semibold text-white">AI Suggestions</h3>
-          <p class="text-sm text-gray-400">Click a fallacy to get argument ideas:</p>
+          <p class="text-sm text-neutral-400">Click a fallacy to get argument ideas:</p>
           <div class="flex flex-wrap gap-2">
             <UButton
               v-for="fallacy in contentStore.fallacies"
@@ -179,7 +179,7 @@
             </UButton>
           </div>
           <div v-if="aiSuggestion" class="game-card">
-            <p class="text-gray-300 text-sm">{{ aiSuggestion }}</p>
+            <p class="text-neutral-300 text-sm">{{ aiSuggestion }}</p>
             <UButton size="xs" class="mt-2" @click="useAiSuggestion">
               Use This
             </UButton>
@@ -294,9 +294,9 @@ function getTopicButtonClass(topicId: string): string {
     return 'border-green-500 bg-green-500/20'
   }
   if (isTopicClaimed(topicId)) {
-    return 'border-gray-700 bg-gray-800/30 opacity-50 cursor-not-allowed'
+    return 'border-neutral-700 bg-neutral-800/30 opacity-50 cursor-not-allowed'
   }
-  return 'border-gray-700 bg-gray-800/50 hover:border-indigo-500'
+  return 'border-neutral-700 bg-neutral-800/50 hover:border-indigo-500'
 }
 
 function selectTopic(topicId: string) {

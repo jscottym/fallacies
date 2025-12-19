@@ -3,9 +3,9 @@
     <div v-if="phase === 'intro'" class="text-center space-y-6">
       <div class="text-6xl mb-6">🎯</div>
       <h1 class="text-4xl font-bold text-white">Warm-Up Round</h1>
-      <p class="text-xl text-gray-400">Let's practice spotting fallacies together</p>
+      <p class="text-xl text-neutral-400">Let's practice spotting fallacies together</p>
       <div class="game-card max-w-xl mx-auto">
-        <p class="text-gray-300">
+        <p class="text-neutral-300">
           You'll see quotes and statements. Vote on which fallacy you think is present.
           Some may have multiple—we'll discuss!
         </p>
@@ -32,10 +32,10 @@
 
       <div v-if="!revealed" class="space-y-4">
         <div class="flex items-center justify-between">
-          <span class="text-gray-400">Votes received</span>
+          <span class="text-neutral-400">Votes received</span>
           <span class="text-white font-medium">{{ votesReceived }} / {{ totalVoters }}</span>
         </div>
-        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+        <div class="h-2 bg-neutral-800 rounded-full overflow-hidden">
           <div 
             class="h-full bg-indigo-500 transition-all duration-300"
             :style="{ width: `${(votesReceived / Math.max(totalVoters, 1)) * 100}%` }"
@@ -78,11 +78,11 @@
               :key="fallacyId"
               class="flex items-center gap-3"
             >
-              <div class="w-32 text-sm text-gray-400">{{ getFallacyName(fallacyId as string) }}</div>
-              <div class="flex-1 h-6 bg-gray-800 rounded overflow-hidden">
+              <div class="w-32 text-sm text-neutral-400">{{ getFallacyName(fallacyId as string) }}</div>
+              <div class="flex-1 h-6 bg-neutral-800 rounded overflow-hidden">
                 <div 
                   class="h-full transition-all duration-500"
-                  :class="isCorrect(fallacyId as string) ? 'bg-green-500' : 'bg-gray-600'"
+                  :class="isCorrect(fallacyId as string) ? 'bg-green-500' : 'bg-neutral-600'"
                   :style="{ width: `${(count / Math.max(votesReceived, 1)) * 100}%` }"
                 ></div>
               </div>
@@ -98,7 +98,7 @@
 
         <div class="game-card border-blue-500/30">
           <h3 class="text-lg font-semibold text-blue-400 mb-3">Explanation</h3>
-          <p class="text-gray-300">{{ currentQuote?.explanation }}</p>
+          <p class="text-neutral-300">{{ currentQuote?.explanation }}</p>
         </div>
       </div>
     </div>
@@ -110,15 +110,15 @@
         <div class="grid grid-cols-2 gap-6 text-center">
           <div>
             <div class="text-4xl font-bold text-indigo-400">{{ quotesCompleted }}</div>
-            <div class="text-gray-400">Quotes Analyzed</div>
+            <div class="text-neutral-400">Quotes Analyzed</div>
           </div>
           <div>
             <div class="text-4xl font-bold text-green-400">{{ Math.round(accuracy) }}%</div>
-            <div class="text-gray-400">Group Accuracy</div>
+            <div class="text-neutral-400">Group Accuracy</div>
           </div>
         </div>
       </div>
-      <p class="text-gray-400">Ready to put these skills to the test?</p>
+      <p class="text-neutral-400">Ready to put these skills to the test?</p>
     </div>
   </div>
 </template>
