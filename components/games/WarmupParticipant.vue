@@ -113,11 +113,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useWebSocket } from '~/composables/useWebSocket'
+import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
-import { useWebSocket } from '~/composables/useWebSocket'
 import type { VotePayload } from '~/types'
 
 const gameStore = useGameStore()

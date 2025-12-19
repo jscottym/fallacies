@@ -96,12 +96,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useSessionStore } from '~/stores/session'
-import { useGameStore } from '~/stores/game'
-import { useWebSocket } from '~/composables/useWebSocket'
 import ReferencePanel from '~/components/game/ReferencePanel.vue'
+import { useWebSocket } from '~/composables/useWebSocket'
+import { useGameStore } from '~/stores/game'
+import { useSessionStore } from '~/stores/session'
 import type { StateUpdatePayload } from '~/types'
 
 const route = useRoute()

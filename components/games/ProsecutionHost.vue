@@ -215,13 +215,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
+import Timer from '~/components/game/Timer.vue'
+import { useTimer } from '~/composables/useTimer'
+import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
-import { useTimer } from '~/composables/useTimer'
-import Timer from '~/components/game/Timer.vue'
-import type { Team, ProsecutionRound } from '~/types'
+import type { ProsecutionRound, Team } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()

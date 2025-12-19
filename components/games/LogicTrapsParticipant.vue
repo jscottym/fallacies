@@ -28,10 +28,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useGameStore } from '~/stores/game'
-import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
+import { computed } from 'vue';
+import { useContentStore } from '~/stores/content';
+import { useGameStore } from '~/stores/game';
+import { useSessionStore } from '~/stores/session';
 
 defineEmits<{
   openReference: []

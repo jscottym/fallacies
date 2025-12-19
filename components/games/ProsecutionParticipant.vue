@@ -194,10 +194,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
 import type { ProsecutionRound } from '~/types'
 
 const gameStore = useGameStore()

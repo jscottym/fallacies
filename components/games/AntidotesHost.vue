@@ -121,11 +121,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
-import type { Participant, Antidote, AntidoteExample } from '~/types'
+import type { Antidote, AntidoteExample, Participant } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()

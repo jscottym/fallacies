@@ -1,5 +1,5 @@
-import { ref, onUnmounted } from 'vue'
-import type { WSMessage, WSEventType } from '~/types'
+import { onUnmounted, ref } from 'vue'
+import type { WSEventType, WSMessage } from '~/types'
 
 type MessageHandler = (message: WSMessage) => void
 

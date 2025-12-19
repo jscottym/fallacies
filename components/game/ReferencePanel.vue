@@ -79,8 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useContentStore } from '~/stores/content'
+import { computed, ref } from 'vue';
+import { useContentStore } from '~/stores/content';
 
 const props = defineProps<{
   open: boolean

@@ -234,11 +234,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import QRCode from 'qrcode'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSessionStore } from '~/stores/session'
 import { GAMES, type GameId } from '~/types'
-import QRCode from 'qrcode'
 
 const route = useRoute()
 const sessionStore = useSessionStore()

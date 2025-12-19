@@ -49,12 +49,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, defineAsyncComponent, watch } from 'vue'
+import { computed, defineAsyncComponent, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useGameStore } from '~/stores/game'
-import { useSessionStore } from '~/stores/session'
 import { useTimer } from '~/composables/useTimer'
 import { useWebSocket } from '~/composables/useWebSocket'
+import { useGameStore } from '~/stores/game'
+import { useSessionStore } from '~/stores/session'
 import { GAMES, type GameId, type StateUpdatePayload, type VotePayload, type WSMessage } from '~/types'
 
 definePageMeta({

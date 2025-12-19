@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useGameStore } from '~/stores/game'
 
 const gameStore = useGameStore()

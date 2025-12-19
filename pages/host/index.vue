@@ -55,9 +55,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useSessionStore } from '~/stores/session'
+import { onMounted, ref } from 'vue'
 import { useStorage } from '~/composables/useStorage'
+import { useSessionStore } from '~/stores/session'
 import type { SessionData } from '~/types'
 
 const sessionStore = useSessionStore()

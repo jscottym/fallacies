@@ -74,11 +74,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
+import ReferencePanel from '~/components/game/ReferencePanel.vue'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { GAMES } from '~/types'
-import ReferencePanel from '~/components/game/ReferencePanel.vue'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()

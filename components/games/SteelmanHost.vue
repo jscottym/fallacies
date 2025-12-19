@@ -108,13 +108,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import Timer from '~/components/game/Timer.vue'
+import { useTimer } from '~/composables/useTimer'
+import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
-import { useTimer } from '~/composables/useTimer'
-import Timer from '~/components/game/Timer.vue'
-import type { Team, SteelmanRound, ProsecutionRound } from '~/types'
+import type { ProsecutionRound, SteelmanRound, Team } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()

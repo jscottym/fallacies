@@ -1,4 +1,4 @@
-import type { SessionData, GameState, GameId } from '~/types'
+import type { GameId, GameState, SessionData } from '~/types'
 
 const STORAGE_PREFIX = 'fallacies'
 const CURRENT_SESSION_KEY = 'fallacies:current-session'
