@@ -129,7 +129,7 @@
         >
           <div class="font-semibold mb-2" :style="{ color: team.color }">{{ team.name }}'s Argument</div>
           <div class="text-xs text-neutral-500 mb-2">Topic: {{ getTeamTopicName(team.id) }}</div>
-          <p class="text-sm text-neutral-300 italic line-clamp-3">"{{ getTeamArgument(team.id) }}"</p>
+          <p class="text-sm text-neutral-300 italic">"{{ getTeamArgument(team.id) }}"</p>
           <div class="mt-3 flex items-center justify-between text-xs text-neutral-400">
             <span>Reviews received:</span>
             <span class="font-medium text-white">{{ getReviewCountForTeam(team.id) }} / {{ sessionStore.teams.length - 1 }}</span>
@@ -309,16 +309,20 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
 import Timer from '~/components/game/Timer.vue'
+import { useHostId } from '~/composables/useHostId'
 import { useTimer } from '~/composables/useTimer'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { ProsecutionRound, Team } from '~/types'
+import type { ArgumentHistoryEntry, HostNavigatePayload, ProsecutionRound, Team } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const contentStore = useContentStore()
 const timer = useTimer()
+const ws = useWebSocket()
+const hostId = useHostId()
 
 const roundPhase = computed(() => {
   if (gameStore.step === 0) return 'intro'
@@ -514,7 +518,7 @@ function getFalsePositives(reviewingTeamId: string, targetTeamId: string): numbe
 function calculateCatchPoints(reviewingTeamId: string, targetTeamId: string): number {
   const catches = getTeamCatches(reviewingTeamId, targetTeamId)
   const falsePos = getFalsePositives(reviewingTeamId, targetTeamId)
-  return Math.max(0, catches * 2 - falsePos)
+  return catches * 2 - falsePos
 }
 
 function startBuilding() {
@@ -527,6 +531,21 @@ function startBuilding() {
 
 function startAllReviewing() {
   if (!currentRound.value) return
+  sessionStore.teams.forEach(team => {
+    const arg = currentRound.value?.arguments[team.id]
+    if (!arg) return
+    const topicId = getTeamTopicId(team.id)
+    if (!topicId) return
+    const topic = contentStore.getTopicById(topicId)
+    const entry: ArgumentHistoryEntry = {
+      gameId: 'prosecution',
+      topicId,
+      position: topic?.positionA.label || '',
+      text: arg.text,
+      createdAt: arg.submittedAt
+    }
+    sessionStore.addArgumentToHistory(team.id, entry)
+  })
   currentRound.value.phase = 'all_reviewing'
   gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
   timer.start(180)
@@ -601,7 +620,14 @@ function startNewRound() {
 function finishGame() {
   sessionStore.updateGameStatus('prosecution', 'completed')
   gameStore.endGame()
-  navigateTo(`/host/${sessionStore.code}`)
+  const targetRoute = `/host/${sessionStore.code}`
+  const payload: HostNavigatePayload = {
+    hostId: hostId.value || '',
+    route: targetRoute,
+    gameId: 'prosecution'
+  }
+  ws.send('host:navigate', payload)
+  navigateTo(targetRoute)
 }
 
 function getFallacyName(id: string): string {

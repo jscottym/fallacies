@@ -108,13 +108,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Timer from '~/components/game/Timer.vue'
 import { useTimer } from '~/composables/useTimer'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { ProsecutionRound, SteelmanRound, Team } from '~/types'
+import type { ArgumentHistoryEntry, SteelmanRound, Team } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -132,9 +132,8 @@ const currentRound = computed((): SteelmanRound | undefined => {
   return rounds[rounds.length - 1]
 })
 
-const prosecutionData = computed(() => {
-  const storage = useStorage()
-  return storage.getGameState(gameStore.sessionCode, 'prosecution')
+const historyByTeam = computed<Record<string, ArgumentHistoryEntry[]>>(() => {
+  return sessionStore.argumentHistory
 })
 
 const allTeamsSubmitted = computed(() => {
@@ -166,20 +165,33 @@ onMounted(() => {
   gameStore.setHostContext('Steelman Showdown - Introduction')
 })
 
+watch(
+  () => gameStore.step,
+  (newStep) => {
+    if (newStep === 0) {
+      phase.value = 'intro'
+      gameStore.setHostContext('Steelman Showdown - Introduction')
+      return
+    }
+
+    if (newStep === 1 && !currentRound.value) {
+      startBuilding()
+    }
+  }
+)
+
 function getTeamTopic(teamId: string): string {
-  const prosRounds = (prosecutionData.value as any)?.rounds as ProsecutionRound[] | undefined
-  if (!prosRounds || prosRounds.length === 0) return 'TBD'
-  const lastRound = prosRounds[prosRounds.length - 1]
-  const topicId = lastRound.topicSelections[teamId]?.topicId
-  return contentStore.getTopicById(topicId)?.name || 'TBD'
+  const entries = historyByTeam.value[teamId] || []
+  const last = entries[entries.length - 1]
+  if (!last) return 'TBD'
+  return contentStore.getTopicById(last.topicId)?.name || 'TBD'
 }
 
 function getOppositePosition(teamId: string): string {
-  const prosRounds = (prosecutionData.value as any)?.rounds as ProsecutionRound[] | undefined
-  if (!prosRounds || prosRounds.length === 0) return ''
-  const lastRound = prosRounds[prosRounds.length - 1]
-  const topicId = lastRound.topicSelections[teamId]?.topicId
-  const topic = contentStore.getTopicById(topicId)
+  const entries = historyByTeam.value[teamId] || []
+  const last = entries[entries.length - 1]
+  if (!last) return ''
+  const topic = contentStore.getTopicById(last.topicId)
   return topic?.positionB.label || ''
 }
 
@@ -189,10 +201,10 @@ function hasSubmitted(teamId: string): boolean {
 }
 
 function getFallaciousArgument(teamId: string): string {
-  const prosRounds = (prosecutionData.value as any)?.rounds as ProsecutionRound[] | undefined
-  if (!prosRounds || prosRounds.length === 0) return ''
-  const lastRound = prosRounds[prosRounds.length - 1]
-  return lastRound.arguments[teamId]?.text || 'No argument recorded'
+  const entries = historyByTeam.value[teamId] || []
+  const last = entries[entries.length - 1]
+  if (!last) return ''
+  return last.text || 'No argument recorded'
 }
 
 function getSteelmanArgument(teamId: string): string {
@@ -246,6 +258,5 @@ function stopTimer() {
   timer.stop()
 }
 
-import { useStorage } from '~/composables/useStorage'
 </script>
 

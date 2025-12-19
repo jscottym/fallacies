@@ -36,10 +36,20 @@ export default defineEventHandler(async (event) => {
   const userPrompt = body.type === 'fallacious'
     ? `Topic: ${body.topic}
 Position to argue: ${body.position}
-Fallacies to include: ${body.targetFallacies?.join(', ') || 'any'}
-${body.existingText ? `Building on: "${body.existingText}"` : ''}
+Fallacies to include (use ALL of these somewhere in the same argument): ${body.targetFallacies?.join(', ') || 'any'}
+${body.existingText ? `Building on this existing argument text: "${body.existingText}"` : ''}
 
-Generate 2-3 short argument fragments (1-2 sentences each) that contain the specified fallacies. Make them subtle but identifiable. Return as JSON array with fields: text, technique (which fallacy), explanation (why it's fallacious).`
+Write a single, cohesive argument that is as **succinct** as possible while still sounding natural and complete. Aim for **2–4 sentences max**. The goal is to smuggle in the specified fallacies with the minimum necessary words, not to ramble.
+
+Make the fallacies **subtle and realistic**:
+- Avoid obvious strawman phrases like "anyone who disagrees is stupid" or cartoonishly extreme language.
+- Prefer plausible wording that a smart but biased person might actually use.
+- The fallacies should be clearly present to an attentive reader, but not so on‑the‑nose that a casual player spots them instantly.
+
+Return JSON with a top-level property "suggestions" containing an array of objects with fields:
+- text: the full argument
+- technique: a short description of which fallacies were used
+- explanation: why this argument is fallacious overall.`
     : `Topic: ${body.topic}
 Position to argue: ${body.position}
 Techniques to use: ${body.targetAntidotes?.join(', ') || 'any sound reasoning'}
@@ -65,9 +75,18 @@ Generate 2-3 short argument fragments (1-2 sentences each) that demonstrate soun
     }
 
     const parsed = JSON.parse(content)
-    return { 
-      suggestions: parsed.suggestions || parsed || getFallbackSuggestions(body)
+
+    let suggestions: unknown = getFallbackSuggestions(body)
+
+    if (Array.isArray(parsed)) {
+      suggestions = parsed
+    } else if (Array.isArray(parsed?.suggestions)) {
+      suggestions = parsed.suggestions
+    } else if (Array.isArray(parsed?.arguments)) {
+      suggestions = parsed.arguments
     }
+
+    return { suggestions }
   } catch (error) {
     console.error('OpenAI API error:', error)
     return { suggestions: getFallbackSuggestions(body) }

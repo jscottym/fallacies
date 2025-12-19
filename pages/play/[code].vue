@@ -30,6 +30,39 @@
             Join Session
           </UButton>
         </div>
+
+        <div class="mt-8 game-card space-y-4">
+          <div class="text-sm text-neutral-400">
+            Participants in this session
+          </div>
+          <div v-if="groupedParticipants.length" class="space-y-3">
+            <div
+              v-for="group in groupedParticipants"
+              :key="group.key"
+              class="space-y-1"
+            >
+              <div
+                class="text-xs font-medium"
+                :style="group.color ? { color: group.color } : {}"
+              >
+                {{ group.label }}
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <UBadge
+                  v-for="p in group.participants"
+                  :key="p.id"
+                  variant="subtle"
+                  color="neutral"
+                >
+                  {{ p.name }}
+                </UBadge>
+              </div>
+            </div>
+          </div>
+          <div v-else class="text-sm text-neutral-500">
+            Waiting for participants to join...
+          </div>
+        </div>
       </div>
     </div>
 
@@ -84,8 +117,12 @@
       <div v-else class="flex-1 flex items-center justify-center p-6">
         <div class="text-center">
           <div class="text-6xl mb-6">⏳</div>
-          <h2 class="text-2xl font-bold text-white mb-2">Waiting for Game</h2>
-          <p class="text-neutral-400">The host will start the game soon</p>
+          <h2 class="text-2xl font-bold text-white mb-2">
+            {{ isSelectingNextGame ? 'Host is selecting the next game' : 'Waiting for Game' }}
+          </h2>
+          <p class="text-neutral-400">
+            {{ isSelectingNextGame ? 'Sit tight while the host picks what to play next.' : 'The host will start the game soon' }}
+          </p>
           <div class="mt-8 p-4 bg-neutral-800/50 rounded-xl">
             <div class="text-sm text-neutral-500 mb-2">Connected as</div>
             <div class="text-xl text-white">{{ currentParticipant?.name }}</div>
@@ -135,7 +172,7 @@ import ReferencePanel from '~/components/game/ReferencePanel.vue'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { SessionSyncRequestPayload, SessionTeamsUpdatedPayload, StateUpdatePayload } from '~/types'
+import type { GameId, HostNavigatePayload, HostSyncRequestPayload, HostSyncResponsePayload, Participant, SessionSyncRequestPayload, SessionTeamsUpdatedPayload, StateUpdatePayload, Team } from '~/types'
 
 const route = useRoute()
 const sessionStore = useSessionStore()
@@ -148,6 +185,7 @@ const hasJoined = ref(false)
 const showReference = ref(false)
 const showEditName = ref(false)
 const editedName = ref('')
+const isSelectingNextGame = ref(false)
 
 const currentParticipant = computed(() => sessionStore.currentParticipant)
 const currentTeam = computed(() => sessionStore.currentTeam)
@@ -156,6 +194,55 @@ const participantStorage = useLocalStorage<string | null>(
   `fallacies:session:${sessionCode.value}:participantName`,
   null
 )
+
+const groupedParticipants = computed(() => {
+  const teamsById: Record<string, Team> = {}
+  sessionStore.teams.forEach((team) => {
+    teamsById[team.id] = team
+  })
+
+  const byKey: Record<
+    string,
+    { key: string; label: string; color?: string; participants: Participant[] }
+  > = {}
+
+  sessionStore.participants.forEach((p) => {
+    const key = p.teamId || 'unassigned'
+    if (!byKey[key]) {
+      if (p.teamId && teamsById[p.teamId]) {
+        byKey[key] = {
+          key,
+          label: teamsById[p.teamId]!.name,
+          color: teamsById[p.teamId]!.color,
+          participants: []
+        }
+      } else {
+        byKey[key] = {
+          key,
+          label: 'Unassigned',
+          participants: []
+        }
+      }
+    }
+    byKey[key].participants.push(p)
+  })
+
+  const groups = Object.values(byKey)
+
+  groups.forEach((group) => {
+    group.participants.sort((a, b) => a.name.localeCompare(b.name))
+  })
+
+  return groups.sort((a, b) => {
+    const isUnassignedA = a.key === 'unassigned'
+    const isUnassignedB = b.key === 'unassigned'
+
+    if (isUnassignedA && !isUnassignedB) return 1
+    if (!isUnassignedA && isUnassignedB) return -1
+
+    return a.label.localeCompare(b.label)
+  })
+})
 
 const currentGameComponent = computed(() => {
   if (!gameStore.currentGameId) return null
@@ -188,11 +275,43 @@ onMounted(() => {
     }
   }
 
-  // Listen for game state updates from host
   ws.on('game:state_update', (message) => {
     const payload = message.payload as StateUpdatePayload
     if (payload && payload.gameId) {
       gameStore.applyRemoteState(payload, sessionCode.value)
+      isSelectingNextGame.value = false
+    }
+  })
+
+  ws.on('host:sync_response', (message) => {
+    const payload = message.payload as HostSyncResponsePayload
+    if (!payload) return
+    if (payload.gameId) {
+      gameStore.currentGameId = payload.gameId as GameId
+      gameStore.sessionCode = sessionCode.value
+      gameStore.phase = payload.phase
+      gameStore.step = payload.step
+      gameStore.totalSteps = payload.totalSteps
+      gameStore.hostContext = payload.hostContext
+      if (payload.gameData) {
+        gameStore.gameData = { ...gameStore.gameData, ...payload.gameData }
+      }
+      isSelectingNextGame.value = false
+    } else {
+      gameStore.endGame()
+      isSelectingNextGame.value = true
+    }
+  })
+
+  ws.on('host:navigate', (message) => {
+    const payload = message.payload as HostNavigatePayload
+    if (!payload || !payload.route) return
+    const lobbyRoute = `/host/${sessionCode.value}`
+    if (payload.route === lobbyRoute) {
+      gameStore.endGame()
+      isSelectingNextGame.value = true
+    } else if (payload.route.startsWith(`${lobbyRoute}/game/`)) {
+      isSelectingNextGame.value = false
     }
   })
 
@@ -201,12 +320,27 @@ onMounted(() => {
     if (!payload) return
     sessionStore.participants = [...payload.participants]
     sessionStore.teams = [...payload.teams]
+    if (!hasJoined.value && participantStorage.value) {
+      const restored = sessionStore.participants.find(
+        (p) => p.name === participantStorage.value
+      )
+      if (restored) {
+        performJoin(restored.id)
+      }
+    }
   })
 
   setTimeout(() => {
     const payload: SessionSyncRequestPayload = { source: 'participant' }
+    console.log('[play] sending session:sync_request', payload)
     ws.send('session:sync_request', payload)
   }, 500)
+
+  setTimeout(() => {
+    const payload: HostSyncRequestPayload = { hostId: '' }
+    console.log('[play] sending host:sync_request', payload)
+    ws.send('host:sync_request', payload)
+  }, 700)
 })
 
 function assignToRandomTeam(participantId: string) {

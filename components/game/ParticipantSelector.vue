@@ -99,7 +99,21 @@ const groupedParticipants = computed(() => {
     byKey[key].participants.push(p)
   })
 
-  return Object.values(byKey)
+  const groups = Object.values(byKey)
+
+  groups.forEach((group) => {
+    group.participants.sort((a, b) => a.name.localeCompare(b.name))
+  })
+
+  return groups.sort((a, b) => {
+    const isUnassignedA = a.key === 'unassigned'
+    const isUnassignedB = b.key === 'unassigned'
+
+    if (isUnassignedA && !isUnassignedB) return 1
+    if (!isUnassignedA && isUnassignedB) return -1
+
+    return a.label.localeCompare(b.label)
+  })
 })
 </script>
 

@@ -2,7 +2,7 @@ import { useLocalStorage, watchDebounced } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { computed, reactive, toRefs } from 'vue'
 import { useStorage } from '~/composables/useStorage'
-import type { GameId, GameStatus, Participant, SessionData, Team } from '~/types'
+import type { ArgumentHistoryEntry, GameId, GameStatus, Participant, SessionData, Team } from '~/types'
 import { generateId, generateSessionCode, TEAM_COLORS } from '~/types'
 
 interface SessionState {
@@ -16,6 +16,7 @@ interface SessionState {
   isHost: boolean
   currentParticipantId: string | null
   isConnected: boolean
+  argumentHistory: Record<string, ArgumentHistoryEntry[]>
 }
 
 const STORAGE_KEY = 'fallacies:current-session'
@@ -34,6 +35,18 @@ function coerceGamesState(value: unknown): Record<string, GameStatus> {
     : {}
 }
 
+function coerceArgumentHistory(value: unknown): Record<string, ArgumentHistoryEntry[]> {
+  if (!value || typeof value !== 'object') return {}
+  const raw = value as Record<string, unknown>
+  const result: Record<string, ArgumentHistoryEntry[]> = {}
+  for (const [teamId, entries] of Object.entries(raw)) {
+    if (Array.isArray(entries)) {
+      result[teamId] = (entries as ArgumentHistoryEntry[]).filter(entry => typeof entry.text === 'string')
+    }
+  }
+  return result
+}
+
 function normalizeStoredSession(raw: unknown): SessionData | null {
   if (!raw || typeof raw !== 'object') return null
   const value = raw as Partial<SessionData> & Record<string, unknown>
@@ -47,7 +60,8 @@ function normalizeStoredSession(raw: unknown): SessionData | null {
     lastAccessedAt: typeof value.lastAccessedAt === 'string' ? value.lastAccessedAt : '',
     participants: coerceParticipants((value as Record<string, unknown>).participants),
     teams: coerceTeams((value as Record<string, unknown>).teams),
-    gamesState: coerceGamesState((value as Record<string, unknown>).gamesState)
+    gamesState: coerceGamesState((value as Record<string, unknown>).gamesState),
+    argumentHistory: coerceArgumentHistory((value as Record<string, unknown>).argumentHistory)
   }
 }
 
@@ -70,7 +84,8 @@ export const useSessionStore = defineStore('session', () => {
     gamesState: initialStored?.gamesState ?? {},
     isHost: false,
     currentParticipantId: null,
-    isConnected: false
+    isConnected: false,
+    argumentHistory: initialStored?.argumentHistory ?? {}
   })
 
   watchDebounced(
@@ -81,7 +96,8 @@ export const useSessionStore = defineStore('session', () => {
       lastAccessedAt: state.lastAccessedAt,
       participants: [...state.participants],
       teams: [...state.teams],
-      gamesState: { ...state.gamesState }
+      gamesState: { ...state.gamesState },
+      argumentHistory: { ...state.argumentHistory }
     }),
     (newState) => {
       if (!newState.code) return
@@ -93,7 +109,8 @@ export const useSessionStore = defineStore('session', () => {
         lastAccessedAt: new Date().toISOString(),
         participants: newState.participants,
         teams: newState.teams,
-        gamesState: newState.gamesState
+        gamesState: newState.gamesState,
+        argumentHistory: newState.argumentHistory
       }
 
       stored.value = snapshot
@@ -164,6 +181,7 @@ export const useSessionStore = defineStore('session', () => {
     state.isHost = true
     state.currentParticipantId = null
     state.isConnected = true
+    state.argumentHistory = {}
 
     return code
   }
@@ -194,7 +212,8 @@ export const useSessionStore = defineStore('session', () => {
       lastAccessedAt: state.lastAccessedAt,
       participants: state.participants,
       teams: state.teams,
-      gamesState: state.gamesState
+      gamesState: state.gamesState,
+      argumentHistory: state.argumentHistory
     }
 
     stored.value = snapshot
@@ -315,6 +334,14 @@ export const useSessionStore = defineStore('session', () => {
     }
   }
 
+  function addArgumentToHistory(teamId: string, entry: ArgumentHistoryEntry) {
+    const existing = state.argumentHistory[teamId] || []
+    state.argumentHistory = {
+      ...state.argumentHistory,
+      [teamId]: [...existing, entry]
+    }
+  }
+
   function reset() {
     state.code = ''
     state.name = ''
@@ -326,6 +353,7 @@ export const useSessionStore = defineStore('session', () => {
     state.isHost = false
     state.currentParticipantId = null
     state.isConnected = false
+    state.argumentHistory = {}
     stored.value = null
   }
 
@@ -352,6 +380,7 @@ export const useSessionStore = defineStore('session', () => {
     setTeamDevice,
     randomizeTeams,
     updateGameStatus,
+    addArgumentToHistory,
     reset
   }
 })

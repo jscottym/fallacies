@@ -18,142 +18,6 @@
       </div>
 
       <div class="grid lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-1 space-y-6">
-          <div class="game-card">
-            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <UIcon name="i-heroicons-qr-code" />
-              Join via QR Code
-            </h2>
-            <div class="bg-white p-4 rounded-xl inline-block">
-              <canvas ref="qrCanvas" width="200" height="200"></canvas>
-            </div>
-            <p class="text-sm text-neutral-400 mt-4">
-              Scan to join at<br>
-              <span class="text-indigo-400">{{ joinUrl }}</span>
-            </p>
-          </div>
-
-          <div class="game-card">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                <UIcon name="i-heroicons-users" />
-                Participants ({{ sessionStore.participantCount }})
-              </h2>
-              <UButton size="xs" variant="soft" @click="showAddParticipant = true">
-                <UIcon name="i-heroicons-plus" />
-              </UButton>
-            </div>
-            <div class="space-y-2 max-h-64 overflow-y-auto">
-              <div
-                v-for="participant in sessionStore.participants"
-                :key="participant.id"
-                class="flex items-center justify-between p-2 bg-neutral-800/50 rounded-lg"
-              >
-                <div class="flex items-center gap-2">
-                  <div 
-                    class="w-2 h-2 rounded-full"
-                    :class="participant.isConnected ? 'bg-green-500' : 'bg-neutral-600'"
-                  ></div>
-                  <span class="text-white">{{ participant.name }}</span>
-                  <span 
-                    v-if="participant.teamId" 
-                    class="text-xs px-2 py-0.5 rounded-full"
-                    :style="{ backgroundColor: getTeamColor(participant.teamId) + '30', color: getTeamColor(participant.teamId) }"
-                  >
-                    {{ getTeamName(participant.teamId) }}
-                  </span>
-                </div>
-                <UButton 
-                  size="xs" 
-                  variant="ghost" 
-                  color="red"
-                  @click="sessionStore.removeParticipant(participant.id)"
-                >
-                  <UIcon name="i-heroicons-x-mark" />
-                </UButton>
-              </div>
-              <div v-if="sessionStore.participantCount === 0" class="text-center text-neutral-500 py-4">
-                Waiting for participants to join...
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-1">
-          <div class="game-card h-full">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                <UIcon name="i-heroicons-user-group" />
-                Teams
-              </h2>
-              <div class="flex gap-2">
-                <UButton size="xs" variant="soft" @click="randomizeTeams">
-                  <UIcon name="i-heroicons-arrow-path" class="mr-1" />
-                  Randomize
-                </UButton>
-                <UButton size="xs" variant="soft" @click="addTeam">
-                  <UIcon name="i-heroicons-plus" />
-                </UButton>
-              </div>
-            </div>
-
-            <div class="space-y-4">
-              <div
-                v-for="team in sessionStore.teams"
-                :key="team.id"
-                class="p-3 rounded-lg border-2"
-                :style="{ borderColor: team.color + '50', backgroundColor: team.color + '10' }"
-              >
-                <div class="font-medium mb-2" :style="{ color: team.color }">
-                  {{ team.name }}
-                </div>
-                <div class="space-y-1">
-                  <div
-                    v-for="memberId in team.memberIds"
-                    :key="memberId"
-                    class="flex items-center justify-between text-sm"
-                  >
-                    <span class="text-neutral-300">{{ getParticipantName(memberId) }}</span>
-                    <div class="flex items-center gap-1">
-                      <UButton
-                        v-if="!isTeamDevice(memberId)"
-                        size="xs"
-                        variant="ghost"
-                        @click="sessionStore.setTeamDevice(memberId)"
-                        title="Set as team device"
-                      >
-                        <UIcon name="i-heroicons-device-phone-mobile" />
-                      </UButton>
-                      <UIcon 
-                        v-else 
-                        name="i-heroicons-device-phone-mobile" 
-                        class="text-green-500"
-                      />
-                    </div>
-                  </div>
-                  <div v-if="team.memberIds.length === 0" class="text-neutral-500 text-sm">
-                    No members
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="sessionStore.unassignedParticipants.length > 0" class="p-3 rounded-lg bg-neutral-800/50">
-                <div class="font-medium text-neutral-400 mb-2">Unassigned</div>
-                <div class="flex flex-wrap gap-2">
-                  <UBadge
-                    v-for="p in sessionStore.unassignedParticipants"
-                    :key="p.id"
-                    variant="subtle"
-                    color="neutral"
-                  >
-                    {{ p.name }}
-                  </UBadge>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="lg:col-span-1">
           <div class="game-card h-full">
             <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -206,6 +70,143 @@
             </div>
           </div>
         </div>
+        <div class="lg:col-span-1 space-y-6">
+          <div class="game-card">
+            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-heroicons-qr-code" />
+              Join via QR Code
+            </h2>
+            <div class="bg-white p-4 rounded-xl inline-block">
+              <canvas ref="qrCanvas" width="200" height="200"></canvas>
+            </div>
+            <p class="text-sm text-neutral-400 mt-4">
+              Scan to join at<br>
+              <span class="text-indigo-400">{{ joinUrl }}</span>
+            </p>
+          </div>
+
+          <div class="game-card">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                <UIcon name="i-heroicons-users" />
+                Participants ({{ sessionStore.participantCount }})
+              </h2>
+              <UButton size="xs" variant="soft" @click="showAddParticipant = true">
+                <UIcon name="i-heroicons-plus" />
+              </UButton>
+            </div>
+            <div class="space-y-2 max-h-64 overflow-y-auto">
+              <div
+                v-for="participant in sortedParticipants"
+                :key="participant.id"
+                class="flex items-center justify-between p-2 bg-neutral-800/50 rounded-lg"
+              >
+                <div class="flex items-center gap-2">
+                  <div 
+                    class="w-2 h-2 rounded-full"
+                    :class="participant.isConnected ? 'bg-green-500' : 'bg-neutral-600'"
+                  ></div>
+                  <span class="text-white">{{ participant.name }}</span>
+                  <span 
+                    v-if="participant.teamId" 
+                    class="text-xs px-2 py-0.5 rounded-full"
+                    :style="{ backgroundColor: getTeamColor(participant.teamId) + '30', color: getTeamColor(participant.teamId) }"
+                  >
+                    {{ getTeamName(participant.teamId) }}
+                  </span>
+                </div>
+                <UButton 
+                  size="xs" 
+                  variant="ghost" 
+                  color="red"
+                  @click="removeParticipant(participant.id)"
+                >
+                  <UIcon name="i-heroicons-x-mark" />
+                </UButton>
+              </div>
+              <div v-if="sessionStore.participantCount === 0" class="text-center text-neutral-500 py-4">
+                Waiting for participants to join...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="game-card h-full">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                <UIcon name="i-heroicons-user-group" />
+                Teams
+              </h2>
+              <div class="flex gap-2">
+                <UButton size="xs" variant="soft" @click="randomizeTeams">
+                  <UIcon name="i-heroicons-arrow-path" class="mr-1" />
+                  Randomize
+                </UButton>
+                <UButton size="xs" variant="soft" @click="addTeam">
+                  <UIcon name="i-heroicons-plus" />
+                </UButton>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div
+                v-for="team in sessionStore.teams"
+                :key="team.id"
+                class="p-3 rounded-lg border-2"
+                :style="{ borderColor: team.color + '50', backgroundColor: team.color + '10' }"
+              >
+                <div class="font-medium mb-2" :style="{ color: team.color }">
+                  {{ team.name }}
+                </div>
+                <div class="space-y-1">
+                  <div
+                    v-for="memberId in team.memberIds"
+                    :key="memberId"
+                    class="flex items-center justify-between text-sm"
+                  >
+                    <span class="text-neutral-300">{{ getParticipantName(memberId) }}</span>
+                    <div class="flex items-center gap-1">
+                      <UButton
+                        v-if="!isTeamDevice(memberId)"
+                        size="xs"
+                        variant="ghost"
+                        @click="setTeamDevice(memberId)"
+                        title="Set as team device"
+                      >
+                        <UIcon name="i-heroicons-device-phone-mobile" />
+                      </UButton>
+                      <UIcon 
+                        v-else 
+                        name="i-heroicons-device-phone-mobile" 
+                        class="text-green-500"
+                      />
+                    </div>
+                  </div>
+                  <div v-if="team.memberIds.length === 0" class="text-neutral-500 text-sm">
+                    No members
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="sessionStore.unassignedParticipants.length > 0" class="p-3 rounded-lg bg-neutral-800/50">
+                <div class="font-medium text-neutral-400 mb-2">Unassigned</div>
+                <div class="flex flex-wrap gap-2">
+                  <UBadge
+                    v-for="p in sessionStore.unassignedParticipants"
+                    :key="p.id"
+                    variant="subtle"
+                    color="neutral"
+                  >
+                    {{ p.name }}
+                  </UBadge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
 
       <UModal v-model:open="showAddParticipant">
@@ -263,10 +264,34 @@ const newParticipantName = ref('')
 const code = computed(() => (route.params.code as string).toUpperCase())
 const games = GAMES
 
+const sortedParticipants = computed(() => {
+  return [...sessionStore.participants].sort((a, b) => {
+    const teamA = a.teamId ? sessionStore.teams.find(t => t.id === a.teamId)?.name || '' : ''
+    const teamB = b.teamId ? sessionStore.teams.find(t => t.id === b.teamId)?.name || '' : ''
+
+    if (teamA === teamB) {
+      return a.name.localeCompare(b.name)
+    }
+
+    if (!teamA) return 1
+    if (!teamB) return -1
+
+    return teamA.localeCompare(teamB)
+  })
+})
+
 const joinUrl = computed(() => {
   if (typeof window === 'undefined') return ''
   return `${window.location.origin}/play/${code.value}`
 })
+
+function broadcastSessionState() {
+  const payload: SessionTeamsUpdatedPayload = {
+    participants: [...sessionStore.participants],
+    teams: [...sessionStore.teams]
+  }
+  ws.send('session:teams_updated', payload)
+}
 
 onMounted(async () => {
   if (!sessionStore.code || sessionStore.code !== code.value) {
@@ -278,14 +303,6 @@ onMounted(async () => {
   }
 
   ws.connect(code.value)
-
-  function broadcastSessionState() {
-    const payload: SessionTeamsUpdatedPayload = {
-      participants: [...sessionStore.participants],
-      teams: [...sessionStore.teams]
-    }
-    ws.send('session:teams_updated', payload)
-  }
 
   ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
     if (message.payload.hostId !== hostId.value) {
@@ -305,6 +322,7 @@ onMounted(async () => {
 
   ws.on('session:sync_request', (message: WSMessage<SessionSyncRequestPayload>) => {
     if (message.payload.source === 'participant') {
+      console.log('[host] received session:sync_request from participant')
       broadcastSessionState()
     }
   })
@@ -360,17 +378,30 @@ function addParticipant() {
     sessionStore.addParticipant(newParticipantName.value.trim())
     newParticipantName.value = ''
     showAddParticipant.value = false
+    broadcastSessionState()
   }
 }
 
 function addTeam() {
   const teamNumber = sessionStore.teams.length + 1
   sessionStore.createTeam(`Team ${String.fromCharCode(64 + teamNumber)}`)
+  broadcastSessionState()
 }
 
 function randomizeTeams() {
   const teamCount = Math.max(2, Math.ceil(sessionStore.participantCount / 3))
   sessionStore.randomizeTeams(teamCount, 3)
+  broadcastSessionState()
+}
+
+function removeParticipant(participantId: string) {
+  sessionStore.removeParticipant(participantId)
+  broadcastSessionState()
+}
+
+function setTeamDevice(participantId: string) {
+  sessionStore.setTeamDevice(participantId)
+  broadcastSessionState()
 }
 
 function getParticipantName(id: string): string {

@@ -1,10 +1,10 @@
 {
   "id": "demand-mechanism",
-  "name": "Demand the Mechanism",
+  "name": "Demand the Cause",
   "definition": "Asking 'how specifically would A cause B?' before accepting causal claims.",
   "counters": ["causation-con", "slippery-slope"],
   "howToApply": [
-    "When someone claims A causes B, ask: What's the actual mechanism?",
+    "When someone claims A causes B, ask: What's the actual cause?",
     "Look for intermediate steps and ask if each one is supported",
     "Consider alternative explanations for the same correlation",
     "Ask what would need to be true for the causal chain to hold"
@@ -12,17 +12,17 @@
   "examples": [
     {
       "before": "Crime dropped after we increased enforcement. Enforcement works!",
-      "after": "What's the actual mechanism? Did enforcement lead to fewer criminals on the street, or did economic improvement happen simultaneously? Were there policing changes? Drug market shifts? Demographic changes? Let's look at what specifically might connect enforcement to crime rates.",
+      "after": "What's the actual cause? Did enforcement lead to fewer criminals on the street, or did economic improvement happen simultaneously? Were there policing changes? Drug market shifts? Demographic changes? Let's look at what specifically might connect enforcement to crime rates.",
       "topic": "immigration"
     },
     {
       "before": "If we reduce sentences, crime will explode.",
-      "after": "What's the mechanism? Does sentence length actually deter crime? The evidence is mixed—deterrence depends more on certainty of punishment than severity. And reduced sentences might mean more resources for rehabilitation, which could reduce recidivism. Let's examine each step.",
+      "after": "What's the cause? Does sentence length actually deter crime? The evidence is mixed—deterrence depends more on certainty of punishment than severity. And reduced sentences might mean more resources for rehabilitation, which could reduce recidivism. Let's examine each step.",
       "topic": "prison-reform"
     }
   ],
   "promptStarters": [
-    "What's the specific mechanism by which ___ would cause ___?",
+    "What's the specific cause by which ___ would lead to ___?",
     "What would need to be true for that causal chain to hold?",
     "Are there alternative explanations for this correlation?",
     "Let's break down each step: First ___, then ___, therefore ___?",

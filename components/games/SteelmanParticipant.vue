@@ -8,6 +8,27 @@
       </div>
 
       <div class="flex-1 flex flex-col">
+        <div v-if="teamHistory.length" class="mb-4 space-y-2">
+          <div class="text-xs text-neutral-400">Select a prior argument to steelman</div>
+          <select
+            v-model="selectedHistoryId"
+            class="w-full bg-neutral-900 border border-neutral-700 rounded-md px-3 py-2 text-sm text-neutral-100"
+          >
+            <option
+              v-for="entry in teamHistory"
+              :key="getHistoryKey(entry)"
+              :value="getHistoryKey(entry)"
+            >
+              {{ getHistoryLabel(entry) }}
+            </option>
+          </select>
+          <div class="mt-2 text-xs text-neutral-400">
+            Original argument:
+          </div>
+          <div class="text-xs text-neutral-300 italic max-h-24 overflow-y-auto">
+            "{{ selectedSourceText }}"
+          </div>
+        </div>
         <label class="text-sm text-neutral-400 mb-2">Your Sound Argument (no fallacies!)</label>
         <textarea
           v-model="argumentText"
@@ -92,7 +113,7 @@ import { computed, ref } from 'vue'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { SteelmanRound } from '~/types'
+import type { ArgumentHistoryEntry, SteelmanRound } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -115,7 +136,42 @@ const currentRound = computed((): SteelmanRound | undefined => {
 
 const myTeamId = computed(() => sessionStore.currentTeam?.id)
 
-const oppositePosition = computed(() => 'The opposite of your previous position')
+const teamHistory = computed<ArgumentHistoryEntry[]>(() => {
+  if (!myTeamId.value) return []
+  return (sessionStore.argumentHistory[myTeamId.value] as ArgumentHistoryEntry[] | undefined) || []
+})
+
+const selectedHistoryId = ref<string | null>(null)
+
+function getHistoryKey(entry: ArgumentHistoryEntry): string {
+  return `${entry.gameId}-${entry.topicId}-${entry.createdAt}`
+}
+
+const selectedHistoryEntry = computed<ArgumentHistoryEntry | null>(() => {
+  const entries = teamHistory.value
+  if (!entries.length) return null
+  const id = selectedHistoryId.value
+  if (!id) return entries[entries.length - 1]
+  const found = entries.find(e => getHistoryKey(e) === id)
+  return found || entries[entries.length - 1]
+})
+
+const oppositePosition = computed(() => {
+  const entry = selectedHistoryEntry.value
+  if (!entry) return 'The opposite of your previous position'
+  const topic = contentStore.getTopicById(entry.topicId)
+  return topic?.positionB.label || 'The opposite of your previous position'
+})
+
+const selectedSourceText = computed(() => {
+  return selectedHistoryEntry.value?.text || ''
+})
+
+function getHistoryLabel(entry: ArgumentHistoryEntry): string {
+  const topic = contentStore.getTopicById(entry.topicId)
+  const topicName = topic?.name || 'Unknown topic'
+  return `${topicName} – ${entry.position}`
+}
 
 const canSubmit = computed(() => {
   return argumentText.value.trim().length > 0 && selectedAntidotes.value.length >= 1

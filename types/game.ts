@@ -112,6 +112,14 @@ export interface TeamScores {
   [teamId: string]: number
 }
 
+export interface ArgumentHistoryEntry {
+  gameId: GameId
+  topicId: string
+  position: string
+  text: string
+  createdAt: string
+}
+
 export interface LogicTrapsState extends GameState {
   gameId: 'logic-traps'
   currentFallacyIndex: number

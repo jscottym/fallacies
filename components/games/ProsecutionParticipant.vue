@@ -39,8 +39,18 @@
         <div class="text-sm text-indigo-400 mt-2 font-medium">Your Position: {{ ourPosition }}</div>
       </div>
 
-      <div class="flex-1 flex flex-col">
-        <label class="text-sm text-neutral-400 mb-2">Your Argument (pack in fallacies!)</label>
+      <div class="flex-1 flex flex-col gap-2">
+        <div class="flex items-end gap-2 justify-between w-full">
+          <label class="text-sm text-neutral-400">Your Argument (pack in fallacies!)</label>
+          <UButton
+              variant="soft"
+              :disabled="hasSubmitted"
+              @click="openAiSuggest"
+            >
+              <UIcon name="i-heroicons-sparkles" class="mr-1" />
+              AI Suggest
+            </UButton>
+        </div>
         <textarea
           v-model="argumentText"
           class="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg p-3 text-white resize-none focus:border-indigo-500 focus:outline-none min-h-[120px]"
@@ -61,21 +71,16 @@
               :disabled="hasSubmitted"
               @click="toggleFallacy(fallacy.id)"
             >
-              {{ fallacy.nickname }}
+              <span class="flex flex-col items-start">
+                <span class="text-xs font-semibold">{{ fallacy.name }}</span>
+                <span class="text-[11px] text-neutral-400">"{{ fallacy.nickname }}"</span>
+              </span>
             </button>
           </div>
         </div>
 
         <div class="mt-4 flex gap-2">
-          <UButton 
-            variant="soft" 
-            class="flex-1"
-            :disabled="hasSubmitted"
-            @click="showAiSuggest = true"
-          >
-            <UIcon name="i-heroicons-sparkles" class="mr-1" />
-            AI Suggest
-          </UButton>
+          
           <UButton 
             color="primary" 
             class="flex-1"
@@ -120,7 +125,10 @@
                   : 'border-neutral-700 text-neutral-400 hover:border-neutral-600'"
                 @click="toggleReviewFallacy(team.id, fallacy.id)"
               >
-                {{ fallacy.nickname }}
+                <span class="flex flex-col items-start">
+                  <span class="text-[11px] font-semibold">{{ fallacy.name }}</span>
+                  <span class="text-[10px] text-neutral-400">"{{ fallacy.nickname }}"</span>
+                </span>
               </button>
             </div>
             <UButton 
@@ -156,28 +164,91 @@
       </div>
     </div>
 
-    <UModal v-model:open="showAiSuggest">
-      <template #content>
-        <div class="p-6 space-y-4">
-          <h3 class="text-lg font-semibold text-white">AI Suggestions</h3>
-          <p class="text-sm text-neutral-400">Click a fallacy to get argument ideas:</p>
-          <div class="flex flex-wrap gap-2">
+    <UModal
+      v-model:open="showAiSuggest"
+      title="AI Suggestions"
+      description="Describe what you want to argue, then pick one or more fallacies for the AI to weave in."
+    >
+      <template #body>
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <div class="text-sm text-neutral-400">What do you want to argue?</div>
+            <textarea
+              v-model="aiPositionText"
+              class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-sm text-white resize-none h-20 focus:border-indigo-500 focus:outline-none"
+            ></textarea>
+            <div class="text-xs text-neutral-500">
+              Using topic: <span class="text-neutral-300">{{ ourTopicName }}</span>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="text-sm text-neutral-400">Fallacies to include</div>
+            <div class="flex flex-wrap gap-2">
+              <UButton
+                v-for="fallacy in contentStore.fallacies"
+                :key="fallacy.id"
+                size="sm"
+                variant="soft"
+                :class="aiSelectedFallacies.includes(fallacy.id)
+                  ? 'bg-indigo-500/20 text-white'
+                  : 'bg-neutral-800 text-neutral-300'"
+                @click="toggleAiFallacy(fallacy.id)"
+              >
+                <span class="flex flex-col items-start">
+                  <span class="text-xs font-semibold">{{ fallacy.name }}</span>
+                  <span class="text-[11px] text-neutral-400">"{{ fallacy.nickname }}"</span>
+                </span>
+              </UButton>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-neutral-500">
+              {{ aiSelectedFallacies.length }} fallac{{ aiSelectedFallacies.length === 1 ? 'y' : 'ies' }} selected
+            </div>
             <UButton
-              v-for="fallacy in contentStore.fallacies"
-              :key="fallacy.id"
               size="sm"
-              variant="soft"
-              @click="getAiSuggestion(fallacy.id)"
+              color="primary"
+              :disabled="aiSelectedFallacies.length === 0 || aiLoading"
+              @click="getAiSuggestion"
             >
-              {{ fallacy.nickname }}
+              <UIcon
+                v-if="aiLoading"
+                name="i-heroicons-arrow-path"
+                class="mr-1 animate-spin"
+              />
+              <span>
+                {{ aiLoading ? 'Generating...' : aiSuggestionsHistory.length ? 'Try Again' : 'Generate' }}
+              </span>
             </UButton>
           </div>
+
+          <div v-if="aiError" class="game-card border-red-500/40">
+            <p class="text-red-400 text-sm">{{ aiError }}</p>
+          </div>
+
           <div v-if="aiSuggestion" class="game-card">
             <p class="text-neutral-300 text-sm">{{ aiSuggestion }}</p>
             <UButton size="xs" class="mt-2" @click="useAiSuggestion">
               Use This
             </UButton>
           </div>
+
+          <div v-if="aiSuggestionsHistory.length" class="space-y-2">
+            <div class="text-xs text-neutral-400">Previous suggestions (tap to preview):</div>
+            <div class="space-y-1 max-h-40 overflow-y-auto">
+              <button
+                v-for="(prev, index) in aiSuggestionsHistory"
+                :key="index"
+                class="w-full text-left text-[11px] text-neutral-300 px-2 py-1 rounded bg-neutral-900/70 hover:bg-neutral-800/90 border border-neutral-800 hover:border-indigo-500/40"
+                @click="aiSuggestion = prev"
+              >
+                {{ prev }}
+              </button>
+            </div>
+          </div>
+
           <div class="text-right">
             <UButton variant="ghost" @click="showAiSuggest = false">Close</UButton>
           </div>
@@ -188,12 +259,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useWebSocket } from '~/composables/useWebSocket'
-import type { ProsecutionRound, TopicSelectPayload, SubmitPayload, ReviewSubmitPayload } from '~/types'
+import type { ProsecutionRound, ReviewSubmitPayload, SubmitPayload, TopicSelectPayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -205,6 +276,11 @@ const selectedFallacies = ref<string[]>([])
 const reviewSelections = reactive<Record<string, string[]>>({})
 const showAiSuggest = ref(false)
 const aiSuggestion = ref('')
+const aiSuggestionsHistory = ref<string[]>([])
+const aiSelectedFallacies = ref<string[]>([])
+const aiPositionText = ref('')
+const aiLoading = ref(false)
+const aiError = ref('')
 
 const currentRound = computed((): ProsecutionRound | undefined => {
   const rounds = (gameStore.gameData.rounds as ProsecutionRound[]) || []
@@ -367,14 +443,47 @@ function submitReviewForTeam(targetTeamId: string) {
   ws.send('game:review_submit', payload)
 }
 
-async function getAiSuggestion(_fallacyId?: string) {
-  if (!ourTopicId.value) return
-  const topic = contentStore.getTopicById(ourTopicId.value)
-  if (!topic) return
+function toggleAiFallacy(id: string) {
+  const index = aiSelectedFallacies.value.indexOf(id)
+  if (index >= 0) {
+    aiSelectedFallacies.value.splice(index, 1)
+  } else {
+    aiSelectedFallacies.value.push(id)
+  }
+}
 
-  const fallacies = selectedFallacies.value.length
-    ? [...selectedFallacies.value]
-    : contentStore.fallacies.slice(0, 2).map(f => f.id)
+function openAiSuggest() {
+  aiError.value = ''
+  aiSelectedFallacies.value = selectedFallacies.value.length ? [...selectedFallacies.value] : []
+  aiPositionText.value = ourPosition.value || ourTopicExplanation.value || ''
+  showAiSuggest.value = true
+}
+
+async function getAiSuggestion() {
+  aiError.value = ''
+
+  if (aiSuggestion.value.trim()) {
+    aiSuggestionsHistory.value.unshift(aiSuggestion.value.trim())
+  }
+
+  if (!ourTopicId.value) {
+    aiError.value = 'Please pick a topic first.'
+    return
+  }
+
+  const topic = contentStore.getTopicById(ourTopicId.value)
+  if (!topic) {
+    aiError.value = 'Could not load topic details.'
+    return
+  }
+
+  const fallacies = aiSelectedFallacies.value.length
+    ? [...aiSelectedFallacies.value]
+    : selectedFallacies.value.length
+      ? [...selectedFallacies.value]
+      : contentStore.fallacies.slice(0, 2).map(f => f.id)
+
+  aiLoading.value = true
 
   try {
     const response = await $fetch<{ suggestions: Array<{ text: string }> }>('/api/ai/suggest', {
@@ -382,7 +491,7 @@ async function getAiSuggestion(_fallacyId?: string) {
       body: {
         type: 'fallacious',
         topic: topic.name,
-        position: ourPosition.value || '',
+        position: aiPositionText.value || ourPosition.value || '',
         targetFallacies: fallacies,
         existingText: argumentText.value || undefined
       }
@@ -391,9 +500,14 @@ async function getAiSuggestion(_fallacyId?: string) {
     const first = response.suggestions && response.suggestions[0]
     if (first?.text) {
       aiSuggestion.value = first.text
+    } else {
+      aiError.value = 'No suggestions returned.'
     }
   } catch (error) {
     console.error('AI suggest error', error)
+    aiError.value = 'Failed to get suggestions.'
+  } finally {
+    aiLoading.value = false
   }
 }
 
@@ -401,6 +515,12 @@ function useAiSuggestion() {
   argumentText.value += (argumentText.value ? ' ' : '') + aiSuggestion.value
   aiSuggestion.value = ''
   showAiSuggest.value = false
+
+   aiSelectedFallacies.value.forEach(id => {
+    if (!selectedFallacies.value.includes(id)) {
+      selectedFallacies.value.push(id)
+    }
+  })
 }
 </script>
 

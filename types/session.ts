@@ -1,3 +1,5 @@
+import type { ArgumentHistoryEntry } from './game'
+
 export interface Participant {
   id: string
   name: string
@@ -28,6 +30,7 @@ export interface SessionData {
   participants: Participant[]
   teams: Team[]
   gamesState: Record<string, GameStatus>
+  argumentHistory?: Record<string, ArgumentHistoryEntry[]>
 }
 
 export interface SessionState extends SessionData {

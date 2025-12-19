@@ -55,14 +55,14 @@
 
       <div v-else class="space-y-6">
         <div class="game-card border-green-500/30">
-          <h3 class="text-lg font-semibold text-green-400 mb-3">
+          <h3 class="text-lg font-semibold text-success-400 mb-3">
             Correct Answer{{ isComplex ? 's' : '' }}
           </h3>
           <div class="flex flex-wrap gap-2">
             <UBadge 
               v-for="fallacyId in currentQuote?.correctFallacies" 
               :key="fallacyId"
-              color="green"
+              color="success"
               size="lg"
             >
               {{ getFallacyName(fallacyId) }}

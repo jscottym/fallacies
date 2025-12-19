@@ -9,6 +9,7 @@ const sessionCode = ref('')
 const handlers = new Map<WSEventType, Set<MessageHandler>>()
 let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
 let pingInterval: ReturnType<typeof setInterval> | null = null
+const pendingMessages: string[] = []
 
 function connect(code: string) {
   if (ws.value?.readyState === WebSocket.OPEN && sessionCode.value === code) {
@@ -28,6 +29,11 @@ function connect(code: string) {
   ws.value.onopen = () => {
     isConnected.value = true
     startPing()
+    if (pendingMessages.length) {
+      pendingMessages.splice(0).forEach(message => {
+        ws.value?.send(message)
+      })
+    }
   }
 
   ws.value.onmessage = (event) => {
@@ -100,7 +106,14 @@ function send<T>(type: WSEventType, payload: T) {
     }
     ws.value.send(JSON.stringify(message))
   } else {
-    console.warn('WebSocket not connected, cannot send:', type)
+    const message: WSMessage<T> = {
+      type,
+      sessionCode: sessionCode.value,
+      payload,
+      timestamp: new Date().toISOString()
+    }
+    pendingMessages.push(JSON.stringify(message))
+    console.warn('WebSocket not connected, queueing message:', type)
   }
 }
 
