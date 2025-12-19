@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950">
+  <div class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950">
     <div v-if="!hasJoined" class="flex items-center justify-center min-h-screen p-6">
       <div class="max-w-md w-full">
         <div class="text-center mb-8">
           <div class="text-5xl mb-4">🧠</div>
           <h1 class="text-3xl font-bold text-white">Join Session</h1>
-          <p class="text-neutral-400 mt-2">Session: <span class="text-indigo-400 font-mono">{{ sessionCode }}</span></p>
+          <p class="text-gray-400 mt-2">Session: <span class="text-indigo-400 font-mono">{{ sessionCode }}</span></p>
         </div>
 
         <div class="game-card space-y-6">
@@ -34,7 +34,12 @@
     <div v-else class="min-h-screen flex flex-col">
       <header class="context-bar flex items-center justify-between">
         <div>
-          <div class="text-sm text-neutral-400">{{ sessionStore.name }}</div>
+          <div class="flex items-center gap-3">
+            <div class="text-sm text-gray-400">{{ sessionStore.name }}</div>
+            <div class="text-xs text-gray-500">
+              Code <span class="font-mono text-indigo-400">{{ sessionCode }}</span>
+            </div>
+          </div>
           <div class="text-white font-medium">{{ currentParticipant?.name }}</div>
         </div>
         <div class="flex items-center gap-3">
@@ -49,7 +54,7 @@
 
       <div v-if="gameStore.isActive" class="flex-1 flex flex-col">
         <div class="context-bar border-t-0">
-          <div class="text-xs text-neutral-500 uppercase tracking-wide">Currently Viewing</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Currently Viewing</div>
           <div class="text-white">{{ gameStore.hostContext || 'Waiting for host...' }}</div>
         </div>
 
@@ -60,7 +65,7 @@
             mode="participant"
           />
           <div v-else class="flex items-center justify-center h-full">
-            <div class="text-center text-neutral-400">
+            <div class="text-center text-gray-400">
               <UIcon name="i-heroicons-clock" class="text-4xl mb-4" />
               <p>Waiting for host to start the game...</p>
             </div>
@@ -72,9 +77,9 @@
         <div class="text-center">
           <div class="text-6xl mb-6">⏳</div>
           <h2 class="text-2xl font-bold text-white mb-2">Waiting for Game</h2>
-          <p class="text-neutral-400">The host will start the game soon</p>
-          <div class="mt-8 p-4 bg-neutral-800/50 rounded-xl">
-            <div class="text-sm text-neutral-500 mb-2">Connected as</div>
+          <p class="text-gray-400">The host will start the game soon</p>
+          <div class="mt-8 p-4 bg-gray-800/50 rounded-xl">
+            <div class="text-sm text-gray-500 mb-2">Connected as</div>
             <div class="text-xl text-white">{{ currentParticipant?.name }}</div>
             <div v-if="currentTeam" class="mt-2">
               <UBadge :style="{ backgroundColor: currentTeam.color + '30', color: currentTeam.color }">
@@ -97,6 +102,7 @@ import { useSessionStore } from '~/stores/session'
 import { useGameStore } from '~/stores/game'
 import { useWebSocket } from '~/composables/useWebSocket'
 import ReferencePanel from '~/components/game/ReferencePanel.vue'
+import type { StateUpdatePayload } from '~/types'
 
 const route = useRoute()
 const sessionStore = useSessionStore()
@@ -129,6 +135,14 @@ onMounted(() => {
   if (!sessionStore.loadSession(sessionCode.value, false)) {
     console.warn('Session not found, creating new one for participant')
   }
+
+  // Listen for game state updates from host
+  ws.on('game:state_update', (message) => {
+    const payload = message.payload as StateUpdatePayload
+    if (payload && payload.gameId) {
+      gameStore.applyRemoteState(payload, sessionCode.value)
+    }
+  })
 })
 
 function joinSession() {

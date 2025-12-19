@@ -6,7 +6,8 @@ import type {
   GameState, 
   TimerState,
   VoteRecord,
-  ProsecutionRound
+  ProsecutionRound,
+  StateUpdatePayload
 } from '~/types'
 
 interface GameStoreState {
@@ -315,6 +316,17 @@ export const useGameStore = defineStore('game', () => {
     return false
   }
 
+  function applyRemoteState(payload: StateUpdatePayload, sessionCode: string) {
+    state.currentGameId = payload.gameId as GameId
+    state.sessionCode = sessionCode
+    state.phase = payload.phase
+    state.step = payload.step
+    state.hostContext = payload.context
+    if (payload.data) {
+      state.gameData = { ...state.gameData, ...payload.data }
+    }
+  }
+
   function endGame() {
     state.currentGameId = null
     state.phase = ''
@@ -359,6 +371,7 @@ export const useGameStore = defineStore('game', () => {
     submitArgument,
     submitReview,
     loadState,
+    applyRemoteState,
     endGame,
     reset
   }

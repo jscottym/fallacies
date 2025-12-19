@@ -1,9 +1,9 @@
-import { reactive, computed, toRefs } from 'vue'
-import { defineStore } from 'pinia'
 import { useLocalStorage, watchDebounced } from '@vueuse/core'
-import type { SessionData, Participant, Team, GameStatus, GameId } from '~/types'
-import { generateSessionCode, generateId, TEAM_COLORS } from '~/types'
+import { defineStore } from 'pinia'
+import { computed, reactive, toRefs } from 'vue'
 import { useStorage } from '~/composables/useStorage'
+import type { GameId, GameStatus, Participant, SessionData, Team } from '~/types'
+import { generateId, generateSessionCode, TEAM_COLORS } from '~/types'
 
 interface SessionState {
   code: string

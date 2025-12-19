@@ -49,12 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, defineAsyncComponent } from 'vue'
+import { computed, onMounted, defineAsyncComponent, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { useTimer } from '~/composables/useTimer'
-import { GAMES, type GameId } from '~/types'
+import { useWebSocket } from '~/composables/useWebSocket'
+import { GAMES, type GameId, type StateUpdatePayload } from '~/types'
 
 definePageMeta({
   layout: 'game'
@@ -64,6 +65,7 @@ const route = useRoute()
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const timer = useTimer()
+const ws = useWebSocket()
 
 const gameId = computed(() => route.params.gameId as GameId)
 
@@ -80,7 +82,25 @@ const gameComponent = computed(() => {
   return components[gameId.value]
 })
 
+function broadcastState() {
+  if (!gameStore.currentGameId || !sessionStore.code) return
+
+  const payload: StateUpdatePayload = {
+    gameId: gameStore.currentGameId,
+    phase: gameStore.phase,
+    step: gameStore.step,
+    context: gameStore.hostContext,
+    data: { ...gameStore.gameData }
+  }
+
+  ws.send('game:state_update', payload)
+}
+
 onMounted(() => {
+  if (sessionStore.code) {
+    ws.connect(sessionStore.code)
+  }
+
   const game = GAMES.find(g => g.id === gameId.value)
   if (!game) {
     navigateTo(`/host/lobby?code=${sessionStore.code}`)
@@ -92,7 +112,18 @@ onMounted(() => {
     const totalSteps = getTotalSteps(gameId.value)
     gameStore.startGame(sessionStore.code, gameId.value, totalSteps)
   }
+
+  // Send initial state to participants
+  broadcastState()
 })
+
+watch(
+  () => [gameStore.phase, gameStore.step, gameStore.hostContext, gameStore.gameData],
+  () => {
+    broadcastState()
+  },
+  { deep: true }
+)
 
 function getTotalSteps(gameId: GameId): number {
   switch (gameId) {

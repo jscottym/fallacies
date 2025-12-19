@@ -26,6 +26,10 @@
         </div>
 
         <div class="flex items-center gap-4">
+          <div class="text-xs text-neutral-500">
+            Code <span class="font-mono text-neutral-200">{{ sessionStore.code }}</span>
+          </div>
+          
           <div class="w-32 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
             <div 
               class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
