@@ -53,13 +53,25 @@ export function useStorage() {
     if (typeof window === 'undefined') return null
     const key = getSessionKey(code)
     const data = localStorage.getItem(key)
-    return data ? JSON.parse(data) : null
+    if (!data) return null
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      console.warn('Failed to parse session from localStorage', key, e)
+      return null
+    }
   }
 
   function getCurrentSession(): SessionData | null {
     if (typeof window === 'undefined') return null
     const data = localStorage.getItem(CURRENT_SESSION_KEY)
-    return data ? JSON.parse(data) : null
+    if (!data) return null
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      console.warn('Failed to parse current session from localStorage', e)
+      return null
+    }
   }
 
   function saveSession(session: SessionData): void {
@@ -93,7 +105,13 @@ export function useStorage() {
     if (typeof window === 'undefined') return null
     const key = getGameKey(sessionCode, gameId)
     const data = localStorage.getItem(key)
-    return data ? JSON.parse(data) : null
+    if (!data) return null
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      console.warn('Failed to parse game state from localStorage', key, e)
+      return null
+    }
   }
 
   function saveGameState<T extends GameState>(state: T): void {
