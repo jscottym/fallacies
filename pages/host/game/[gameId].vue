@@ -67,7 +67,8 @@ import {
   type HostNavigatePayload,
   type SessionTeamsUpdatedPayload,
   type SessionSyncRequestPayload,
-  type SubmitPayload
+  type SubmitPayload,
+  type TopicSelectPayload
 } from '~/types'
 
 definePageMeta({
@@ -251,6 +252,16 @@ onMounted(() => {
       payload.submission.text,
       payload.submission.techniques
     )
+  })
+
+  ws.on('game:topic_select', (message: WSMessage<TopicSelectPayload>) => {
+    const payload = message.payload
+    if (!payload || payload.gameId !== gameId.value) return
+
+    const claimed = gameStore.selectTopic(payload.teamId, payload.topicId)
+    if (claimed) {
+      broadcastState()
+    }
   })
 
   setTimeout(() => {

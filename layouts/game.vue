@@ -6,7 +6,7 @@
           <UButton 
             variant="ghost" 
             size="sm"
-            @click="confirmExit"
+            @click="exitGame"
           >
             <UIcon name="i-heroicons-arrow-left" class="mr-1" />
             Back to Lobby
@@ -50,26 +50,6 @@
     </main>
 
     <ReferencePanel v-model:open="showReference" />
-
-    <UModal v-model:open="showExitConfirm">
-      <template #content>
-        <div class="p-6 text-center space-y-6">
-          <UIcon name="i-heroicons-exclamation-triangle" class="text-5xl text-yellow-500" />
-          <div>
-            <h3 class="text-xl font-semibold text-white mb-2">Leave this game?</h3>
-            <p class="text-neutral-400">Your progress will be saved. You can resume later.</p>
-          </div>
-          <div class="flex gap-3 justify-center">
-            <UButton variant="ghost" size="lg" @click="showExitConfirm = false">
-              Keep Playing
-            </UButton>
-            <UButton color="primary" size="lg" @click="exitGame">
-              Back to Lobby
-            </UButton>
-          </div>
-        </div>
-      </template>
-    </UModal>
   </div>
 </template>
 
@@ -88,19 +68,12 @@ const ws = useWebSocket()
 const hostId = useHostId()
 
 const showReference = ref(false)
-const showExitConfirm = ref(false)
 
 const gameInfo = computed(() => {
   return GAMES.find(g => g.id === gameStore.currentGameId)
 })
 
-function confirmExit() {
-  showExitConfirm.value = true
-}
-
 function exitGame() {
-  showExitConfirm.value = false
-
   const targetRoute = `/host/lobby?code=${sessionStore.code}`
 
   const payload: HostNavigatePayload = {
