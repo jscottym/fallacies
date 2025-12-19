@@ -1,119 +1,121 @@
-import { onUnmounted, ref } from 'vue'
-import type { WSEventType, WSMessage } from '~/types'
+import { ref, onUnmounted } from 'vue'
+import type { WSMessage, WSEventType } from '~/types'
 
 type MessageHandler = (message: WSMessage) => void
 
-export function useWebSocket() {
-  const ws = ref<WebSocket | null>(null)
-  const isConnected = ref(false)
-  const sessionCode = ref('')
-  const handlers = new Map<WSEventType, Set<MessageHandler>>()
-  let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
-  let pingInterval: ReturnType<typeof setInterval> | null = null
+const ws = ref<WebSocket | null>(null)
+const isConnected = ref(false)
+const sessionCode = ref('')
+const handlers = new Map<WSEventType, Set<MessageHandler>>()
+let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
+let pingInterval: ReturnType<typeof setInterval> | null = null
 
-  function connect(code: string) {
-    if (ws.value?.readyState === WebSocket.OPEN) {
-      return
-    }
+function connect(code: string) {
+  if (ws.value?.readyState === WebSocket.OPEN && sessionCode.value === code) {
+    return
+  }
 
-    sessionCode.value = code
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const url = `${protocol}//${window.location.host}/api/ws?session=${code}`
-    
-    ws.value = new WebSocket(url)
+  if (ws.value) {
+    ws.value.close()
+  }
 
-    ws.value.onopen = () => {
-      isConnected.value = true
-      startPing()
-    }
+  sessionCode.value = code
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  const url = `${protocol}//${window.location.host}/api/ws?session=${code}`
+  
+  ws.value = new WebSocket(url)
 
-    ws.value.onmessage = (event) => {
-      try {
-        const message: WSMessage = JSON.parse(event.data)
-        const typeHandlers = handlers.get(message.type)
-        if (typeHandlers) {
-          typeHandlers.forEach(handler => handler(message))
-        }
-      } catch (e) {
-        console.error('Failed to parse WebSocket message:', e)
+  ws.value.onopen = () => {
+    isConnected.value = true
+    startPing()
+  }
+
+  ws.value.onmessage = (event) => {
+    try {
+      const message: WSMessage = JSON.parse(event.data)
+      const typeHandlers = handlers.get(message.type)
+      if (typeHandlers) {
+        typeHandlers.forEach(handler => handler(message))
       }
-    }
-
-    ws.value.onclose = () => {
-      isConnected.value = false
-      stopPing()
-      scheduleReconnect()
-    }
-
-    ws.value.onerror = () => {
-      isConnected.value = false
+    } catch (e) {
+      console.error('Failed to parse WebSocket message:', e)
     }
   }
 
-  function disconnect() {
-    if (reconnectTimeout) {
-      clearTimeout(reconnectTimeout)
-      reconnectTimeout = null
-    }
+  ws.value.onclose = () => {
+    isConnected.value = false
     stopPing()
-    if (ws.value) {
-      ws.value.close()
-      ws.value = null
-    }
+    scheduleReconnect()
+  }
+
+  ws.value.onerror = () => {
     isConnected.value = false
   }
+}
 
-  function scheduleReconnect() {
-    if (reconnectTimeout) return
-    reconnectTimeout = setTimeout(() => {
-      reconnectTimeout = null
-      if (sessionCode.value) {
-        connect(sessionCode.value)
-      }
-    }, 3000)
+function disconnect() {
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = null
   }
-
-  function startPing() {
-    if (pingInterval) return
-    pingInterval = setInterval(() => {
-      send('ping', {})
-    }, 30000)
+  stopPing()
+  if (ws.value) {
+    ws.value.close()
+    ws.value = null
   }
+  isConnected.value = false
+}
 
-  function stopPing() {
-    if (pingInterval) {
-      clearInterval(pingInterval)
-      pingInterval = null
+function scheduleReconnect() {
+  if (reconnectTimeout) return
+  reconnectTimeout = setTimeout(() => {
+    reconnectTimeout = null
+    if (sessionCode.value) {
+      connect(sessionCode.value)
     }
-  }
+  }, 3000)
+}
 
-  function send<T>(type: WSEventType, payload: T) {
-    if (ws.value?.readyState === WebSocket.OPEN) {
-      const message: WSMessage<T> = {
-        type,
-        sessionCode: sessionCode.value,
-        payload,
-        timestamp: new Date().toISOString()
-      }
-      ws.value.send(JSON.stringify(message))
+function startPing() {
+  if (pingInterval) return
+  pingInterval = setInterval(() => {
+    send('ping', {})
+  }, 30000)
+}
+
+function stopPing() {
+  if (pingInterval) {
+    clearInterval(pingInterval)
+    pingInterval = null
+  }
+}
+
+function send<T>(type: WSEventType, payload: T) {
+  if (ws.value?.readyState === WebSocket.OPEN) {
+    const message: WSMessage<T> = {
+      type,
+      sessionCode: sessionCode.value,
+      payload,
+      timestamp: new Date().toISOString()
     }
+    ws.value.send(JSON.stringify(message))
+  } else {
+    console.warn('WebSocket not connected, cannot send:', type)
   }
+}
 
-  function on(type: WSEventType, handler: MessageHandler) {
-    if (!handlers.has(type)) {
-      handlers.set(type, new Set())
-    }
-    handlers.get(type)!.add(handler)
+function on(type: WSEventType, handler: MessageHandler) {
+  if (!handlers.has(type)) {
+    handlers.set(type, new Set())
   }
+  handlers.get(type)!.add(handler)
+}
 
-  function off(type: WSEventType, handler: MessageHandler) {
-    handlers.get(type)?.delete(handler)
-  }
+function off(type: WSEventType, handler: MessageHandler) {
+  handlers.get(type)?.delete(handler)
+}
 
-  onUnmounted(() => {
-    disconnect()
-  })
-
+export function useWebSocket() {
   return {
     isConnected,
     connect,
@@ -123,4 +125,3 @@ export function useWebSocket() {
     off
   }
 }
-
