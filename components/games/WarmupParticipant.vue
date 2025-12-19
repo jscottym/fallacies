@@ -11,16 +11,7 @@
     <div v-else-if="phase === 'quote'" class="flex-1 flex flex-col">
       <div class="game-card mb-4">
         <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Current Quote</div>
-        <p class="text-white text-sm leading-relaxed">"{{ truncatedQuote }}"</p>
-        <UButton 
-          v-if="fullQuote.length > 100" 
-          size="xs" 
-          variant="link" 
-          class="mt-2"
-          @click="showFullQuote = true"
-        >
-          View Full Quote
-        </UButton>
+        <p class="text-white text-sm leading-relaxed">"{{ fullQuote }}"</p>
       </div>
 
       <div v-if="!hasVoted && !revealed" class="flex-1 overflow-y-auto">
@@ -34,7 +25,7 @@
             class="w-full p-3 rounded-lg border transition-all text-left"
             :class="selectedFallacies.includes(fallacy.id) 
               ? 'border-indigo-500 bg-indigo-500/20 text-white' 
-              : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-gray-600'"
+              : 'border-neutral-700 bg-neutral-800/50 text-neutral-300 hover:border-neutral-600'"
             @click="toggleFallacy(fallacy.id)"
           >
             <div class="font-medium">{{ fallacy.name }}</div>
