@@ -87,6 +87,12 @@ const isReceivingRemoteUpdate = ref(false)
 
 const gameId = computed(() => route.params.gameId as GameId)
 
+// Prefer code from URL query when available so refresh works
+const sessionCode = computed(() => {
+  const fromQuery = (route.query.code as string) || ''
+  return fromQuery || sessionStore.code || ''
+})
+
 const gameComponent = computed(() => {
   const components: Record<string, ReturnType<typeof defineAsyncComponent>> = {
     'logic-traps': defineAsyncComponent(() => import('~/components/games/LogicTrapsHost.vue')),
@@ -101,7 +107,7 @@ const gameComponent = computed(() => {
 })
 
 function broadcastState() {
-  if (!gameStore.currentGameId || !sessionStore.code || isReceivingRemoteUpdate.value) return
+  if (!gameStore.currentGameId || !sessionCode.value || isReceivingRemoteUpdate.value) return
 
   const payload: StateUpdatePayload = {
     gameId: gameStore.currentGameId,
@@ -177,20 +183,24 @@ function applyRemoteHostState(payload: HostSyncResponsePayload | StateUpdatePayl
 }
 
 onMounted(() => {
-  if (sessionStore.code) {
-    ws.connect(sessionStore.code)
+  if (sessionCode.value) {
+    // Ensure session store is hydrated for this code
+    if (!sessionStore.code || sessionStore.code !== sessionCode.value) {
+      sessionStore.loadSession(sessionCode.value, true)
+    }
+    ws.connect(sessionCode.value)
   }
 
   const game = GAMES.find(g => g.id === gameId.value)
   if (!game) {
-    navigateTo(`/host/lobby?code=${sessionStore.code}`)
+    navigateTo(`/host/lobby?code=${sessionCode.value}`)
     return
   }
 
-  const existingState = gameStore.loadState(sessionStore.code, gameId.value)
+  const existingState = gameStore.loadState(sessionCode.value, gameId.value)
   if (!existingState) {
     const totalSteps = getTotalSteps(gameId.value)
-    gameStore.startGame(sessionStore.code, gameId.value, totalSteps)
+    gameStore.startGame(sessionCode.value, gameId.value, totalSteps)
   }
 
   ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {

@@ -411,7 +411,8 @@ function getGameStatus(gameId: GameId): string {
 function startGame(gameId: GameId) {
   sessionStore.updateGameStatus(gameId, 'in_progress')
   
-  const targetRoute = `/host/game/${gameId}`
+  const code = sessionStore.code || (route.query.code as string) || ''
+  const targetRoute = code ? `/host/game/${gameId}?code=${code}` : `/host/game/${gameId}`
   
   const payload: HostNavigatePayload = {
     hostId: hostId.value,
