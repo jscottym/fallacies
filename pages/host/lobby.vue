@@ -257,11 +257,27 @@ const joinUrl = computed(() => {
 })
 
 onMounted(async () => {
-  const code = route.query.code as string
-  if (code && !sessionStore.code) {
-    sessionStore.loadSession(code, true)
+  const code = route.query.code as string | undefined
+
+  // On hard refresh, session store starts empty – hydrate from storage
+  if (!sessionStore.code) {
+    let loaded = false
+
+    if (code) {
+      loaded = sessionStore.loadSession(code, true)
+    }
+
+    if (!loaded) {
+      loaded = sessionStore.hydrateFromStorage()
+    }
+
+    // If we still don't have a session, send host back to create screen
+    if (!loaded || !sessionStore.code) {
+      navigateTo('/host')
+      return
+    }
   }
-  
+
   await generateQR()
 })
 
