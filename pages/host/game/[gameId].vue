@@ -1,27 +1,69 @@
 <template>
-  <GameWrapper ref="gameWrapper">
-    <component 
-      :is="gameComponent" 
-      v-if="gameComponent"
-      mode="host"
-      :timer="gameWrapper?.timer"
-    />
-  </GameWrapper>
+  <div class="flex-1 flex flex-col">
+    <div class="flex-1 max-w-6xl mx-auto w-full p-6">
+      <component 
+        :is="gameComponent" 
+        v-if="gameComponent"
+        mode="host"
+        :timer="timer"
+      />
+    </div>
+
+    <footer class="bg-neutral-900/80 backdrop-blur-sm border-t border-neutral-800 px-6 py-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <UButton 
+          variant="ghost" 
+          :disabled="gameStore.step === 0"
+          @click="gameStore.prevStep()"
+        >
+          <UIcon name="i-heroicons-arrow-left" class="mr-2" />
+          Back
+        </UButton>
+
+        <div v-if="timer.isActive.value" class="flex items-center gap-3">
+          <div 
+            class="text-2xl font-mono font-bold"
+            :class="{
+              'text-white': timer.status.value === 'normal',
+              'text-yellow-500': timer.status.value === 'warning',
+              'text-red-500': timer.status.value === 'critical'
+            }"
+          >
+            {{ timer.formattedTime.value }}
+          </div>
+          <UButton size="xs" variant="soft" @click="timer.extend(30)">+30s</UButton>
+          <UButton size="xs" variant="soft" @click="timer.stop()">Stop</UButton>
+        </div>
+
+        <UButton 
+          color="primary"
+          :disabled="gameStore.step >= gameStore.totalSteps - 1"
+          @click="gameStore.nextStep()"
+        >
+          Next
+          <UIcon name="i-heroicons-arrow-right" class="ml-2" />
+        </UButton>
+      </div>
+    </footer>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
+import { computed, onMounted, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
+import { useTimer } from '~/composables/useTimer'
 import { GAMES, type GameId } from '~/types'
-import GameWrapper from '~/components/game/GameWrapper.vue'
+
+definePageMeta({
+  layout: 'game'
+})
 
 const route = useRoute()
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
-
-const gameWrapper = ref<InstanceType<typeof GameWrapper>>()
+const timer = useTimer()
 
 const gameId = computed(() => route.params.gameId as GameId)
 
@@ -54,23 +96,14 @@ onMounted(() => {
 
 function getTotalSteps(gameId: GameId): number {
   switch (gameId) {
-    case 'logic-traps':
-      return 30
-    case 'warmup':
-      return 14
-    case 'prosecution':
-      return 20
-    case 'antidotes':
-      return 22
-    case 'steelman':
-      return 15
-    case 'crux-hunt':
-      return 10
-    case 'reflection':
-      return 8
-    default:
-      return 10
+    case 'logic-traps': return 30
+    case 'warmup': return 14
+    case 'prosecution': return 20
+    case 'antidotes': return 22
+    case 'steelman': return 15
+    case 'crux-hunt': return 10
+    case 'reflection': return 8
+    default: return 10
   }
 }
 </script>
-

@@ -107,4 +107,3 @@ function toggleExpanded(id: string) {
   expanded.value = expanded.value === id ? null : id
 }
 </script>
-
