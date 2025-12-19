@@ -1,0 +1,41 @@
+{
+  "id": "housing-market",
+  "name": "Housing & Economic Opportunity",
+  "positionA": {
+    "label": "Personal responsibility is key",
+    "statement": "Housing affordability is primarily about personal choices and financial discipline.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "Young people complaining are the same ones who ___." },
+      { "fallacy": "false-dilemma", "starter": "Either you work harder and sacrifice, or you ___." },
+      { "fallacy": "causation-con", "starter": "Boomers bought houses young because they ___." },
+      { "fallacy": "whataboutism", "starter": "Try buying a house with 18% interest rates like ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those pointing to systemic issues have valid data about ___, including ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific mechanism by which individual choices affect home ownership is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Both individual choices and systemic factors play a role, specifically ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Systemic factors dominate",
+    "statement": "The housing crisis is primarily a policy and economic failure, not individual choices.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "Boomers who lecture us are just ___ who got lucky with ___." },
+      { "fallacy": "straw-man", "starter": "They think anyone who can't afford a house is just ___." },
+      { "fallacy": "appeal-to-authority", "starter": "Every economist agrees that housing policy has ___." },
+      { "fallacy": "causation-con", "starter": "Ever since ___, housing prices have ___, proving ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those emphasizing personal responsibility have valid points about ___, such as ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific policy mechanisms driving unaffordability are ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Solutions likely involve both policy changes and individual adjustments, including ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "How much has the ratio of housing prices to wages changed over generations?",
+    "Do individual financial choices explain the majority of the affordability gap?",
+    "What role does housing supply vs. demand play?",
+    "Are zoning and regulatory policies the main barrier to affordability?"
+  ]
+}
+

@@ -1,0 +1,43 @@
+{
+  "id": "slippery-slope",
+  "name": "Slippery Slope",
+  "nickname": "The Doom Spiral",
+  "definition": "Claiming that one action will inevitably lead to extreme consequences without demonstrating the causal chain.",
+  "whyItWorks": "Fear is motivating. By painting a vivid worst-case scenario, we make moderate positions seem dangerous. The chain of 'if...then' feels logical even without evidence for each link.",
+  "examples": [
+    {
+      "text": "If we allow any path to legal status for undocumented immigrants, we're signaling that laws don't matter. Soon there will be no border at all.",
+      "topic": "immigration",
+      "analysis": "Assumes no stopping points or course corrections are possible. Many countries have paths to legal status without open borders."
+    },
+    {
+      "text": "If we let employers fire people for controversial tweets, soon you'll lose your job for private dinner conversations.",
+      "topic": "cancel-culture",
+      "analysis": "Plausible-sounding progression, but lacks evidence it's inevitable. Social and legal norms can create stable middle grounds."
+    },
+    {
+      "text": "If we reduce sentences for non-violent drug offenses, criminals will see we're soft and violent crime will explode.",
+      "topic": "prison-reform",
+      "analysis": "Assumes direct causal chain without evidence. Many jurisdictions have reduced sentences without increases in violent crime."
+    },
+    {
+      "text": "If the government can regulate one health supplement, they'll eventually ban all natural medicine and force us to use only pharmaceuticals.",
+      "topic": "influencer-health",
+      "analysis": "Regulation exists on a spectrum. Requiring evidence for claims is different from banning products."
+    },
+    {
+      "text": "If we keep building high-density housing, we'll destroy every neighborhood's character until cities are just concrete blocks.",
+      "topic": "housing-market",
+      "analysis": "Ignores zoning, design standards, community input, and that some density can coexist with neighborhood character."
+    }
+  ],
+  "antidoteId": "demand-mechanism",
+  "promptStarters": [
+    "If we allow ___, soon we'll have ___, and eventually ___.",
+    "This is just the first step toward ___.",
+    "Once we start ___, where does it end?",
+    "Today it's ___. Tomorrow it'll be ___.",
+    "Give them an inch on ___ and they'll take a mile."
+  ]
+}
+

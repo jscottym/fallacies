@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+:root {
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-display);
+}
+
+.game-card {
+  @apply bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6;
+  @apply transition-all duration-300 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10;
+}
+
+.context-bar {
+  @apply bg-gray-800/80 backdrop-blur-sm border-b border-gray-700 px-4 py-3;
+}
+
+.slide-content {
+  @apply max-w-4xl mx-auto px-6 py-12;
+}
+

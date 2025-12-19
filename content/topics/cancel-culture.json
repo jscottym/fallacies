@@ -1,0 +1,41 @@
+{
+  "id": "cancel-culture",
+  "name": "Cancel Culture & Accountability",
+  "positionA": {
+    "label": "Cancel culture has gone too far",
+    "statement": "Modern cancel culture causes disproportionate harm and stifles free expression.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "The woke mob is mostly just ___ who have never ___." },
+      { "fallacy": "slippery-slope", "starter": "First they came for old tweets, next they'll ___." },
+      { "fallacy": "whataboutism", "starter": "Funny how they never cancel anyone on their side for ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we defend free speech or we enable ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Supporters of public accountability have valid points about ___, particularly when ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between zero consequences and career destruction, proportional responses could include ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific way cancel culture chills speech is ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Public accountability is necessary",
+    "statement": "Public accountability for harmful speech is an important social mechanism.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "Critics of accountability are usually just ___ who want to ___." },
+      { "fallacy": "straw-man", "starter": "They think people should be able to say anything with ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we hold people accountable or harmful ideas ___." },
+      { "fallacy": "appeal-to-authority", "starter": "Social scientists agree that public shaming ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Critics raise legitimate concerns about proportionality, specifically ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Accountability can take many forms beyond firing, including ___." },
+      { "antidote": "stay-in-lane", "starter": "The specific question of proportionality deserves direct answer: ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Does public shaming actually change behavior, or just drive it underground?",
+    "Where should the line be between criticism and mob punishment?",
+    "Should consequences be proportional to harm, and who decides?",
+    "Is there a difference between public figures and private individuals?"
+  ]
+}
+

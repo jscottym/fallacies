@@ -1,0 +1,115 @@
+{
+  "simpleQuotes": [
+    {
+      "id": "q1",
+      "text": "You're worried about influencer health claims? What about all the people Big Pharma has killed with opioids?",
+      "correctFallacies": ["whataboutism"],
+      "topic": "influencer-health",
+      "explanation": "Deflects from the original concern by pointing to a different (albeit real) problem. Both can be concerning—addressing one doesn't require ignoring the other."
+    },
+    {
+      "id": "q2",
+      "text": "Of course she supports prison reform—she's never been a victim of violent crime.",
+      "correctFallacies": ["ad-hominem"],
+      "topic": "prison-reform",
+      "explanation": "Attacks the speaker's personal experience rather than engaging with her arguments about policy effectiveness and ethics."
+    },
+    {
+      "id": "q3",
+      "text": "Either we enforce our borders strictly or we become a lawless nation. There's no middle ground.",
+      "correctFallacies": ["false-dilemma"],
+      "topic": "immigration",
+      "explanation": "Presents only two extreme options while ignoring the many policy positions between strict enforcement and no enforcement."
+    },
+    {
+      "id": "q4",
+      "text": "Crime dropped after we increased deportations. Clearly, deportation reduces crime.",
+      "correctFallacies": ["causation-con"],
+      "topic": "immigration",
+      "explanation": "Assumes causation from correlation. Many other factors (economy, policing, demographics) could explain the crime drop."
+    },
+    {
+      "id": "q5",
+      "text": "Cancel culture critics just want consequence-free speech where they can say anything without pushback.",
+      "correctFallacies": ["straw-man"],
+      "topic": "cancel-culture",
+      "explanation": "Misrepresents the critics' position. Most distinguish between proportional consequences and disproportionate mob punishment."
+    },
+    {
+      "id": "q6",
+      "text": "Dr. Andrew Huberman recommends this supplement protocol, so it must be effective.",
+      "correctFallacies": ["appeal-to-authority"],
+      "topic": "influencer-health",
+      "explanation": "Uses credentials as a substitute for evidence. Huberman is a real scientist, but his podcast claims aren't all peer-reviewed or in his specialty."
+    },
+    {
+      "id": "q7",
+      "text": "If we let employers fire people for old tweets, soon you'll lose your job for private dinner conversations.",
+      "correctFallacies": ["slippery-slope"],
+      "topic": "cancel-culture",
+      "explanation": "Assumes an inevitable progression without evidence. Social and legal norms can create stable boundaries."
+    },
+    {
+      "id": "q8",
+      "text": "Young people complaining about housing prices are the same ones spending money on avocado toast and streaming services.",
+      "correctFallacies": ["ad-hominem"],
+      "topic": "housing-market",
+      "explanation": "Attacks the character/choices of the complainers rather than engaging with economic arguments about wage-to-price ratios."
+    },
+    {
+      "id": "q9",
+      "text": "Prison reformers want to let dangerous criminals walk free with no consequences.",
+      "correctFallacies": ["straw-man"],
+      "topic": "prison-reform",
+      "explanation": "Exaggerates the reform position. Most reformers focus on non-violent offenders and rehabilitation, not eliminating all consequences."
+    },
+    {
+      "id": "q10",
+      "text": "I started taking this supplement and felt better within a week. It definitely works!",
+      "correctFallacies": ["causation-con"],
+      "topic": "influencer-health",
+      "explanation": "Assumes the supplement caused improvement. Could be placebo effect, lifestyle changes, or natural recovery."
+    }
+  ],
+  "complexExamples": [
+    {
+      "id": "c1",
+      "text": "Anyone questioning strict enforcement clearly doesn't care about American workers. These open-borders academics—mostly privileged elites who live in gated communities—want to lecture working-class families about compassion while crime surges in their neighborhoods. We saw what happened in the 90s when we got tough: the economy boomed. Either we enforce our laws or we become a failed state like Venezuela.",
+      "correctFallacies": ["ad-hominem", "straw-man", "causation-con", "false-dilemma", "slippery-slope"],
+      "topic": "immigration",
+      "explanations": {
+        "ad-hominem": "Attacks critics as 'privileged academics' and 'elites' rather than addressing their arguments.",
+        "straw-man": "Misrepresents the position as 'open-borders' when most critics support some enforcement.",
+        "causation-con": "The 90s economic boom had many causes; enforcement was one of many simultaneous factors.",
+        "false-dilemma": "Presents only two options: strict enforcement or failed state.",
+        "slippery-slope": "Jumps to 'Venezuela' without demonstrating the causal chain."
+      }
+    },
+    {
+      "id": "c2",
+      "text": "Dr. Smith, who has 3 million followers and a bestselling book, says intermittent fasting is the key to longevity. Critics are mostly overweight people who don't want to put in the work, or they're shills for Big Food who profit from you eating all day. Look at traditional cultures—they ate less and lived well. You either commit to a disciplined eating window or accept that you're choosing sickness and early death.",
+      "correctFallacies": ["appeal-to-authority", "ad-hominem", "causation-con", "false-dilemma"],
+      "topic": "influencer-health",
+      "explanations": {
+        "appeal-to-authority": "Followers and book sales don't validate health claims; peer-reviewed evidence would.",
+        "ad-hominem": "Dismisses critics as 'overweight' or 'shills' rather than engaging with their arguments.",
+        "causation-con": "Traditional cultures' longevity had many causes beyond meal timing.",
+        "false-dilemma": "Frames it as discipline vs. choosing sickness, ignoring many healthy eating patterns."
+      }
+    },
+    {
+      "id": "c3",
+      "text": "A former police chief with 30 years of experience says our sentences are too lenient. Since California reduced some sentences, crime went up—the numbers don't lie. Reformers, who mostly live in safe suburban neighborhoods and have never been crime victims, think hugging criminals will solve everything. We tried being soft on crime in the 70s and it was chaos. Either we get serious about punishment or our cities become lawless.",
+      "correctFallacies": ["appeal-to-authority", "causation-con", "ad-hominem", "straw-man", "false-dilemma"],
+      "topic": "prison-reform",
+      "explanations": {
+        "appeal-to-authority": "One police chief's opinion isn't consensus; law enforcement can have biases too.",
+        "causation-con": "California's crime increase had multiple simultaneous causes; sentence changes are one factor.",
+        "ad-hominem": "Attacks reformers' neighborhoods and victim status rather than their arguments.",
+        "straw-man": "'Hugging criminals' misrepresents rehabilitation as lacking any consequences.",
+        "false-dilemma": "Only presents harsh punishment or lawlessness, ignoring evidence-based middle options."
+      }
+    }
+  ]
+}
+

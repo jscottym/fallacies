@@ -1,0 +1,41 @@
+{
+  "id": "prison-reform",
+  "name": "Prison Sentencing & Justice",
+  "positionA": {
+    "label": "Longer sentences protect communities",
+    "statement": "Longer sentences deter crime and keep dangerous people away from potential victims.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "Reformers mostly live in safe suburbs and have never ___." },
+      { "fallacy": "straw-man", "starter": "Reformers want to let dangerous criminals ___." },
+      { "fallacy": "causation-con", "starter": "When we got tough on crime in the 90s, crime dropped. This proves ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we get serious about punishment or cities become ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Reformers make valid points about recidivism data, specifically ___." },
+      { "antidote": "demand-mechanism", "starter": "The mechanism by which longer sentences deter crime is ___." },
+      { "antidote": "separate-claim-claimant", "starter": "Regardless of who advocates for it, the evidence on sentence length and deterrence shows ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Rehabilitation reduces crime more",
+    "statement": "Rehabilitation-focused sentencing is more effective at reducing recidivism and more humane.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "Tough-on-crime advocates are just ___ who profit from ___." },
+      { "fallacy": "appeal-to-authority", "starter": "Criminologists universally agree that ___." },
+      { "fallacy": "straw-man", "starter": "They think locking people up forever will somehow ___." },
+      { "fallacy": "slippery-slope", "starter": "If we keep building prisons, soon we'll have ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those who favor longer sentences have valid concerns about public safety, including ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific mechanism by which rehabilitation reduces recidivism is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between maximum incarceration and no consequences, evidence supports ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Does severity of punishment actually deter crime?",
+    "Does rehabilitation work for violent offenders?",
+    "How do we balance punishment, deterrence, and rehabilitation?",
+    "What is the cost-benefit of incarceration vs. alternative programs?"
+  ]
+}
+

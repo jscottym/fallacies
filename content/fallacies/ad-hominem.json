@@ -1,0 +1,43 @@
+{
+  "id": "ad-hominem",
+  "name": "Ad Hominem",
+  "nickname": "Attack the Messenger",
+  "definition": "Attacking the person making the argument rather than the argument itself.",
+  "whyItWorks": "Our brains use source credibility as a mental shortcut. If we can discredit the messenger, we feel justified in dismissing the message—even when the argument stands on its own merits.",
+  "examples": [
+    {
+      "text": "Of course she supports prison reform—she's never been a victim of violent crime.",
+      "topic": "prison-reform",
+      "analysis": "The speaker's personal experience doesn't determine whether her policy arguments are valid. Data and ethical reasoning matter regardless of who presents them."
+    },
+    {
+      "text": "Why would anyone listen to that influencer about nutrition? They're just a college dropout trying to sell supplements.",
+      "topic": "influencer-health",
+      "analysis": "Their education and business model are relevant context but don't automatically make specific claims false. Evaluate the claims on their merits."
+    },
+    {
+      "text": "You only think housing prices are too high because you're bitter you can't afford one. Renters just want handouts.",
+      "topic": "housing-market",
+      "analysis": "The speaker's housing situation doesn't invalidate economic arguments about affordability ratios and wage stagnation."
+    },
+    {
+      "text": "People defending strict immigration enforcement are just afraid of demographic change. It's barely concealed racism.",
+      "topic": "immigration",
+      "analysis": "Assigns motive without addressing actual policy arguments about law enforcement, economic impacts, or border security."
+    },
+    {
+      "text": "She's criticizing cancel culture now, but she participated in pile-ons five years ago. Total hypocrite.",
+      "topic": "cancel-culture",
+      "analysis": "Past behavior may be relevant to character, but doesn't address whether her current argument about proportionality is sound."
+    }
+  ],
+  "antidoteId": "separate-claim-claimant",
+  "promptStarters": [
+    "People who believe this are usually just ___ who ___.",
+    "Of course they'd say that—they're a ___.",
+    "You can't trust their opinion because they ___.",
+    "Easy for them to say when they've never ___.",
+    "They only think that because they're ___."
+  ]
+}
+

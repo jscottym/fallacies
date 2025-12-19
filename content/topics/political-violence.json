@@ -1,0 +1,41 @@
+{
+  "id": "political-violence",
+  "name": "Political Violence & Rhetoric",
+  "positionA": {
+    "label": "Rhetoric contributes to violence",
+    "statement": "Inflammatory political rhetoric directly contributes to political violence.",
+    "fallacyPrompts": [
+      { "fallacy": "causation-con", "starter": "After [politician]'s speech, violence increased. This proves ___." },
+      { "fallacy": "ad-hominem", "starter": "Anyone defending that rhetoric is just a ___ who ___." },
+      { "fallacy": "slippery-slope", "starter": "If we don't condemn this rhetoric now, soon we'll have ___." },
+      { "fallacy": "appeal-to-authority", "starter": "Psychologists agree that violent language leads to ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Free speech defenders have valid concerns about ___, including ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific mechanism by which rhetoric influences behavior is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between censorship and unlimited speech, reasonable positions include ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Blaming rhetoric is a slippery slope",
+    "statement": "Holding speakers responsible for listeners' actions threatens free expression.",
+    "fallacyPrompts": [
+      { "fallacy": "whataboutism", "starter": "What about when the other side used violent imagery like ___?" },
+      { "fallacy": "straw-man", "starter": "They want to silence all criticism of public figures and ___." },
+      { "fallacy": "slippery-slope", "starter": "If we blame rhetoric for violence, soon any speech could be ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we protect speech absolutely or we ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those concerned about rhetoric have valid points about responsibility, including ___." },
+      { "antidote": "demand-mechanism", "starter": "The mechanism by which speech restrictions would expand is ___." },
+      { "antidote": "stay-in-lane", "starter": "Addressing the specific question of this rhetoric, my view is ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Does inflammatory rhetoric actually increase violence rates?",
+    "Where is the line between protected speech and incitement?",
+    "How do we account for individual responsibility in violent acts?",
+    "Are speech restrictions effective at reducing political violence?"
+  ]
+}
+

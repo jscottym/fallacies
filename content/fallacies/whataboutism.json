@@ -1,0 +1,43 @@
+{
+  "id": "whataboutism",
+  "name": "Whataboutism",
+  "nickname": "The Deflection",
+  "definition": "Responding to criticism by pointing to someone else's behavior rather than addressing the original point.",
+  "whyItWorks": "It shifts the burden of defense to offense. Instead of answering the charge, you put your accuser on trial. It feels fair ('why focus on me?') but avoids the actual issue.",
+  "examples": [
+    {
+      "text": "You're upset about inflammatory political rhetoric now? Where was this energy when cities were burning in 2020?",
+      "topic": "political-violence",
+      "analysis": "Both can be problems worth addressing. Pointing to past events doesn't address the current concern—it just deflects."
+    },
+    {
+      "text": "Worried about cancel culture? What about the Hollywood blacklist? McCarthyism was worse.",
+      "topic": "cancel-culture",
+      "analysis": "Historical comparisons don't determine whether current practices are harmful. Something can be bad without being the worst in history."
+    },
+    {
+      "text": "You're criticizing influencer health claims? Pharmaceutical companies have killed way more people with opioids.",
+      "topic": "influencer-health",
+      "analysis": "True, but doesn't make supplement misinformation acceptable. Two wrongs don't make a right."
+    },
+    {
+      "text": "Concerned about prison conditions? What about the victims who suffer because of these criminals?",
+      "topic": "prison-reform",
+      "analysis": "Both deserve concern. Caring about humane treatment doesn't mean ignoring victims—deflection avoids the actual question."
+    },
+    {
+      "text": "Young people complaining about housing prices? Try buying a house with 18% interest rates like Boomers did.",
+      "topic": "housing-market",
+      "analysis": "Different challenge, different context. Higher rates with lower prices vs. lower rates with astronomical prices are both difficult—this deflects from the current problem."
+    }
+  ],
+  "antidoteId": "stay-in-lane",
+  "promptStarters": [
+    "Before we criticize this, let's talk about how ___ did ___.",
+    "What about when ___ happened? Where was the outrage then?",
+    "You're worried about ___? What about ___?",
+    "But ___ is just as bad, if not worse!",
+    "Funny how no one mentions ___ when they bring this up."
+  ]
+}
+

@@ -1,0 +1,32 @@
+{
+  "id": "steelmanning",
+  "name": "Steelmanning",
+  "definition": "Representing the strongest possible version of an opposing view before critiquing it.",
+  "counters": ["straw-man"],
+  "howToApply": [
+    "Ask yourself: What's the best argument for their side?",
+    "Articulate their position so well they'd say 'Yes, exactly!'",
+    "Only THEN respond to that strongest version",
+    "If you can't state their view fairly, you might not understand it yet"
+  ],
+  "examples": [
+    {
+      "before": "People who want stricter immigration just hate foreigners.",
+      "after": "People who support stricter enforcement often argue that controlled borders allow for better integration of newcomers, protect domestic workers from wage suppression, and ensure rule of law. Even if I disagree with their policy conclusions, I should engage with these substantive concerns.",
+      "topic": "immigration"
+    },
+    {
+      "before": "Cancel culture critics just want consequence-free speech.",
+      "after": "Critics of cancel culture often argue that proportionality matters—that losing a career over a decade-old tweet is different from facing criticism for ongoing harmful behavior. They may support accountability while opposing what they see as mob justice.",
+      "topic": "cancel-culture"
+    }
+  ],
+  "promptStarters": [
+    "The strongest argument for the other side is ___.",
+    "Someone who disagrees might reasonably point out that ___.",
+    "Before I respond, I should acknowledge that their view includes ___.",
+    "If I were arguing their position, I'd say ___.",
+    "The most charitable interpretation of their argument is ___."
+  ]
+}
+

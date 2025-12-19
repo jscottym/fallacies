@@ -1,0 +1,32 @@
+{
+  "id": "stay-in-lane",
+  "name": "Stay in the Lane",
+  "definition": "Addressing the actual point raised rather than deflecting to different issues.",
+  "counters": ["whataboutism"],
+  "howToApply": [
+    "When tempted to say 'what about X,' pause and answer the original question first",
+    "Acknowledge that multiple things can be problems simultaneously",
+    "If you want to raise a related issue, do it AFTER addressing the current one",
+    "Ask yourself: Am I responding to what they said, or changing the subject?"
+  ],
+  "examples": [
+    {
+      "before": "You're concerned about political rhetoric? What about when the other side was violent?",
+      "after": "I hear your concern about inflammatory rhetoric, and I think it's worth taking seriously. Both sides can contribute to a toxic environment—addressing one doesn't mean ignoring the other. Let's talk about what specifically concerns you here.",
+      "topic": "political-violence"
+    },
+    {
+      "before": "Worried about influencer health claims? Big Pharma is worse!",
+      "after": "The pharmaceutical industry's problems are real and worth discussing. But right now we're talking about supplement claims—both can be concerning, and addressing one doesn't excuse the other. What specifically worries you about these influencer claims?",
+      "topic": "influencer-health"
+    }
+  ],
+  "promptStarters": [
+    "That's a fair point about ___. Let me address it directly: ___.",
+    "You raise [topic X]. While [topic Y] is also important, the specific question here is ___.",
+    "Both issues deserve attention. On this particular point, ___.",
+    "I want to respond to what you actually said: ___.",
+    "Setting aside other issues for now, the question is ___."
+  ]
+}
+

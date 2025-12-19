@@ -1,0 +1,43 @@
+{
+  "id": "appeal-to-authority",
+  "name": "Appeal to Authority",
+  "nickname": "The Credibility Heist",
+  "definition": "Using someone's status or credentials as proof of a claim, especially outside their expertise or without supporting evidence.",
+  "whyItWorks": "We rely on experts because we can't verify everything ourselves. This shortcut becomes a fallacy when we use credentials as a substitute for evidence, or when the 'authority' isn't actually expert in the relevant area.",
+  "examples": [
+    {
+      "text": "This fitness protocol is backed by Dr. Andrew Huberman, a Stanford neuroscientist.",
+      "topic": "influencer-health",
+      "analysis": "Huberman is a real scientist, but not every claim on his podcast is peer-reviewed or within his specialty. Neuroscience credentials don't automatically validate nutrition advice."
+    },
+    {
+      "text": "A Nobel laureate economist says deportations will crash the economy.",
+      "topic": "immigration",
+      "analysis": "Nobel Prizes don't make every opinion equally authoritative, especially on complex social policy with many variables beyond pure economics."
+    },
+    {
+      "text": "9 out of 10 doctors recommend this supplement.",
+      "topic": "influencer-health",
+      "analysis": "Which doctors? Paid by the company? In a relevant specialty? What does 'recommend' mean? Vague appeals to unnamed authorities are weak evidence."
+    },
+    {
+      "text": "A retired federal judge says our sentencing guidelines are just right.",
+      "topic": "prison-reform",
+      "analysis": "One judge's opinion isn't consensus. Judges can have ideological biases, and decades in one role can create blind spots."
+    },
+    {
+      "text": "This investment strategy is used by billionaires like Warren Buffett.",
+      "topic": "housing-market",
+      "analysis": "Survivorship bias—you don't hear about billionaires' failed strategies. Their context (capital, access, risk tolerance) differs dramatically from average investors."
+    }
+  ],
+  "antidoteId": "separate-claim-claimant",
+  "promptStarters": [
+    "Even ___, who is a respected ___, agrees that ___.",
+    "Experts like ___ have confirmed that ___.",
+    "___ out of ___ [authorities] say that ___.",
+    "According to [famous person], ___.",
+    "Studies by [impressive institution] show ___."
+  ]
+}
+

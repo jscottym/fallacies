@@ -1,0 +1,43 @@
+{
+  "id": "causation-con",
+  "name": "The Causation Con",
+  "nickname": "After This ≠ Because of This",
+  "definition": "Assuming that because one event followed another, the first event caused the second.",
+  "whyItWorks": "Our brains are pattern-matching machines. When we see a sequence, we instinctively assign causation. 'After' feels like 'because'—even when many other factors could explain the outcome.",
+  "examples": [
+    {
+      "text": "Crime dropped after we increased deportations. Proof that deportation reduces crime.",
+      "topic": "immigration",
+      "analysis": "Many factors affect crime: economy, policing changes, demographics, drug market shifts. Correlation during a period doesn't establish causation."
+    },
+    {
+      "text": "I started taking this supplement and felt better within a week. It definitely works!",
+      "topic": "influencer-health",
+      "analysis": "Could be placebo effect, lifestyle changes made simultaneously, natural recovery, or regression to the mean. Personal experience isn't controlled evidence."
+    },
+    {
+      "text": "Since California reduced some sentences, crime increased. Soft-on-crime policies caused it.",
+      "topic": "prison-reform",
+      "analysis": "Many factors changed simultaneously: pandemic, economic stress, policing changes, drug market shifts. Attribution requires controlling for variables."
+    },
+    {
+      "text": "Housing prices rose after remote work became common. Working from home caused the housing crisis.",
+      "topic": "housing-market",
+      "analysis": "Many simultaneous factors: record-low interest rates, supply chain issues, investor activity, migration patterns. Remote work is one factor among many."
+    },
+    {
+      "text": "After that celebrity endorsed this product, sales increased 500%. Celebrity endorsements are the most effective marketing.",
+      "topic": "influencer-health",
+      "analysis": "Could be timing, other marketing efforts, general trends, or product improvements. One data point isn't proof of general effectiveness."
+    }
+  ],
+  "antidoteId": "demand-mechanism",
+  "promptStarters": [
+    "After ___ happened, ___ followed. Clearly, the first caused the second.",
+    "Ever since we started ___, we've seen ___. Coincidence?",
+    "The numbers don't lie: ___ went up/down right after ___.",
+    "We tried ___ and ___ got better. It obviously works.",
+    "Look at what happened after ___—the results speak for themselves."
+  ]
+}
+

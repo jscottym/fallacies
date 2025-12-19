@@ -1,0 +1,43 @@
+{
+  "id": "straw-man",
+  "name": "Straw Man",
+  "nickname": "The Argument No One Made",
+  "definition": "Misrepresenting someone's position to make it easier to attack.",
+  "whyItWorks": "It's easier to defeat a caricature than a nuanced position. By exaggerating or distorting, we can 'win' against a version of the argument that was never actually made.",
+  "examples": [
+    {
+      "text": "Immigration hawks want to deport every immigrant and seal the border permanently.",
+      "topic": "immigration",
+      "analysis": "Most supporters of stricter enforcement distinguish between legal and illegal immigration and don't advocate for zero immigration."
+    },
+    {
+      "text": "Cancel culture critics think people should be able to say anything with zero consequences.",
+      "topic": "cancel-culture",
+      "analysis": "Most critics distinguish between proportional social consequences and disproportionate mob punishment. They're not advocating for zero accountability."
+    },
+    {
+      "text": "Prison reformers want to let dangerous criminals walk free with no punishment.",
+      "topic": "prison-reform",
+      "analysis": "Most reformers focus on non-violent offenders and advocate for rehabilitation alongside consequences, not eliminating accountability."
+    },
+    {
+      "text": "Health skeptics think all natural supplements are snake oil and only trust Big Pharma.",
+      "topic": "influencer-health",
+      "analysis": "Most skeptics simply want evidence-based claims; they're not reflexively pro-pharmaceutical or anti-natural."
+    },
+    {
+      "text": "People concerned about political violence just want to silence all criticism of public figures.",
+      "topic": "political-violence",
+      "analysis": "Concern about violence isn't the same as opposing criticism. Most people distinguish between harsh speech and incitement."
+    }
+  ],
+  "antidoteId": "steelmanning",
+  "promptStarters": [
+    "The other side wants us to believe that ___, which is ridiculous.",
+    "They basically think we should just ___.",
+    "So you're saying we should ___ and let ___ happen?",
+    "Their position is essentially that ___, which no sane person would support.",
+    "What they really want is ___."
+  ]
+}
+

@@ -1,0 +1,32 @@
+{
+  "id": "acknowledge-spectrum",
+  "name": "Acknowledge the Spectrum",
+  "definition": "Recognizing that most issues have more than two positions—finding and exploring the nuance.",
+  "counters": ["false-dilemma"],
+  "howToApply": [
+    "When presented with 'either X or Y,' ask: What are positions C, D, E?",
+    "Look for graduated options rather than binary choices",
+    "Consider hybrid approaches that take elements from multiple positions",
+    "Ask what specific variations exist within each 'side'"
+  ],
+  "examples": [
+    {
+      "before": "Either we have open borders or mass deportation.",
+      "after": "There's a wide spectrum: visa reform, employer enforcement, earned legal status pathways, increased legal immigration with reduced illegal immigration, sanctuary policies vs. cooperation—many positions exist between the extremes.",
+      "topic": "immigration"
+    },
+    {
+      "before": "Either we publicly shame wrongdoers or bad ideas spread unchecked.",
+      "after": "Options include: private confrontation, graduated responses (minor offense = minor consequence), education over punishment, counter-speech, ignoring, time-limited consequences, or distinguishing between public figures and private individuals.",
+      "topic": "cancel-culture"
+    }
+  ],
+  "promptStarters": [
+    "This isn't just X or Y—there are also options like ___.",
+    "The spectrum of positions includes ___.",
+    "A more nuanced view might be ___.",
+    "We could combine elements: ___ from one side and ___ from another.",
+    "What if we considered a graduated approach where ___?"
+  ]
+}
+

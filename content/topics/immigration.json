@@ -1,0 +1,42 @@
+{
+  "id": "immigration",
+  "name": "Immigration & Deportation",
+  "positionA": {
+    "label": "For strict enforcement",
+    "statement": "Strict enforcement and deportation are necessary and effective policies.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "Critics of enforcement are usually just privileged academics who ___." },
+      { "fallacy": "straw-man", "starter": "The other side wants completely open borders where anyone can ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we enforce our laws or we ___." },
+      { "fallacy": "causation-con", "starter": "Crime dropped after we increased enforcement, proving that ___." },
+      { "fallacy": "slippery-slope", "starter": "If we allow any amnesty, soon ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those who favor more lenient policies raise valid concerns about ___, and I should address those directly." },
+      { "antidote": "demand-mechanism", "starter": "The specific mechanism by which enforcement reduces ___ is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Rather than just strict or lax, options include ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Against mass deportation",
+    "statement": "Mass deportation is impractical, inhumane, and economically harmful.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "People who support deportation are just ___ who fear ___." },
+      { "fallacy": "straw-man", "starter": "Enforcement supporters want to deport everyone and seal the border ___." },
+      { "fallacy": "appeal-to-authority", "starter": "Leading economists all agree that ___." },
+      { "fallacy": "slippery-slope", "starter": "If we start mass deportations, soon we'll be ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those who favor enforcement have legitimate concerns about ___, including ___." },
+      { "antidote": "separate-claim-claimant", "starter": "Regardless of political affiliation, the evidence on economic impact shows ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "There are many positions between open borders and mass deportation, such as ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Does deportation actually reduce crime rates?",
+    "What is the true economic impact of removing immigrant workers?",
+    "Is mass enforcement practically feasible at scale?",
+    "How do we weigh rule of law against humanitarian concerns?"
+  ]
+}
+

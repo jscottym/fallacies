@@ -1,0 +1,32 @@
+{
+  "id": "separate-claim-claimant",
+  "name": "Separate Claim from Claimant",
+  "definition": "Evaluating arguments on their own merits, independent of who makes them.",
+  "counters": ["ad-hominem", "appeal-to-authority"],
+  "howToApply": [
+    "Ask: Is this argument true or false regardless of who said it?",
+    "Consider: Would this logic hold if someone else made the same point?",
+    "Note source context (bias, expertise) but don't let it replace evaluation",
+    "Focus on evidence and reasoning, not credentials or character"
+  ],
+  "examples": [
+    {
+      "before": "She's a landlord, so of course she opposes rent control. Her opinion is worthless.",
+      "after": "While her financial interest is worth noting as context, let me evaluate her specific argument about supply effects. If her reasoning is flawed, I can point out why—but her being a landlord doesn't automatically make her wrong.",
+      "topic": "housing-market"
+    },
+    {
+      "before": "A Stanford neuroscientist recommends this, so it must be valid.",
+      "after": "While his credentials suggest he understands research methods, I should still check: Is this claim within his specialty? Is he citing peer-reviewed evidence? Expert status is a reason to listen, not a reason to stop thinking.",
+      "topic": "influencer-health"
+    }
+  ],
+  "promptStarters": [
+    "Let me evaluate this argument on its merits: ___.",
+    "Regardless of who's making this claim, the evidence suggests ___.",
+    "Their background is worth noting, but the key question is whether ___.",
+    "Would this argument be true if someone else made it?",
+    "Setting aside who said this, the logic is ___ because ___."
+  ]
+}
+

@@ -1,0 +1,41 @@
+{
+  "id": "influencer-health",
+  "name": "Influencer Health Claims",
+  "positionA": {
+    "label": "Influencers should be regulated",
+    "statement": "Health influencers should be held legally accountable for unsubstantiated claims.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "These influencers are just uneducated grifters who ___." },
+      { "fallacy": "slippery-slope", "starter": "If we don't regulate them now, soon people will be ___." },
+      { "fallacy": "appeal-to-authority", "starter": "The FDA and real doctors all agree that ___." },
+      { "fallacy": "causation-con", "starter": "After that influencer promoted this, hospitalizations increased, proving ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Free speech advocates have valid concerns about regulation, including ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific harm mechanism from unregulated claims is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between no regulation and full pharmaceutical-style oversight, options include ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Regulation threatens free speech",
+    "statement": "Regulating influencer health speech sets a dangerous precedent for censorship.",
+    "fallacyPrompts": [
+      { "fallacy": "whataboutism", "starter": "Why focus on influencers when Big Pharma has ___?" },
+      { "fallacy": "slippery-slope", "starter": "If the government can regulate this, next they'll ___." },
+      { "fallacy": "ad-hominem", "starter": "Regulators are just ___ who want to protect ___." },
+      { "fallacy": "straw-man", "starter": "They want to ban all natural health advice and force everyone to ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Those concerned about health misinformation have valid points about real harm, such as ___." },
+      { "antidote": "demand-mechanism", "starter": "The mechanism by which regulation would lead to broader censorship is ___." },
+      { "antidote": "stay-in-lane", "starter": "Setting aside pharmaceutical issues, the specific question of influencer claims is ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Where is the line between health advice and medical claims?",
+    "Does disclosure of sponsorship adequately inform consumers?",
+    "Can platforms effectively self-regulate health content?",
+    "How do we weigh free speech against potential health harm?"
+  ]
+}
+
