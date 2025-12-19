@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useLocalStorage, watchDebounced } from '@vueuse/core'
 import type { SessionData, Participant, Team, GameStatus, GameId } from '~/types'
 import { generateSessionCode, generateId, TEAM_COLORS } from '~/types'
+import { useStorage } from '~/composables/useStorage'
 
 interface SessionState {
   code: string
@@ -23,6 +24,7 @@ export const useSessionStore = defineStore('session', () => {
     deep: true,
     listenToStorageChanges: true
   })
+  const storage = useStorage()
   
   const state = reactive<SessionState>({
     code: stored.value?.code ?? '',
@@ -48,17 +50,20 @@ export const useSessionStore = defineStore('session', () => {
       gamesState: { ...state.gamesState }
     }),
     (newState) => {
-      if (newState.code) {
-        stored.value = {
-          code: newState.code,
-          name: newState.name,
-          createdAt: newState.createdAt,
-          lastAccessedAt: new Date().toISOString(),
-          participants: newState.participants,
-          teams: newState.teams,
-          gamesState: newState.gamesState
-        }
+      if (!newState.code) return
+
+      const snapshot: SessionData = {
+        code: newState.code,
+        name: newState.name,
+        createdAt: newState.createdAt || new Date().toISOString(),
+        lastAccessedAt: new Date().toISOString(),
+        participants: newState.participants,
+        teams: newState.teams,
+        gamesState: newState.gamesState
       }
+
+      stored.value = snapshot
+      storage.saveSession(snapshot)
     },
     { debounce: 100, deep: true }
   )
@@ -97,17 +102,17 @@ export const useSessionStore = defineStore('session', () => {
   )
 
   function hydrateFromStorage(): boolean {
-    if (stored.value) {
-      state.code = stored.value.code
-      state.name = stored.value.name
-      state.createdAt = stored.value.createdAt
-      state.lastAccessedAt = stored.value.lastAccessedAt
-      state.participants = [...stored.value.participants]
-      state.teams = [...stored.value.teams]
-      state.gamesState = { ...stored.value.gamesState }
-      return true
-    }
-    return false
+    if (!stored.value) return false
+
+    state.code = stored.value.code
+    state.name = stored.value.name
+    state.createdAt = stored.value.createdAt
+    state.lastAccessedAt = stored.value.lastAccessedAt
+    state.participants = [...stored.value.participants]
+    state.teams = [...stored.value.teams]
+    state.gamesState = { ...stored.value.gamesState }
+
+    return true
   }
 
   function createSession(name: string = ''): string {
@@ -129,14 +134,37 @@ export const useSessionStore = defineStore('session', () => {
   }
 
   function loadSession(code: string, asHost: boolean = false): boolean {
-    if (stored.value?.code === code) {
-      hydrateFromStorage()
-      state.isHost = asHost
-      state.isConnected = true
-      state.lastAccessedAt = new Date().toISOString()
-      return true
+    const fromStorage = storage.getSession(code)
+    const session = fromStorage || (stored.value?.code === code ? stored.value : null)
+
+    if (!session || session.code !== code) {
+      return false
     }
-    return false
+
+    state.code = session.code
+    state.name = session.name
+    state.createdAt = session.createdAt
+    state.lastAccessedAt = new Date().toISOString()
+    state.participants = [...session.participants]
+    state.teams = [...session.teams]
+    state.gamesState = { ...session.gamesState }
+    state.isHost = asHost
+    state.isConnected = true
+
+    const snapshot: SessionData = {
+      code: state.code,
+      name: state.name,
+      createdAt: state.createdAt,
+      lastAccessedAt: state.lastAccessedAt,
+      participants: state.participants,
+      teams: state.teams,
+      gamesState: state.gamesState
+    }
+
+    stored.value = snapshot
+    storage.saveSession(snapshot)
+
+    return true
   }
 
   function addParticipant(name: string): Participant {
