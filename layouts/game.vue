@@ -76,8 +76,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import ReferencePanel from '~/components/game/ReferencePanel.vue'
-import { useWebSocket } from '~/composables/useWebSocket'
 import { useHostId } from '~/composables/useHostId'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { GAMES, type HostNavigatePayload } from '~/types'
