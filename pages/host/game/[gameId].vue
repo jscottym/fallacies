@@ -66,7 +66,8 @@ import {
   type HostSyncResponsePayload,
   type HostNavigatePayload,
   type SessionTeamsUpdatedPayload,
-  type SessionSyncRequestPayload
+  type SessionSyncRequestPayload,
+  type SubmitPayload
 } from '~/types'
 
 definePageMeta({
@@ -239,6 +240,17 @@ onMounted(() => {
       vote: payload.vote,
       submittedAt: new Date().toISOString()
     })
+  })
+
+  ws.on('game:submit', (message: WSMessage<SubmitPayload>) => {
+    const payload = message.payload
+    if (!payload || payload.gameId !== gameId.value) return
+
+    gameStore.submitArgument(
+      payload.teamId,
+      payload.submission.text,
+      payload.submission.techniques
+    )
   })
 
   setTimeout(() => {

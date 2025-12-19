@@ -199,7 +199,7 @@ import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { useWebSocket } from '~/composables/useWebSocket'
-import type { ProsecutionRound, TopicSelectPayload } from '~/types'
+import type { ProsecutionRound, TopicSelectPayload, SubmitPayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -324,7 +324,17 @@ function toggleFallacy(id: string) {
 
 function submitArgument() {
   if (!myTeamId.value || !canSubmit.value) return
-  gameStore.submitArgument(myTeamId.value, argumentText.value, selectedFallacies.value)
+
+  const payload: SubmitPayload = {
+    gameId: gameStore.currentGameId || 'prosecution',
+    teamId: myTeamId.value,
+    submission: {
+      text: argumentText.value,
+      techniques: [...selectedFallacies.value]
+    }
+  }
+
+  ws.send('game:submit', payload)
 }
 
 function toggleReviewSelection(id: string) {
@@ -342,17 +352,33 @@ function submitReview() {
   reviewSelections.value = []
 }
 
-async function getAiSuggestion(fallacyId: string) {
-  const fallacy = contentStore.getFallacyById(fallacyId)
+async function getAiSuggestion() {
+  if (!ourTopicId.value) return
   const topic = contentStore.getTopicById(ourTopicId.value || '')
-  
-  if (!fallacy || !topic) return
-  
-  const prompts = topic.positionA.fallacyPrompts.filter(p => p.fallacy === fallacyId)
-  if (prompts.length > 0) {
-    aiSuggestion.value = prompts[Math.floor(Math.random() * prompts.length)].starter
-  } else {
-    aiSuggestion.value = fallacy.promptStarters[Math.floor(Math.random() * fallacy.promptStarters.length)]
+  if (!topic) return
+
+  const fallacies = selectedFallacies.value.length
+    ? [...selectedFallacies.value]
+    : contentStore.fallacies.slice(0, 2).map(f => f.id)
+
+  try {
+    const response = await $fetch<{ suggestions: Array<{ text: string }> }>('/api/ai/suggest', {
+      method: 'POST',
+      body: {
+        type: 'fallacious',
+        topic: topic.name,
+        position: ourPosition.value || '',
+        targetFallacies: fallacies,
+        existingText: argumentText.value || undefined
+      }
+    })
+
+    const first = response.suggestions && response.suggestions[0]
+    if (first?.text) {
+      aiSuggestion.value = first.text
+    }
+  } catch (error) {
+    console.error('AI suggest error', error)
   }
 }
 

@@ -135,7 +135,7 @@ import ReferencePanel from '~/components/game/ReferencePanel.vue'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { StateUpdatePayload, SessionTeamsUpdatedPayload, SessionSyncRequestPayload } from '~/types'
+import type { SessionSyncRequestPayload, SessionTeamsUpdatedPayload, StateUpdatePayload } from '~/types'
 
 const route = useRoute()
 const sessionStore = useSessionStore()
