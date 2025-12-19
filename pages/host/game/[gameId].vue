@@ -53,6 +53,7 @@ import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTimer } from '~/composables/useTimer'
 import { useWebSocket } from '~/composables/useWebSocket'
+import { useHostId } from '~/composables/useHostId'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { 
@@ -76,8 +77,7 @@ const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const timer = useTimer()
 const ws = useWebSocket()
-
-const hostId = ref(Math.random().toString(36).substring(2, 10))
+const hostId = useHostId()
 const isReceivingRemoteUpdate = ref(false)
 
 const gameId = computed(() => route.params.gameId as GameId)

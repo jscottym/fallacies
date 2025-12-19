@@ -76,12 +76,16 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import ReferencePanel from '~/components/game/ReferencePanel.vue'
+import { useWebSocket } from '~/composables/useWebSocket'
+import { useHostId } from '~/composables/useHostId'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { GAMES } from '~/types'
+import { GAMES, type HostNavigatePayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
+const ws = useWebSocket()
+const hostId = useHostId()
 
 const showReference = ref(false)
 const showExitConfirm = ref(false)
@@ -96,7 +100,16 @@ function confirmExit() {
 
 function exitGame() {
   showExitConfirm.value = false
-  navigateTo(`/host/lobby?code=${sessionStore.code}`)
+
+  const targetRoute = `/host/lobby?code=${sessionStore.code}`
+
+  const payload: HostNavigatePayload = {
+    hostId: hostId.value || '',
+    route: targetRoute
+  }
+
+  ws.send('host:navigate', payload)
+  navigateTo(targetRoute)
 }
 </script>
 

@@ -9,21 +9,23 @@
         </div>
 
         <div class="game-card space-y-6">
-          <UFormField label="Your Name">
-            <UInput
-              v-model="participantName"
-              placeholder="Enter your name"
-              size="lg"
-              @keyup.enter="joinSession"
-            />
-          </UFormField>
+          <ParticipantSelector
+            v-model="participantName"
+            :participants="sessionStore.participants"
+            :teams="sessionStore.teams"
+            label="Your Name"
+            placeholder="Enter your name"
+            list-label="Or pick your name from the list:"
+            @select-participant="joinWithParticipant"
+            @enter="joinSessionClick"
+          />
 
           <UButton
             color="primary"
             size="lg"
             block
             :disabled="!participantName.trim()"
-            @click="joinSession"
+            @click="joinSessionClick"
           >
             Join Session
           </UButton>
@@ -40,7 +42,13 @@
               Code <span class="font-mono text-indigo-400">{{ sessionCode }}</span>
             </div>
           </div>
-          <div class="text-white font-medium">{{ currentParticipant?.name }}</div>
+          <button
+            class="text-white font-medium underline-offset-2 hover:underline"
+            type="button"
+            @click="openEditName"
+          >
+            {{ currentParticipant?.name }}
+          </button>
         </div>
         <div class="flex items-center gap-3">
           <UBadge v-if="currentTeam" :style="{ backgroundColor: currentTeam.color + '30', color: currentTeam.color }">
@@ -90,14 +98,39 @@
         </div>
       </div>
     </div>
-
     <ReferencePanel v-model:open="showReference" />
+
+    <UModal v-model:open="showEditName">
+      <template #content>
+        <div class="p-6 space-y-4">
+          <h3 class="text-lg font-semibold text-white">Change Participant</h3>
+          <ParticipantSelector
+            v-model="editedName"
+            :participants="sessionStore.participants"
+            :teams="sessionStore.teams"
+            label="Name"
+            placeholder="Enter your name"
+            list-label="Or pick a name from the list:"
+            @select-participant="changeToParticipant"
+            @enter="saveEditedName"
+          />
+          <div class="flex justify-end gap-3">
+            <UButton variant="ghost" @click="showEditName = false">Cancel</UButton>
+            <UButton color="primary" :disabled="!editedName.trim()" @click="saveEditedName">
+              Save
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import ParticipantSelector from '~/components/game/ParticipantSelector.vue'
 import ReferencePanel from '~/components/game/ReferencePanel.vue'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
@@ -113,9 +146,16 @@ const sessionCode = computed(() => (route.params.code as string).toUpperCase())
 const participantName = ref('')
 const hasJoined = ref(false)
 const showReference = ref(false)
+const showEditName = ref(false)
+const editedName = ref('')
 
 const currentParticipant = computed(() => sessionStore.currentParticipant)
 const currentTeam = computed(() => sessionStore.currentTeam)
+
+const participantStorage = useLocalStorage<string | null>(
+  `fallacies:session:${sessionCode.value}:participantName`,
+  null
+)
 
 const currentGameComponent = computed(() => {
   if (!gameStore.currentGameId) return null
@@ -136,6 +176,16 @@ onMounted(() => {
     console.warn('Session not found, creating new one for participant')
   }
 
+  if (participantStorage.value) {
+    participantName.value = participantStorage.value
+    const existingParticipant = sessionStore.participants.find(
+      (p) => p.name === participantStorage.value
+    )
+    if (existingParticipant) {
+      performJoin(existingParticipant.id)
+    }
+  }
+
   // Listen for game state updates from host
   ws.on('game:state_update', (message) => {
     const payload = message.payload as StateUpdatePayload
@@ -145,18 +195,77 @@ onMounted(() => {
   })
 })
 
-function joinSession() {
-  if (!participantName.value.trim()) return
-  
-  const participant = sessionStore.addParticipant(participantName.value.trim())
+function assignToRandomTeam(participantId: string) {
+  if (!sessionStore.teams.length) return
+  const index = Math.floor(Math.random() * sessionStore.teams.length)
+  const team = sessionStore.teams[index]
+  if (team) {
+    sessionStore.assignToTeam(participantId, team.id)
+  }
+}
+
+function performJoin(existingParticipantId?: string) {
+  const nameFromInput = participantName.value.trim()
+  if (!nameFromInput && !existingParticipantId) return
+
+  let participant =
+    existingParticipantId &&
+    sessionStore.participants.find((p) => p.id === existingParticipantId)
+
+  if (!participant) {
+    const name = existingParticipantId
+      ? sessionStore.participants.find((p) => p.id === existingParticipantId)?.name || ''
+      : nameFromInput
+    if (!name.trim()) return
+    participant =
+      sessionStore.participants.find((p) => p.name === name) ||
+      sessionStore.addParticipant(name)
+    if (!participant.teamId) {
+      assignToRandomTeam(participant.id)
+    }
+  }
+
   sessionStore.currentParticipantId = participant.id
   hasJoined.value = true
-  
+  participantStorage.value = participant.name
+
   ws.connect(sessionCode.value)
   ws.send('session:join', {
     participantName: participant.name,
     participantId: participant.id
   })
+}
+
+function joinSessionClick() {
+  performJoin()
+}
+
+function joinWithParticipant(participantId: string) {
+  performJoin(participantId)
+}
+
+function openEditName() {
+  if (!currentParticipant.value) return
+  editedName.value = currentParticipant.value.name
+  showEditName.value = true
+}
+
+function saveEditedName() {
+  const name = editedName.value.trim()
+  if (!name) {
+    showEditName.value = false
+    return
+  }
+  participantName.value = name
+  performJoin()
+  showEditName.value = false
+}
+
+function changeToParticipant(participantId: string) {
+  performJoin(participantId)
+  const selected = sessionStore.participants.find((p) => p.id === participantId)
+  editedName.value = selected ? selected.name : ''
+  showEditName.value = false
 }
 </script>
 

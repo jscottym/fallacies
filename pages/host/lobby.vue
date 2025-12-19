@@ -238,6 +238,7 @@ import QRCode from 'qrcode'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWebSocket } from '~/composables/useWebSocket'
+import { useHostId } from '~/composables/useHostId'
 import { useSessionStore } from '~/stores/session'
 import { 
   GAMES, 
@@ -252,8 +253,7 @@ const route = useRoute()
 const router = useRouter()
 const sessionStore = useSessionStore()
 const ws = useWebSocket()
-
-const hostId = ref(Math.random().toString(36).substring(2, 10))
+const hostId = useHostId()
 const qrCanvas = ref<HTMLCanvasElement>()
 const showAddParticipant = ref(false)
 const newParticipantName = ref('')
