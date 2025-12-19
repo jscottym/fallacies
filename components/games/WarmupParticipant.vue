@@ -4,13 +4,13 @@
       <div class="text-center space-y-4">
         <div class="text-5xl">🎯</div>
         <h2 class="text-xl font-bold text-white">Warm-Up Round</h2>
-        <p class="text-neutral-400">Get ready to identify fallacies!</p>
+        <p class="text-gray-400">Get ready to identify fallacies!</p>
       </div>
     </div>
 
     <div v-else-if="phase === 'quote'" class="flex-1 flex flex-col">
       <div class="game-card mb-4">
-        <div class="text-xs text-neutral-500 uppercase tracking-wide mb-2">Current Quote</div>
+        <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Current Quote</div>
         <p class="text-white text-sm leading-relaxed">"{{ truncatedQuote }}"</p>
         <UButton 
           v-if="fullQuote.length > 100" 
@@ -24,7 +24,7 @@
       </div>
 
       <div v-if="!hasVoted && !revealed" class="flex-1 overflow-y-auto">
-        <div class="text-sm text-neutral-400 mb-3">
+        <div class="text-sm text-gray-400 mb-3">
           {{ isComplex ? 'Select ALL fallacies present:' : 'Which fallacy is this?' }}
         </div>
         <div class="space-y-2">
@@ -34,14 +34,14 @@
             class="w-full p-3 rounded-lg border transition-all text-left"
             :class="selectedFallacies.includes(fallacy.id) 
               ? 'border-indigo-500 bg-indigo-500/20 text-white' 
-              : 'border-neutral-700 bg-neutral-800/50 text-neutral-300 hover:border-neutral-600'"
+              : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-gray-600'"
             @click="toggleFallacy(fallacy.id)"
           >
             <div class="font-medium">{{ fallacy.name }}</div>
-            <div class="text-sm text-neutral-500">"{{ fallacy.nickname }}"</div>
+            <div class="text-sm text-gray-500">"{{ fallacy.nickname }}"</div>
           </button>
         </div>
-        <div class="mt-4 sticky bottom-0 bg-neutral-900/90 backdrop-blur-sm p-2 -mx-2">
+        <div class="mt-4 sticky bottom-0 bg-gray-900/90 backdrop-blur-sm p-2 -mx-2">
           <UButton 
             color="primary" 
             block 
@@ -57,7 +57,7 @@
         <div class="text-center space-y-4">
           <UIcon name="i-heroicons-check-circle" class="text-5xl text-green-500" />
           <h3 class="text-xl font-bold text-white">Vote Submitted!</h3>
-          <p class="text-neutral-400">Waiting for results...</p>
+          <p class="text-gray-400">Waiting for results...</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="game-card">
-            <div class="text-sm text-neutral-400 mb-2">Your Vote</div>
+            <div class="text-sm text-gray-400 mb-2">Your Vote</div>
             <div class="flex flex-wrap gap-2">
               <UBadge 
                 v-for="fallacyId in selectedFallacies" 
@@ -95,7 +95,7 @@
       <div class="text-center space-y-4">
         <div class="text-5xl">🏆</div>
         <h2 class="text-xl font-bold text-white">Great Work!</h2>
-        <p class="text-neutral-400">Warm-up complete</p>
+        <p class="text-gray-400">Warm-up complete</p>
       </div>
     </div>
 
@@ -113,14 +113,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { useContentStore } from '~/stores/content'
+import { useWebSocket } from '~/composables/useWebSocket'
+import type { VotePayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const contentStore = useContentStore()
+const ws = useWebSocket()
 
 const selectedFallacies = ref<string[]>([])
 const showFullQuote = ref(false)
@@ -172,16 +175,38 @@ function toggleFallacy(id: string) {
 function submitVote() {
   if (selectedFallacies.value.length === 0) return
   
+  const participantId = sessionStore.currentParticipantId
+  if (!participantId) return
+
+  // Update local view so this participant sees \"Vote submitted\" immediately
   gameStore.addVote({
-    participantId: sessionStore.currentParticipantId!,
+    participantId,
     teamId: sessionStore.currentTeam?.id,
     vote: selectedFallacies.value,
     submittedAt: new Date().toISOString()
   })
+
+  // Notify host via WebSocket so host vote counts update
+  const payload: VotePayload = {
+    gameId: gameStore.currentGameId || 'warmup',
+    participantId,
+    teamId: sessionStore.currentTeam?.id,
+    vote: [...selectedFallacies.value]
+  }
+
+  ws.send('game:vote', payload)
 }
 
 function getFallacyName(id: string): string {
   return contentStore.getFallacyById(id)?.name || id
 }
+
+// When the host advances to a new quote, clear prior selection highlighting
+watch(
+  () => gameStore.step,
+  () => {
+    selectedFallacies.value = []
+  }
+)
 </script>
 

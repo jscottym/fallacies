@@ -55,7 +55,7 @@ import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import { useTimer } from '~/composables/useTimer'
 import { useWebSocket } from '~/composables/useWebSocket'
-import { GAMES, type GameId, type StateUpdatePayload } from '~/types'
+import { GAMES, type GameId, type StateUpdatePayload, type VotePayload, type WSMessage } from '~/types'
 
 definePageMeta({
   layout: 'game'
@@ -115,6 +115,19 @@ onMounted(() => {
 
   // Send initial state to participants
   broadcastState()
+
+  // Listen for votes from participants (used in Warm-Up Round)
+  ws.on('game:vote', (message: WSMessage<VotePayload>) => {
+    const payload = message.payload
+    if (!payload || payload.gameId !== gameId.value) return
+
+    gameStore.addVote({
+      participantId: payload.participantId,
+      teamId: payload.teamId,
+      vote: payload.vote,
+      submittedAt: new Date().toISOString()
+    })
+  })
 })
 
 watch(

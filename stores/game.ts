@@ -1,13 +1,13 @@
-import { reactive, computed, toRefs } from 'vue'
-import { defineStore } from 'pinia'
 import { useLocalStorage, watchDebounced } from '@vueuse/core'
-import type { 
-  GameId, 
-  GameState, 
-  TimerState,
-  VoteRecord,
-  ProsecutionRound,
-  StateUpdatePayload
+import { defineStore } from 'pinia'
+import { computed, reactive, toRefs } from 'vue'
+import type {
+    GameId,
+    GameState,
+    ProsecutionRound,
+    StateUpdatePayload,
+    TimerState,
+    VoteRecord
 } from '~/types'
 
 interface GameStoreState {
