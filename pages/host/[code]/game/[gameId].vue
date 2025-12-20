@@ -49,13 +49,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHostId } from '~/composables/useHostId'
 import { useTimer } from '~/composables/useTimer'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
+import { useContentStore } from '~/stores/content'
 import {
   GAMES,
   type GameId,
@@ -80,6 +81,7 @@ const route = useRoute()
 const router = useRouter()
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
+const contentStore = useContentStore()
 const timer = useTimer()
 const ws = useWebSocket()
 const hostId = useHostId()
@@ -124,6 +126,28 @@ function handleNextStep() {
 function handlePrevStep() {
   gameStore.prevStep()
   broadcastState()
+}
+
+function handleKeydown(event: KeyboardEvent) {
+  const target = event.target as HTMLElement | null
+  if (target) {
+    const tag = target.tagName
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable) {
+      return
+    }
+  }
+
+  if (event.key === 'ArrowRight') {
+    if (gameStore.step < gameStore.totalSteps - 1) {
+      event.preventDefault()
+      handleNextStep()
+    }
+  } else if (event.key === 'ArrowLeft') {
+    if (gameStore.step > 0) {
+      event.preventDefault()
+      handlePrevStep()
+    }
+  }
 }
 
 function sendSyncResponse() {
@@ -316,6 +340,12 @@ onMounted(() => {
     const payload: SessionSyncRequestPayload = { source: 'host' }
     ws.send('session:sync_request', payload)
   }, 1200)
+
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 
 watch(
@@ -340,7 +370,9 @@ watch(
 
 function getTotalSteps(gameId: GameId): number {
   switch (gameId) {
-    case 'logic-traps': return 30
+    case 'logic-traps':
+      // 3 intro slides (title + 2 intros) + 5 slides per fallacy (intro, why, 2 examples, discussion) + 1 recap
+      return 3 + contentStore.fallacies.length * 5 + 1
     case 'warmup': return 14
     case 'prosecution': return 20
     case 'antidotes': return 22
