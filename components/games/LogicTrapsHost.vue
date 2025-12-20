@@ -37,9 +37,15 @@
     </div>
 
     <div v-else-if="currentSlide.type === 'fallacy-why'" class="space-y-8">
-      <div class="flex items-center gap-4 mb-8">
-        <span class="text-4xl">{{ getFallacyIcon(currentFallacy?.id) }}</span>
-        <h2 class="text-3xl font-bold text-white">Why It Works</h2>
+      <div class="flex items-center gap-6">
+        <div class="text-5xl">{{ getFallacyIcon(currentFallacy?.id) }}</div>
+        <div>
+          <h2 class="text-3xl font-bold text-white">{{ currentFallacy?.name }}</h2>
+          <p class="text-xl text-indigo-400 mt-1">"{{ currentFallacy?.nickname }}"</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <h3 class="text-2xl font-bold text-white">Why It Works</h3>
       </div>
       <div class="game-card">
         <p class="text-xl text-neutral-300 leading-relaxed">{{ currentFallacy?.whyItWorks }}</p>
@@ -47,9 +53,15 @@
     </div>
 
     <div v-else-if="currentSlide.type === 'fallacy-example'" class="space-y-8">
+      <div class="flex items-center gap-6">
+        <div class="text-5xl">{{ getFallacyIcon(currentFallacy?.id) }}</div>
+        <div>
+          <h2 class="text-3xl font-bold text-white">{{ currentFallacy?.name }}</h2>
+          <p class="text-xl text-indigo-400 mt-1">"{{ currentFallacy?.nickname }}"</p>
+        </div>
+      </div>
       <div class="flex items-center gap-4 mb-4">
-        <span class="text-3xl">{{ getFallacyIcon(currentFallacy?.id) }}</span>
-        <h2 class="text-2xl font-bold text-white">Example {{ currentExampleIndex + 1 }}</h2>
+        <h3 class="text-2xl font-bold text-white">Example {{ currentExampleIndex + 1 }}</h3>
       </div>
       <div class="game-card border-indigo-500/30">
         <p class="text-2xl text-white italic leading-relaxed">"{{ currentExample?.text }}"</p>
@@ -67,6 +79,13 @@
     </div>
 
     <div v-else-if="currentSlide.type === 'discussion'" class="space-y-8 text-center">
+      <div class="flex items-center justify-center gap-4">
+        <div class="text-4xl">{{ getFallacyIcon(currentFallacy?.id) }}</div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">{{ currentFallacy?.name }}</h2>
+          <p class="text-lg text-indigo-400 mt-1">"{{ currentFallacy?.nickname }}"</p>
+        </div>
+      </div>
       <div class="text-6xl mb-6">💬</div>
       <h2 class="text-3xl font-bold text-white">Discussion</h2>
       

@@ -126,7 +126,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Timer from '~/components/game/Timer.vue'
 import { useTimer } from '~/composables/useTimer'
 import { useContentStore } from '~/stores/content'
@@ -167,6 +167,46 @@ onMounted(() => {
   generatePairs()
 })
 
+watch(
+  () => gameStore.step,
+  (newStep: number) => {
+    if (newStep === 0) {
+      phase.value = 'intro'
+      gameStore.setHostContext('The Crux Hunt - Introduction')
+      return
+    }
+
+    if (newStep === 1) {
+      phase.value = 'pairing'
+      gameStore.setHostContext('Crux Hunt Pairs')
+      return
+    }
+
+    if (newStep === 2) {
+      if (phase.value !== 'hunting') {
+        startHunting()
+      }
+      return
+    }
+
+    if (newStep === 3 || newStep === 4 || newStep === 5) {
+      if (phase.value !== 'hunting') {
+        startHunting()
+      } else {
+        nextPrompt()
+      }
+      return
+    }
+
+    if (newStep === 6) {
+      if (phase.value !== 'reveal') {
+        showCruxes()
+      }
+    }
+  },
+  { immediate: true }
+)
+
 function generatePairs() {
   const participants = [...sessionStore.participants]
   const topics = contentStore.topics.slice(0, Math.ceil(participants.length / 2))
@@ -176,7 +216,7 @@ function generatePairs() {
   pairs.value = []
   for (let i = 0; i < participants.length - 1; i += 2) {
     pairs.value.push({
-      person1: participants[i].name,
+      person1: participants[i]?.name || 'TBD',
       person2: participants[i + 1]?.name || 'TBD',
       topic: topics[Math.floor(i / 2) % topics.length]?.name || 'Free Topic',
       crux: ''

@@ -1,18 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950 flex flex-col">
-    <header class="bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-800 px-6 py-3">
-      <div class="max-w-6xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <UButton 
-            variant="ghost" 
-            size="sm"
-            @click="exitGame"
-          >
-            <UIcon name="i-heroicons-arrow-left" class="mr-1" />
-            Back to Lobby
-          </UButton>
-          
-          <div class="h-6 w-px bg-neutral-700" />
+  <div class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-indigo-950 flex flex-col w-full">
+    <header class="bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-800 px-6 py-3 w-full">
+      <div class="max-w-6xl mx-auto flex flex-col w-full gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-4 justify-between w-full sm:w-auto">
+          <div class="flex flex-col">
+            <UButton
+              variant="ghost"
+              size="sm"
+              @click="exitGame"
+            >
+              <UIcon name="i-heroicons-arrow-left" class="mr-1" />
+              Back to Lobby
+            </UButton>
+            <div class="text-xs text-neutral-500 pl-8">Code <span class="font-mono text-neutral-200">{{ sessionStore.code }}</span></div>
+          </div>
           
           <div class="flex items-center gap-3">
             <span class="text-2xl">{{ gameInfo?.icon }}</span>
@@ -25,12 +26,8 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-4">
-          <div class="text-xs text-neutral-500">
-            Code <span class="font-mono text-neutral-200">{{ sessionStore.code }}</span>
-          </div>
-          
-          <div class="w-32 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+        <div class="flex items-center gap-3 justify-start sm:justify-end w-full max-w-xs">
+          <div class="w-full h-1.5 bg-neutral-800 rounded-full overflow-hidden">
             <div 
               class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
               :style="{ width: `${gameStore.progress}%` }"
@@ -38,9 +35,7 @@
           </div>
           <span class="text-sm text-neutral-400">{{ Math.round(gameStore.progress) }}%</span>
 
-          <UButton variant="ghost" size="sm" @click="showReference = true">
-            <UIcon name="i-heroicons-book-open" />
-          </UButton>
+          <UButton variant="ghost" icon="i-heroicons-book-open" @click="showReference = true" />
         </div>
       </div>
     </header>

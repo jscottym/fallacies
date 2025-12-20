@@ -87,9 +87,8 @@
           <UBadge v-if="currentTeam" :style="{ backgroundColor: currentTeam.color + '30', color: currentTeam.color }">
             {{ currentTeam.name }}
           </UBadge>
-          <UButton size="xs" variant="ghost" @click="showReference = true">
-            <UIcon name="i-heroicons-book-open" />
-          </UButton>
+          
+          <UButton  icon="i-heroicons-book-open" variant="ghost" @click="showReference = true" />
         </div>
       </header>
 

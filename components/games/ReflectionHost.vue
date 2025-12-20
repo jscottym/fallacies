@@ -121,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import type { Participant } from '~/types'
@@ -154,6 +154,30 @@ const currentParticipant = computed((): Participant | undefined => {
 onMounted(() => {
   gameStore.setHostContext('Closing Reflection')
 })
+
+watch(
+  () => gameStore.step,
+  (newStep: number) => {
+    if (newStep === 0) {
+      phase.value = 'intro'
+      gameStore.setHostContext('Closing Reflection')
+      return
+    }
+
+    if (newStep === 1) {
+      phase.value = 'commitments'
+      gameStore.setHostContext('Personal Commitments')
+      return
+    }
+
+    if (newStep === 2) {
+      phase.value = 'stats'
+      gameStore.setHostContext('Session Complete!')
+      return
+    }
+  },
+  { immediate: true }
+)
 
 function pickNextParticipant() {
   if (currentParticipant.value) {

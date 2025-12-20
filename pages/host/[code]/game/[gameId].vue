@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col">
-    <div class="flex-1 max-w-6xl mx-auto w-full p-6">
+    <div class="flex-1 max-w-6xl mx-auto w-full px-6 pt-6 pb-28">
       <component 
         :is="gameComponent" 
         v-if="gameComponent"
@@ -9,8 +9,8 @@
       />
     </div>
 
-    <footer class="bg-neutral-900/80 backdrop-blur-sm border-t border-neutral-800 px-6 py-4">
-      <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <footer class="sticky bottom-0 bg-neutral-900/80 backdrop-blur-sm border-t border-neutral-800 px-6 py-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between w-full">
         <UButton 
           variant="ghost" 
           :disabled="gameStore.step === 0"
@@ -57,19 +57,19 @@ import { useWebSocket } from '~/composables/useWebSocket'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import {
-    GAMES,
-    type GameId,
-    type HostNavigatePayload,
-    type HostSyncRequestPayload,
-    type HostSyncResponsePayload,
-    type ReviewSubmitPayload,
-    type SessionSyncRequestPayload,
-    type SessionTeamsUpdatedPayload,
-    type StateUpdatePayload,
-    type SubmitPayload,
-    type TopicSelectPayload,
-    type VotePayload,
-    type WSMessage
+  GAMES,
+  type GameId,
+  type HostNavigatePayload,
+  type HostSyncRequestPayload,
+  type HostSyncResponsePayload,
+  type ReviewSubmitPayload,
+  type SessionSyncRequestPayload,
+  type SessionTeamsUpdatedPayload,
+  type StateUpdatePayload,
+  type SubmitPayload,
+  type TopicSelectPayload,
+  type VotePayload,
+  type WSMessage
 } from '~/types'
 
 definePageMeta({
