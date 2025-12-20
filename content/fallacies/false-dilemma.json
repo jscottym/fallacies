@@ -3,32 +3,32 @@
   "name": "False Dilemma",
   "nickname": "The Forced Choice",
   "definition": "Presenting only two options when more exist.",
-  "whyItWorks": "Binary choices feel decisive and clear. By eliminating the messy middle ground, we force people to pick a side—often the one we prefer by making the other extreme unpalatable.",
+  "whyItWorks": "Binary choices feel decisive and clear. By eliminating the messy middle ground, we force people to pick a side—often by making the other option sound terrible.",
   "examples": [
+    {
+      "text": "Either you're always available to hang out, or you're not really my friend.",
+      "topic": "friend-group-chats",
+      "analysis": "Friendship isn't all-or-nothing. You can be a good friend and still have boundaries, other commitments, or need alone time."
+    },
+    {
+      "text": "Either your parents trust you completely with your phone, or they're controlling and don't respect you.",
+      "topic": "screen-time-independence",
+      "analysis": "There are lots of middle grounds: check-ins, gradual freedom, agreed-upon limits. Trust isn't binary."
+    },
     {
       "text": "You either support mass deportation or you want open borders. There's no in-between.",
       "topic": "immigration",
-      "analysis": "Ignores visa reform, enforcement priorities, legal pathway expansion, employer sanctions, and dozens of other policy options."
-    },
-    {
-      "text": "Either we publicly shame people for problematic statements, or we let harmful ideas spread unchecked.",
-      "topic": "cancel-culture",
-      "analysis": "Ignores private confrontation, education, proportional responses, counter-speech, or simply ignoring."
+      "analysis": "There are lots of options between these two extremes that get ignored."
     },
     {
       "text": "America has to choose: be tough on crime, or coddle criminals and accept chaos.",
       "topic": "prison-reform",
-      "analysis": "Ignores evidence-based approaches that reduce recidivism while maintaining public safety—like drug courts, rehabilitation programs, and restorative justice."
+      "analysis": "Ignores approaches that reduce crime AND treat people fairly—they're not mutually exclusive."
     },
     {
       "text": "Young people either need to work harder and stop complaining, or admit they want everything handed to them.",
       "topic": "housing-market",
-      "analysis": "Ignores systemic factors like housing supply, wage stagnation, and policy choices that affect affordability independently of individual effort."
-    },
-    {
-      "text": "You're either with the free speech defenders or you're enabling digital authoritarianism.",
-      "topic": "cancel-culture",
-      "analysis": "Ignores nuanced positions on platform responsibility, proportionality of consequences, and the difference between government and social censorship."
+      "analysis": "Ignores that both personal effort AND bigger economic forces can matter at the same time."
     }
   ],
   "antidoteId": "acknowledge-spectrum",

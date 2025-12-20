@@ -3,32 +3,32 @@
   "name": "Ad Hominem",
   "nickname": "Attack the Messenger",
   "definition": "Attacking the person making the argument rather than the argument itself.",
-  "whyItWorks": "Our brains use source credibility as a mental shortcut. If we can discredit the messenger, we feel justified in dismissing the message—even when the argument stands on its own merits.",
+  "whyItWorks": "If we can make the person look bad, we feel okay ignoring what they said—even when their point is still good.",
   "examples": [
+    {
+      "text": "You're just saying we should study together because you have no friends.",
+      "topic": "friend-group-chats",
+      "analysis": "Even if true, it doesn't change whether studying together is actually a good idea. Attack the suggestion, not the person."
+    },
     {
       "text": "Of course she supports prison reform—she's never been a victim of violent crime.",
       "topic": "prison-reform",
-      "analysis": "The speaker's personal experience doesn't determine whether her policy arguments are valid. Data and ethical reasoning matter regardless of who presents them."
+      "analysis": "Her personal experience doesn't determine whether her arguments are valid. The data matters regardless of who presents it."
     },
     {
       "text": "Why would anyone listen to that influencer about nutrition? They're just a college dropout trying to sell supplements.",
       "topic": "influencer-health",
-      "analysis": "Their education and business model are relevant context but don't automatically make specific claims false. Evaluate the claims on their merits."
+      "analysis": "Their background is worth knowing, but doesn't automatically make their claims false. Check the claims themselves."
     },
     {
-      "text": "You only think housing prices are too high because you're bitter you can't afford one. Renters just want handouts.",
+      "text": "You only think housing prices are too high because you're bitter you can't afford one.",
       "topic": "housing-market",
-      "analysis": "The speaker's housing situation doesn't invalidate economic arguments about affordability ratios and wage stagnation."
-    },
-    {
-      "text": "People defending strict immigration enforcement are just afraid of demographic change. It's barely concealed racism.",
-      "topic": "immigration",
-      "analysis": "Assigns motive without addressing actual policy arguments about law enforcement, economic impacts, or border security."
+      "analysis": "Someone's situation doesn't change whether the math on housing costs is right or wrong."
     },
     {
       "text": "She's criticizing cancel culture now, but she participated in pile-ons five years ago. Total hypocrite.",
       "topic": "cancel-culture",
-      "analysis": "Past behavior may be relevant to character, but doesn't address whether her current argument about proportionality is sound."
+      "analysis": "Past behavior may be relevant, but doesn't address whether her current argument is sound."
     }
   ],
   "antidoteId": "separate-claim-claimant",

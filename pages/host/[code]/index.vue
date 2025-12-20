@@ -251,6 +251,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHostId } from '~/composables/useHostId'
 import { useWebSocket } from '~/composables/useWebSocket'
+import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
 import {
   GAMES,
@@ -266,6 +267,7 @@ import {
 const route = useRoute()
 const router = useRouter()
 const sessionStore = useSessionStore()
+const gameStore = useGameStore()
 const ws = useWebSocket()
 const hostId = useHostId()
 const qrCanvas = ref<HTMLCanvasElement>()
@@ -325,16 +327,16 @@ onMounted(async () => {
   ws.connect(code.value)
 
   ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
-    if (message.payload.hostId !== hostId.value) {
+    if (message.payload.hostId !== hostId.value && gameStore.isActive) {
       const payload: HostSyncResponsePayload = {
         hostId: hostId.value,
         currentRoute: route.fullPath,
-        gameId: null,
-        phase: '',
-        step: 0,
-        totalSteps: 0,
-        hostContext: '',
-        gameData: {}
+        gameId: gameStore.currentGameId,
+        phase: gameStore.phase,
+        step: gameStore.step,
+        totalSteps: gameStore.totalSteps,
+        hostContext: gameStore.hostContext,
+        gameData: { ...gameStore.gameData }
       }
       ws.send('host:sync_response', payload)
     }

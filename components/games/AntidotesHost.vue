@@ -6,21 +6,48 @@
       <p v-if="currentSlide.subtitle" class="text-2xl text-neutral-400">{{ currentSlide.subtitle }}</p>
     </div>
 
-    <div v-else-if="currentSlide.type === 'recap-validity'" class="space-y-8">
-      <h2 class="text-3xl font-bold text-white text-center">What Makes an Argument Good?</h2>
-      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <div class="game-card border-indigo-500/30">
-          <h3 class="text-xl font-semibold text-indigo-400 mb-3">Valid Structure</h3>
-          <p class="text-neutral-300">If premises are true, conclusion must follow</p>
-        </div>
+    <div v-else-if="currentSlide.type === 'recap-validity'" class="space-y-6">
+      <h2 class="text-3xl font-bold text-white text-center">Quick Recap: What Makes an Argument Good?</h2>
+      <div class="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
         <div class="game-card border-green-500/30">
-          <h3 class="text-xl font-semibold text-green-400 mb-3">True Premises</h3>
-          <p class="text-neutral-300">The starting points are actually correct</p>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">✅</span>
+            <h3 class="text-base font-semibold text-green-400">Sound</h3>
+          </div>
+          <div class="space-y-1 text-neutral-300 text-xs">
+            <p class="italic border-l-2 border-green-500/50 pl-2">All dogs are mammals.</p>
+            <p class="italic border-l-2 border-green-500/50 pl-2">Buddy is a dog.</p>
+            <p class="font-semibold text-green-300">→ Buddy is a mammal.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-2">Valid + True premises</p>
+        </div>
+        <div class="game-card border-indigo-500/30">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">⚠️</span>
+            <h3 class="text-base font-semibold text-indigo-400">Valid but Unsound</h3>
+          </div>
+          <div class="space-y-1 text-neutral-300 text-xs">
+            <p class="italic border-l-2 border-indigo-500/50 pl-2">All birds can fly.</p>
+            <p class="italic border-l-2 border-indigo-500/50 pl-2">Penguins are birds.</p>
+            <p class="font-semibold text-indigo-300">→ Penguins can fly.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-2">Valid structure, false premise</p>
+        </div>
+        <div class="game-card border-red-500/30">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">❌</span>
+            <h3 class="text-base font-semibold text-red-400">Invalid (Fallacy)</h3>
+          </div>
+          <div class="space-y-1 text-neutral-300 text-xs">
+            <p class="italic border-l-2 border-red-500/50 pl-2">I studied for the test.</p>
+            <p class="italic border-l-2 border-red-500/50 pl-2">I got an A.</p>
+            <p class="font-semibold text-red-300">→ Studying = A's.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-2">Conclusion doesn't follow!</p>
         </div>
       </div>
-      <div class="game-card border-yellow-500/30 max-w-2xl mx-auto text-center">
-        <h3 class="text-xl font-semibold text-yellow-400 mb-3">Valid + True = Sound</h3>
-        <p class="text-neutral-300">A sound argument is what we're aiming for!</p>
+      <div class="game-card border-yellow-500/30 max-w-xl mx-auto text-center">
+        <p class="text-neutral-300"><strong class="text-yellow-400">Antidotes</strong> help us build <strong class="text-green-400">sound</strong> arguments instead of falling into fallacies.</p>
       </div>
     </div>
 

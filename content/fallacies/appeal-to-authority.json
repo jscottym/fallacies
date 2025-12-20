@@ -1,34 +1,34 @@
 {
   "id": "appeal-to-authority",
   "name": "Appeal to Authority",
-  "nickname": "The Credibility Heist",
-  "definition": "Using someone's status or credentials as proof of a claim, especially outside their expertise or without supporting evidence.",
-  "whyItWorks": "We rely on experts because we can't verify everything ourselves. This shortcut becomes a fallacy when we use credentials as a substitute for evidence, or when the 'authority' isn't actually expert in the relevant area.",
+  "nickname": "Trust Me, I'm an Expert",
+  "definition": "Using someone's status or credentials as proof of a claim, especially outside their expertise or without real evidence.",
+  "whyItWorks": "We trust experts because we can't check everything ourselves. But someone's title isn't proof—a famous scientist's opinion on nutrition isn't the same as actual nutrition research.",
   "examples": [
+    {
+      "text": "My older brother got into Harvard, so his advice on how to study is definitely right.",
+      "topic": "grades-and-pressure",
+      "analysis": "Getting into a good school doesn't make someone an expert on learning. What worked for him might not work for you."
+    },
     {
       "text": "This fitness protocol is backed by Dr. Andrew Huberman, a Stanford neuroscientist.",
       "topic": "influencer-health",
-      "analysis": "Huberman is a real scientist, but not every claim on his podcast is peer-reviewed or within his specialty. Neuroscience credentials don't automatically validate nutrition advice."
-    },
-    {
-      "text": "A Nobel laureate economist says deportations will crash the economy.",
-      "topic": "immigration",
-      "analysis": "Nobel Prizes don't make every opinion equally authoritative, especially on complex social policy with many variables beyond pure economics."
+      "analysis": "He's a real scientist, but neuroscience credentials don't automatically make nutrition advice correct. Check the actual evidence."
     },
     {
       "text": "9 out of 10 doctors recommend this supplement.",
       "topic": "influencer-health",
-      "analysis": "Which doctors? Paid by the company? In a relevant specialty? What does 'recommend' mean? Vague appeals to unnamed authorities are weak evidence."
+      "analysis": "Which doctors? Paid by the company? What does 'recommend' even mean? Vague expert claims are weak evidence."
     },
     {
       "text": "A retired federal judge says our sentencing guidelines are just right.",
       "topic": "prison-reform",
-      "analysis": "One judge's opinion isn't consensus. Judges can have ideological biases, and decades in one role can create blind spots."
+      "analysis": "One judge's opinion isn't consensus. They can have biases like anyone else."
     },
     {
       "text": "This investment strategy is used by billionaires like Warren Buffett.",
       "topic": "housing-market",
-      "analysis": "Survivorship bias—you don't hear about billionaires' failed strategies. Their context (capital, access, risk tolerance) differs dramatically from average investors."
+      "analysis": "You don't hear about the strategies that failed. Their situation (billions of dollars, insider access) is totally different from most people's."
     }
   ],
   "antidoteId": "separate-claim-claimant",

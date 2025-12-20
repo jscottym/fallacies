@@ -2,33 +2,33 @@
   "id": "slippery-slope",
   "name": "Slippery Slope",
   "nickname": "The Doom Spiral",
-  "definition": "Claiming that one action will inevitably lead to extreme consequences without demonstrating the causal chain.",
-  "whyItWorks": "Fear is motivating. By painting a vivid worst-case scenario, we make moderate positions seem dangerous. The chain of 'if...then' feels logical even without evidence for each link.",
+  "definition": "Claiming one action will inevitably lead to extreme consequences without showing how each step would actually happen.",
+  "whyItWorks": "Fear is motivating. By painting a vivid worst-case scenario, we make even small changes seem dangerous. The chain of 'if...then' feels logical even when there's no proof each step will happen.",
   "examples": [
     {
-      "text": "If we allow any path to legal status for undocumented immigrants, we're signaling that laws don't matter. Soon there will be no border at all.",
+      "text": "If I let you borrow my notes once, you'll expect me to do all your work for you.",
+      "topic": "grades-and-pressure",
+      "analysis": "Sharing notes once doesn't mean you'll become someone's personal tutor. You can help once and still set boundaries."
+    },
+    {
+      "text": "If your parents let you stay out until midnight once, next you'll want to stay out all night, and then you'll stop coming home at all.",
+      "topic": "screen-time-independence",
+      "analysis": "One later curfew doesn't automatically lead to no curfew. Most people can handle gradual trust without going to extremes."
+    },
+    {
+      "text": "If we allow any path to legal status for undocumented immigrants, soon there will be no border at all.",
       "topic": "immigration",
-      "analysis": "Assumes no stopping points or course corrections are possible. Many countries have paths to legal status without open borders."
+      "analysis": "Many countries have paths to legal status without open borders. Assumes no stopping points are possible."
     },
     {
-      "text": "If we let employers fire people for controversial tweets, soon you'll lose your job for private dinner conversations.",
-      "topic": "cancel-culture",
-      "analysis": "Plausible-sounding progression, but lacks evidence it's inevitable. Social and legal norms can create stable middle grounds."
-    },
-    {
-      "text": "If we reduce sentences for non-violent drug offenses, criminals will see we're soft and violent crime will explode.",
+      "text": "If we reduce sentences for non-violent drug offenses, violent crime will explode.",
       "topic": "prison-reform",
-      "analysis": "Assumes direct causal chain without evidence. Many jurisdictions have reduced sentences without increases in violent crime."
+      "analysis": "Many places have reduced sentences without more violent crime. The chain of events isn't automatic."
     },
     {
-      "text": "If the government can regulate one health supplement, they'll eventually ban all natural medicine and force us to use only pharmaceuticals.",
+      "text": "If the government can regulate one health supplement, they'll eventually ban all natural medicine.",
       "topic": "influencer-health",
-      "analysis": "Regulation exists on a spectrum. Requiring evidence for claims is different from banning products."
-    },
-    {
-      "text": "If we keep building high-density housing, we'll destroy every neighborhood's character until cities are just concrete blocks.",
-      "topic": "housing-market",
-      "analysis": "Ignores zoning, design standards, community input, and that some density can coexist with neighborhood character."
+      "analysis": "Requiring evidence for claims is different from banning products. Regulation exists on a spectrum."
     }
   ],
   "antidoteId": "demand-mechanism",

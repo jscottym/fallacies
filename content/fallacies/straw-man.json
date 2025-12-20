@@ -3,32 +3,32 @@
   "name": "Straw Man",
   "nickname": "The Argument No One Made",
   "definition": "Misrepresenting someone's position to make it easier to attack.",
-  "whyItWorks": "It's easier to defeat a caricature than a nuanced position. By exaggerating or distorting, we can 'win' against a version of the argument that was never actually made.",
+  "whyItWorks": "It's easier to defeat a caricature than a real argument. By exaggerating what someone said, we can 'win' against a version of their point that was never actually made.",
   "examples": [
     {
-      "text": "Immigration hawks want to deport every immigrant and seal the border permanently.",
-      "topic": "immigration",
-      "analysis": "Most supporters of stricter enforcement distinguish between legal and illegal immigration and don't advocate for zero immigration."
+      "text": "So you're saying I can never ask you to hang out? You just want to be alone forever?",
+      "topic": "friend-group-chats",
+      "analysis": "They said they needed some space this week, not that they never want to see you. Twisting their words makes it unfair."
+    },
+    {
+      "text": "My parents say I spend too much time on my phone, so apparently they want me to have zero social life.",
+      "topic": "screen-time-independence",
+      "analysis": "Asking for less screen time isn't the same as wanting you isolated. The exaggeration avoids the real conversation."
     },
     {
       "text": "Cancel culture critics think people should be able to say anything with zero consequences.",
       "topic": "cancel-culture",
-      "analysis": "Most critics distinguish between proportional social consequences and disproportionate mob punishment. They're not advocating for zero accountability."
+      "analysis": "Most critics just want proportional responses, not zero accountability. The extreme version is easier to dismiss."
     },
     {
       "text": "Prison reformers want to let dangerous criminals walk free with no punishment.",
       "topic": "prison-reform",
-      "analysis": "Most reformers focus on non-violent offenders and advocate for rehabilitation alongside consequences, not eliminating accountability."
+      "analysis": "Most reformers focus on non-violent offenders and want rehabilitation alongside consequences, not eliminating accountability."
     },
     {
       "text": "Health skeptics think all natural supplements are snake oil and only trust Big Pharma.",
       "topic": "influencer-health",
-      "analysis": "Most skeptics simply want evidence-based claims; they're not reflexively pro-pharmaceutical or anti-natural."
-    },
-    {
-      "text": "People concerned about political violence just want to silence all criticism of public figures.",
-      "topic": "political-violence",
-      "analysis": "Concern about violence isn't the same as opposing criticism. Most people distinguish between harsh speech and incitement."
+      "analysis": "Most just want evidence-based claims. Wanting proof isn't the same as being anti-natural."
     }
   ],
   "antidoteId": "steelmanning",

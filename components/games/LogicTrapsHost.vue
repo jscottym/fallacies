@@ -23,6 +23,59 @@
       </div>
     </div>
 
+    <div v-else-if="currentSlide.type === 'intro-examples'" class="space-y-6">
+      <h2 class="text-3xl font-bold text-white text-center">Let's See Some Examples</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="game-card border-green-500/30">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">✅</span>
+            <h3 class="text-lg font-semibold text-green-400">Valid AND Sound</h3>
+          </div>
+          <div class="space-y-2 text-neutral-300 text-sm">
+            <p class="italic border-l-2 border-green-500/50 pl-3">All dogs are mammals.</p>
+            <p class="italic border-l-2 border-green-500/50 pl-3">Buddy is a dog.</p>
+            <p class="font-semibold text-green-300">→ Buddy is a mammal.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-3">Structure is correct + premises are true = Sound!</p>
+        </div>
+        <div class="game-card border-indigo-500/30">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">⚠️</span>
+            <h3 class="text-lg font-semibold text-indigo-400">Valid but NOT Sound</h3>
+          </div>
+          <div class="space-y-2 text-neutral-300 text-sm">
+            <p class="italic border-l-2 border-indigo-500/50 pl-3">All birds can fly.</p>
+            <p class="italic border-l-2 border-indigo-500/50 pl-3">Penguins are birds.</p>
+            <p class="font-semibold text-indigo-300">→ Penguins can fly.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-3">Structure is correct, but first premise is false!</p>
+        </div>
+        <div class="game-card border-red-500/30">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">❌</span>
+            <h3 class="text-lg font-semibold text-red-400">INVALID (Fallacy!)</h3>
+          </div>
+          <div class="space-y-2 text-neutral-300 text-sm">
+            <p class="italic border-l-2 border-red-500/50 pl-3">I studied for the test.</p>
+            <p class="italic border-l-2 border-red-500/50 pl-3">I got an A on the test.</p>
+            <p class="font-semibold text-red-300">→ Studying always leads to A's.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-3">The conclusion doesn't follow! Maybe it was easy, or you got lucky.</p>
+        </div>
+        <div class="game-card border-yellow-500/30">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">🎯</span>
+            <h3 class="text-lg font-semibold text-yellow-400">The Goal</h3>
+          </div>
+          <div class="space-y-3 text-neutral-300 text-sm">
+            <p><strong class="text-green-400">Sound</strong> = Valid structure + True premises</p>
+            <p><strong class="text-red-400">Fallacy</strong> = Broken logic that tricks you</p>
+            <p class="text-yellow-300 font-medium mt-2">Today we'll learn 7 common fallacies so you can spot them!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-else-if="currentSlide.type === 'fallacy-intro'" class="space-y-8">
       <div class="flex items-center gap-6">
         <div class="text-7xl">{{ getFallacyIcon(currentFallacy?.id) }}</div>
@@ -124,11 +177,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import { useContentStore } from '~/stores/content'
-import type { Participant, Fallacy, FallacyExample } from '~/types'
+import type { Fallacy, FallacyExample, Participant } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -152,7 +205,7 @@ function getFallacyIcon(id?: string): string {
 }
 
 interface Slide {
-  type: 'title' | 'intro' | 'fallacy-intro' | 'fallacy-why' | 'fallacy-example' | 'discussion' | 'recap'
+  type: 'title' | 'intro' | 'intro-examples' | 'fallacy-intro' | 'fallacy-why' | 'fallacy-example' | 'discussion' | 'recap'
   title?: string
   subtitle?: string
   fallacyIndex?: number
@@ -163,7 +216,8 @@ interface Slide {
 const slides = computed((): Slide[] => {
   const result: Slide[] = [
     { type: 'title', title: 'The 7 Logic Traps', subtitle: 'Learning to spot the tricks our minds play' },
-    { type: 'intro', title: 'Valid vs Sound' }
+    { type: 'intro', title: 'Valid vs Sound' },
+    { type: 'intro-examples', title: 'Examples' }
   ]
 
   contentStore.fallacies.forEach((fallacy, fIndex) => {
@@ -233,6 +287,8 @@ function updateHostContext() {
     context = `Discussion: ${currentFallacy.value?.name}`
   } else if (currentSlide.value.type === 'recap') {
     context = 'Recap: All 7 Logic Traps'
+  } else if (currentSlide.value.type === 'intro-examples') {
+    context = 'Valid vs Sound: Examples'
   } else {
     context = currentSlide.value.title || 'Introduction'
   }

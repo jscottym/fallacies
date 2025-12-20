@@ -1,34 +1,34 @@
 {
   "id": "causation-con",
   "name": "The Causation Con",
-  "nickname": "After This ≠ Because of This",
+  "nickname": "Just Because It's After Doesn't Mean It's Because",
   "definition": "Assuming that because one event followed another, the first event caused the second.",
-  "whyItWorks": "Our brains are pattern-matching machines. When we see a sequence, we instinctively assign causation. 'After' feels like 'because'—even when many other factors could explain the outcome.",
+  "whyItWorks": "Our brains love patterns. When something happens after something else, we assume the first thing caused it—even when lots of other stuff could explain it.",
   "examples": [
     {
-      "text": "Crime dropped after we increased deportations. Proof that deportation reduces crime.",
-      "topic": "immigration",
-      "analysis": "Many factors affect crime: economy, policing changes, demographics, drug market shifts. Correlation during a period doesn't establish causation."
+      "text": "I wore my lucky socks and we won the game. The socks definitely helped.",
+      "topic": "friend-group-chats",
+      "analysis": "Your team might have won because you practiced, the other team had an off day, or random chance. The socks just happened to be there."
     },
     {
       "text": "I started taking this supplement and felt better within a week. It definitely works!",
       "topic": "influencer-health",
-      "analysis": "Could be placebo effect, lifestyle changes made simultaneously, natural recovery, or regression to the mean. Personal experience isn't controlled evidence."
+      "analysis": "Could be placebo, other changes you made at the same time, or just naturally getting better anyway."
+    },
+    {
+      "text": "Crime dropped after we increased deportations. Proof that deportation reduces crime.",
+      "topic": "immigration",
+      "analysis": "Many factors affect crime: economy, policing, demographics. Things happening at the same time doesn't prove one caused the other."
     },
     {
       "text": "Since California reduced some sentences, crime increased. Soft-on-crime policies caused it.",
       "topic": "prison-reform",
-      "analysis": "Many factors changed simultaneously: pandemic, economic stress, policing changes, drug market shifts. Attribution requires controlling for variables."
+      "analysis": "Lots changed at the same time: pandemic, economic stress, policing changes. You can't just pick one thing and blame it."
     },
     {
       "text": "Housing prices rose after remote work became common. Working from home caused the housing crisis.",
       "topic": "housing-market",
-      "analysis": "Many simultaneous factors: record-low interest rates, supply chain issues, investor activity, migration patterns. Remote work is one factor among many."
-    },
-    {
-      "text": "After that celebrity endorsed this product, sales increased 500%. Celebrity endorsements are the most effective marketing.",
-      "topic": "influencer-health",
-      "analysis": "Could be timing, other marketing efforts, general trends, or product improvements. One data point isn't proof of general effectiveness."
+      "analysis": "Many things happened at once: low interest rates, supply issues, investors buying houses. Remote work is just one piece."
     }
   ],
   "antidoteId": "demand-mechanism",

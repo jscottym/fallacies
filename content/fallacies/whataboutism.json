@@ -3,32 +3,32 @@
   "name": "Whataboutism",
   "nickname": "The Deflection",
   "definition": "Responding to criticism by pointing to someone else's behavior rather than addressing the original point.",
-  "whyItWorks": "It shifts the burden of defense to offense. Instead of answering the charge, you put your accuser on trial. It feels fair ('why focus on me?') but avoids the actual issue.",
+  "whyItWorks": "Instead of answering, you make your accuser defend themselves. It feels fair ('why pick on me?'), but you still never answered the question.",
   "examples": [
     {
-      "text": "You're upset about inflammatory political rhetoric now? Where was this energy when cities were burning in 2020?",
-      "topic": "political-violence",
-      "analysis": "Both can be problems worth addressing. Pointing to past events doesn't address the current concern—it just deflects."
+      "text": "You're mad I didn't text back? What about when YOU ghosted the group chat for two days last month?",
+      "topic": "friend-group-chats",
+      "analysis": "Their past behavior doesn't answer whether you should have responded. You're just changing the subject."
     },
     {
-      "text": "Worried about cancel culture? What about the Hollywood blacklist? McCarthyism was worse.",
-      "topic": "cancel-culture",
-      "analysis": "Historical comparisons don't determine whether current practices are harmful. Something can be bad without being the worst in history."
+      "text": "You're upset I was on my phone during dinner? You're on your laptop for work all the time!",
+      "topic": "screen-time-independence",
+      "analysis": "Their screen time doesn't justify yours. Both could be problems, but the deflection avoids the actual conversation."
     },
     {
       "text": "You're criticizing influencer health claims? Pharmaceutical companies have killed way more people with opioids.",
       "topic": "influencer-health",
-      "analysis": "True, but doesn't make supplement misinformation acceptable. Two wrongs don't make a right."
+      "analysis": "True, but doesn't make bad health advice okay. Two wrongs don't make a right."
     },
     {
       "text": "Concerned about prison conditions? What about the victims who suffer because of these criminals?",
       "topic": "prison-reform",
-      "analysis": "Both deserve concern. Caring about humane treatment doesn't mean ignoring victims—deflection avoids the actual question."
+      "analysis": "Both deserve concern. Caring about one doesn't mean ignoring the other—deflection just avoids the question."
     },
     {
       "text": "Young people complaining about housing prices? Try buying a house with 18% interest rates like Boomers did.",
       "topic": "housing-market",
-      "analysis": "Different challenge, different context. Higher rates with lower prices vs. lower rates with astronomical prices are both difficult—this deflects from the current problem."
+      "analysis": "Different challenge, different context. Pointing to the past doesn't address today's problem."
     }
   ],
   "antidoteId": "stay-in-lane",
