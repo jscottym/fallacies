@@ -30,6 +30,28 @@
         </UButton>
       </div>
 
+      <div class="mt-6 game-card space-y-4">
+        <h2 class="text-xl font-semibold text-white text-center">Join as Co-host</h2>
+        <UFormField label="Existing Session Code">
+          <UInput
+            v-model="joinCode"
+            placeholder="Enter 6-character code"
+            size="lg"
+            class="uppercase"
+            @keyup.enter="joinAsHost"
+          />
+        </UFormField>
+        <UButton
+          color="neutral"
+          size="lg"
+          block
+          :disabled="joinCode.length !== 6"
+          @click="joinAsHost"
+        >
+          Join Existing Session as Host
+        </UButton>
+      </div>
+
       <div v-if="recentSessions.length > 0" class="mt-8">
         <h3 class="text-lg font-medium text-neutral-400 mb-4 text-center">Or Resume a Previous Session</h3>
         <div class="space-y-3">
@@ -63,6 +85,7 @@ import type { SessionData } from '~/types'
 const sessionStore = useSessionStore()
 const sessionName = ref('')
 const recentSessions = ref<SessionData[]>([])
+const joinCode = ref('')
 
 onMounted(() => {
   const storage = useStorage()
@@ -77,6 +100,12 @@ function createSession() {
 function resumeSession(code: string) {
   sessionStore.loadSession(code, true)
   navigateTo(`/host/${code}`)
+}
+
+function joinAsHost() {
+  if (joinCode.value.length === 6) {
+    navigateTo(`/host/${joinCode.value.toUpperCase()}`)
+  }
 }
 
 function formatDate(dateString: string): string {

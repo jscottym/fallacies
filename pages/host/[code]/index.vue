@@ -72,16 +72,27 @@
         </div>
         <div class="lg:col-span-1 space-y-6">
           <div class="game-card">
-            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <UIcon name="i-heroicons-qr-code" />
-              Join via QR Code
-            </h2>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                <UIcon name="i-heroicons-qr-code" />
+                Join via QR Code
+              </h2>
+              <div class="flex items-center gap-2 text-xs text-neutral-400">
+                <span :class="!isHostQr ? 'text-indigo-400 font-semibold' : ''">Player</span>
+                <USwitch v-model="isHostQr" />
+                <span :class="isHostQr ? 'text-indigo-400 font-semibold' : ''">Host</span>
+              </div>
+            </div>
             <div class="bg-white p-4 rounded-xl inline-block">
               <canvas ref="qrCanvas" width="200" height="200"></canvas>
             </div>
             <p class="text-sm text-neutral-400 mt-4">
-              Scan to join at<br>
-              <span class="text-indigo-400">{{ joinUrl }}</span>
+              Scan to join as
+              <span class="font-semibold text-white">
+                {{ isHostQr ? 'Host' : 'Player' }}
+              </span>
+              at<br>
+              <span class="text-indigo-400 break-all">{{ qrUrl }}</span>
             </p>
           </div>
 
@@ -242,14 +253,14 @@ import { useHostId } from '~/composables/useHostId'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useSessionStore } from '~/stores/session'
 import {
-    GAMES,
-    type GameId,
-    type HostNavigatePayload,
-    type HostSyncRequestPayload,
-    type HostSyncResponsePayload,
-    type SessionSyncRequestPayload,
-    type SessionTeamsUpdatedPayload,
-    type WSMessage
+  GAMES,
+  type GameId,
+  type HostNavigatePayload,
+  type HostSyncRequestPayload,
+  type HostSyncResponsePayload,
+  type SessionSyncRequestPayload,
+  type SessionTeamsUpdatedPayload,
+  type WSMessage
 } from '~/types'
 
 const route = useRoute()
@@ -258,6 +269,7 @@ const sessionStore = useSessionStore()
 const ws = useWebSocket()
 const hostId = useHostId()
 const qrCanvas = ref<HTMLCanvasElement>()
+const isHostQr = ref(false)
 const showAddParticipant = ref(false)
 const newParticipantName = ref('')
 
@@ -285,6 +297,13 @@ const joinUrl = computed(() => {
   return `${window.location.origin}/play/${code.value}`
 })
 
+const cohostUrl = computed(() => {
+  if (typeof window === 'undefined') return ''
+  return `${window.location.origin}/host/${code.value}`
+})
+
+const qrUrl = computed(() => (isHostQr.value ? cohostUrl.value : joinUrl.value))
+
 function broadcastSessionState() {
   const payload: SessionTeamsUpdatedPayload = {
     participants: [...sessionStore.participants],
@@ -298,8 +317,8 @@ onMounted(async () => {
   if (!sessionStore.code || sessionStore.code !== code.value) {
     const loaded = sessionStore.loadSession(code.value, true) || sessionStore.hydrateFromStorage()
     if (!loaded) {
-      navigateTo('/host')
-      return
+      sessionStore.code = code.value
+      sessionStore.isHost = true
     }
   }
 
@@ -322,10 +341,8 @@ onMounted(async () => {
   })
 
   ws.on('session:sync_request', (message: WSMessage<SessionSyncRequestPayload>) => {
-    if (message.payload.source === 'participant') {
-      console.log('[host] received session:sync_request from participant')
-      broadcastSessionState()
-    }
+    console.log('[host] received session:sync_request', message.payload)
+    broadcastSessionState()
   })
 
   ws.on('host:sync_response', (message: WSMessage<HostSyncResponsePayload>) => {
@@ -346,24 +363,35 @@ onMounted(async () => {
     }
   })
 
+  ws.on('session:teams_updated', (message: WSMessage<SessionTeamsUpdatedPayload>) => {
+    const payload = message.payload
+    if (!payload) return
+    sessionStore.participants = [...payload.participants]
+    sessionStore.teams = [...payload.teams]
+    if (payload.argumentHistory) {
+      sessionStore.argumentHistory = { ...payload.argumentHistory }
+    }
+  })
+
   setTimeout(() => {
     ws.send('host:sync_request', { hostId: hostId.value } as HostSyncRequestPayload)
   }, 500)
 
   setTimeout(() => {
-    broadcastSessionState()
+    const payload: SessionSyncRequestPayload = { source: 'host' }
+    ws.send('session:sync_request', payload)
   }, 700)
 
   await generateQR()
 })
 
-watch(code, async () => {
+watch(qrUrl, async () => {
   await generateQR()
 })
 
 async function generateQR() {
-  if (qrCanvas.value && joinUrl.value) {
-    await QRCode.toCanvas(qrCanvas.value, joinUrl.value, {
+  if (qrCanvas.value && qrUrl.value) {
+    await QRCode.toCanvas(qrCanvas.value, qrUrl.value, {
       width: 200,
       margin: 0,
       color: {

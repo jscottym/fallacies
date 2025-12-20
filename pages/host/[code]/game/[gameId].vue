@@ -84,6 +84,7 @@ const timer = useTimer()
 const ws = useWebSocket()
 const hostId = useHostId()
 const isReceivingRemoteUpdate = ref(false)
+const isReceivingSessionUpdate = ref(false)
 
 const code = computed(() => (route.params.code as string).toUpperCase())
 const gameId = computed(() => route.params.gameId as GameId)
@@ -179,12 +180,11 @@ function applyRemoteHostState(payload: HostSyncResponsePayload | StateUpdatePayl
 }
 
 onMounted(() => {
-  // Hydrate session for this host from code in URL
   if (!sessionStore.code || sessionStore.code !== code.value) {
     const loaded = sessionStore.loadSession(code.value, true) || sessionStore.hydrateFromStorage()
     if (!loaded) {
-      navigateTo('/host')
-      return
+      sessionStore.code = code.value
+      sessionStore.isHost = true
     }
   }
 
@@ -209,9 +209,7 @@ onMounted(() => {
   })
 
   ws.on('session:sync_request', (message: WSMessage<SessionSyncRequestPayload>) => {
-    if (message.payload.source === 'participant') {
-      broadcastSessionState()
-    }
+    broadcastSessionState()
   })
 
   ws.on('host:sync_response', (message: WSMessage<HostSyncResponsePayload>) => {
@@ -239,6 +237,20 @@ onMounted(() => {
     if (payload.route !== route.fullPath) {
       router.push(payload.route)
     }
+  })
+
+  ws.on('session:teams_updated', (message: WSMessage<SessionTeamsUpdatedPayload>) => {
+    const payload = message.payload
+    if (!payload) return
+    isReceivingSessionUpdate.value = true
+    sessionStore.participants = [...payload.participants]
+    sessionStore.teams = [...payload.teams]
+    if (payload.argumentHistory) {
+      sessionStore.argumentHistory = { ...payload.argumentHistory }
+    }
+    setTimeout(() => {
+      isReceivingSessionUpdate.value = false
+    }, 100)
   })
 
   ws.on('game:vote', (message: WSMessage<VotePayload>) => {
@@ -301,7 +313,8 @@ onMounted(() => {
   }, 1000)
 
   setTimeout(() => {
-    broadcastSessionState()
+    const payload: SessionSyncRequestPayload = { source: 'host' }
+    ws.send('session:sync_request', payload)
   }, 1200)
 })
 
@@ -318,7 +331,9 @@ watch(
 watch(
   () => [sessionStore.participants, sessionStore.teams, sessionStore.argumentHistory],
   () => {
-    broadcastSessionState()
+    if (!isReceivingSessionUpdate.value) {
+      broadcastSessionState()
+    }
   },
   { deep: true }
 )
