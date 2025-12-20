@@ -1,4 +1,4 @@
-import { useLocalStorage, watchDebounced } from '@vueuse/core'
+import { StorageSerializers, useLocalStorage, watchDebounced } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { computed, reactive, toRefs } from 'vue'
 import type {
@@ -6,6 +6,7 @@ import type {
     GameState,
     ProsecutionRound,
     StateUpdatePayload,
+    SteelmanRound,
     TimerState,
     VoteRecord
 } from '~/types'
@@ -26,7 +27,8 @@ const STORAGE_KEY = 'fallacies:current-game'
 export const useGameStore = defineStore('game', () => {
   const stored = useLocalStorage<GameStoreState | null>(STORAGE_KEY, null, {
     deep: true,
-    listenToStorageChanges: true
+    listenToStorageChanges: true,
+    serializer: StorageSerializers.object
   })
   
   const state = reactive<GameStoreState>({
@@ -274,6 +276,29 @@ export const useGameStore = defineStore('game', () => {
     state.gameData = { ...state.gameData, rounds }
   }
 
+  function submitSteelmanArgument(
+    teamId: string,
+    submission: { text: string; techniques: string[]; topicId?: string; position?: string; sourceHistoryKey?: string }
+  ) {
+    const rounds = [...((state.gameData.rounds || []) as SteelmanRound[])]
+    const round = rounds[rounds.length - 1]
+    if (!round) return
+
+    round.arguments = {
+      ...round.arguments,
+      [teamId]: {
+        text: submission.text,
+        antidotesUsed: [...submission.techniques],
+        submittedAt: new Date().toISOString(),
+        topicId: submission.topicId,
+        position: submission.position,
+        sourceHistoryKey: submission.sourceHistoryKey
+      }
+    }
+
+    state.gameData = { ...state.gameData, rounds }
+  }
+
   function submitReview(reviewingTeamId: string, targetTeamId: string, identifiedFallacies: string[]) {
     const rounds = [...(state.gameData.rounds as ProsecutionRound[])]
     const currentRound = rounds[state.gameData.currentRoundIndex as number]
@@ -369,6 +394,7 @@ export const useGameStore = defineStore('game', () => {
     initProsecutionRound,
     selectTopic,
     submitArgument,
+    submitSteelmanArgument,
     submitReview,
     loadState,
     applyRemoteState,

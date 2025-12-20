@@ -542,7 +542,8 @@ function startAllReviewing() {
       topicId,
       position: topic?.positionA.label || '',
       text: arg.text,
-      createdAt: arg.submittedAt
+      createdAt: arg.submittedAt,
+      fallaciesUsed: arg.fallaciesUsed || []
     }
     sessionStore.addArgumentToHistory(team.id, entry)
   })

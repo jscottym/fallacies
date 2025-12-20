@@ -142,7 +142,8 @@ function sendSyncResponse() {
 function broadcastSessionState() {
   const payload: SessionTeamsUpdatedPayload = {
     participants: [...sessionStore.participants],
-    teams: [...sessionStore.teams]
+    teams: [...sessionStore.teams],
+    argumentHistory: { ...sessionStore.argumentHistory }
   }
   ws.send('session:teams_updated', payload)
 }
@@ -256,11 +257,18 @@ onMounted(() => {
     const payload = message.payload
     if (!payload || payload.gameId !== gameId.value) return
 
-    gameStore.submitArgument(
-      payload.teamId,
-      payload.submission.text,
-      payload.submission.techniques
-    )
+    if (gameId.value === 'prosecution') {
+      gameStore.submitArgument(
+        payload.teamId,
+        payload.submission.text,
+        payload.submission.techniques
+      )
+    } else if (gameId.value === 'steelman') {
+      gameStore.submitSteelmanArgument(
+        payload.teamId,
+        payload.submission
+      )
+    }
   })
 
   ws.on('game:topic_select', (message: WSMessage<TopicSelectPayload>) => {
@@ -303,6 +311,14 @@ watch(
     if (!isReceivingRemoteUpdate.value) {
       broadcastState()
     }
+  },
+  { deep: true }
+)
+
+watch(
+  () => [sessionStore.participants, sessionStore.teams, sessionStore.argumentHistory],
+  () => {
+    broadcastSessionState()
   },
   { deep: true }
 )

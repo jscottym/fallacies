@@ -1,4 +1,5 @@
 import type { Participant, Team } from './session'
+import type { ArgumentHistoryEntry } from './game'
 
 export type WSEventType =
   | 'session:join'
@@ -66,6 +67,9 @@ export interface SubmitPayload {
   submission: {
     text: string
     techniques: string[]
+    topicId?: string
+    position?: string
+    sourceHistoryKey?: string
   }
 }
 
@@ -119,6 +123,7 @@ export interface HostNavigatePayload {
 export interface SessionTeamsUpdatedPayload {
   participants: Participant[]
   teams: Team[]
+  argumentHistory?: Record<string, ArgumentHistoryEntry[]>
 }
 
 export interface SessionSyncRequestPayload {

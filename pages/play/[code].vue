@@ -320,6 +320,9 @@ onMounted(() => {
     if (!payload) return
     sessionStore.participants = [...payload.participants]
     sessionStore.teams = [...payload.teams]
+    if (payload.argumentHistory) {
+      sessionStore.argumentHistory = { ...payload.argumentHistory }
+    }
     if (!hasJoined.value && participantStorage.value) {
       const restored = sessionStore.participants.find(
         (p) => p.name === participantStorage.value

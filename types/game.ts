@@ -118,6 +118,7 @@ export interface ArgumentHistoryEntry {
   position: string
   text: string
   createdAt: string
+  fallaciesUsed: string[]
 }
 
 export interface LogicTrapsState extends GameState {
@@ -166,7 +167,14 @@ export interface AntidotesState extends GameState {
 export interface SteelmanRound {
   roundNumber: number
   phase: 'building' | 'reviewing' | 'voting' | 'comparison'
-  arguments: Record<string, { text: string; antidotesUsed: string[]; submittedAt: string }>
+  arguments: Record<string, {
+    text: string
+    antidotesUsed: string[]
+    submittedAt: string
+    topicId?: string
+    position?: string
+    sourceHistoryKey?: string
+  }>
   reviews: Array<{
     reviewingTeamId: string
     targetTeamId: string

@@ -1,4 +1,4 @@
-import { useLocalStorage, watchDebounced } from '@vueuse/core'
+import { StorageSerializers, useLocalStorage, watchDebounced } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { computed, reactive, toRefs } from 'vue'
 import { useStorage } from '~/composables/useStorage'
@@ -68,7 +68,8 @@ function normalizeStoredSession(raw: unknown): SessionData | null {
 export const useSessionStore = defineStore('session', () => {
   const stored = useLocalStorage<SessionData | null>(STORAGE_KEY, null, {
     deep: true,
-    listenToStorageChanges: true
+    listenToStorageChanges: true,
+    serializer: StorageSerializers.object
   })
   const storage = useStorage()
 
@@ -163,6 +164,7 @@ export const useSessionStore = defineStore('session', () => {
     state.participants = [...normalized.participants]
     state.teams = [...normalized.teams]
     state.gamesState = { ...normalized.gamesState }
+    state.argumentHistory = { ...normalized.argumentHistory }
 
     return true
   }
@@ -202,6 +204,7 @@ export const useSessionStore = defineStore('session', () => {
     state.participants = [...session.participants]
     state.teams = [...session.teams]
     state.gamesState = { ...session.gamesState }
+    state.argumentHistory = { ...(session as SessionData & { argumentHistory?: Record<string, ArgumentHistoryEntry[]> }).argumentHistory ?? {} }
     state.isHost = asHost
     state.isConnected = true
 

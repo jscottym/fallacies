@@ -4,7 +4,6 @@
       <div class="mb-4">
         <div class="text-sm text-neutral-400">Your Challenge</div>
         <div class="font-semibold text-white">Argue the OPPOSITE side—with sound logic!</div>
-        <div class="text-sm text-green-400 mt-1">Position: {{ oppositePosition }}</div>
       </div>
 
       <div class="flex-1 flex flex-col">
@@ -28,7 +27,18 @@
           <div class="text-xs text-neutral-300 italic max-h-24 overflow-y-auto">
             "{{ selectedSourceText }}"
           </div>
+          <div v-if="selectedFallacies.length" class="mt-2 flex flex-wrap gap-1">
+            <UBadge
+              v-for="fallacyId in selectedFallacies"
+              :key="fallacyId"
+              class="border border-red-500/40 bg-red-500/10 text-red-300"
+            >
+              {{ getFallacyName(fallacyId) }}
+            </UBadge>
+          </div>
         </div>
+        <div class="text-sm text-green-400 mt-1">New Position: {{ oppositePosition }}</div>
+
         <label class="text-sm text-neutral-400 mb-2">Your Sound Argument (no fallacies!)</label>
         <textarea
           v-model="argumentText"
@@ -62,7 +72,7 @@
             :disabled="!canSubmit || hasSubmitted"
             @click="submitArgument"
           >
-            {{ hasSubmitted ? 'Submitted ✓' : 'Submit Sound Argument' }}
+            {{ hasSubmitted ? 'Submitted ✓' : 'Submit Argument' }}
           </UButton>
         </div>
       </div>
@@ -110,14 +120,16 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { ArgumentHistoryEntry, SteelmanRound } from '~/types'
+import type { ArgumentHistoryEntry, SteelmanRound, SubmitPayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
 const contentStore = useContentStore()
+const ws = useWebSocket()
 
 const argumentText = ref('')
 const selectedAntidotes = ref<string[]>([])
@@ -151,9 +163,11 @@ const selectedHistoryEntry = computed<ArgumentHistoryEntry | null>(() => {
   const entries = teamHistory.value
   if (!entries.length) return null
   const id = selectedHistoryId.value
-  if (!id) return entries[entries.length - 1]
+  if (!id) {
+    return entries[entries.length - 1] ?? null
+  }
   const found = entries.find(e => getHistoryKey(e) === id)
-  return found || entries[entries.length - 1]
+  return found ?? entries[entries.length - 1] ?? null
 })
 
 const oppositePosition = computed(() => {
@@ -171,6 +185,14 @@ function getHistoryLabel(entry: ArgumentHistoryEntry): string {
   const topic = contentStore.getTopicById(entry.topicId)
   const topicName = topic?.name || 'Unknown topic'
   return `${topicName} – ${entry.position}`
+}
+
+const selectedFallacies = computed(() => {
+  return selectedHistoryEntry.value?.fallaciesUsed || []
+})
+
+function getFallacyName(id: string): string {
+  return contentStore.getFallacyById(id)?.name || id
 }
 
 const canSubmit = computed(() => {
@@ -192,21 +214,33 @@ function toggleAntidote(id: string) {
 }
 
 function submitArgument() {
-  if (!myTeamId.value || !canSubmit.value || !currentRound.value) return
-  
-  currentRound.value.arguments[myTeamId.value] = {
-    text: argumentText.value,
-    antidotesUsed: selectedAntidotes.value,
-    submittedAt: new Date().toISOString()
+  if (!myTeamId.value || !canSubmit.value) return
+  const source = selectedHistoryEntry.value
+  const topicId = source?.topicId
+  const topic = topicId ? contentStore.getTopicById(topicId) : null
+  const position = topic?.positionB.label || undefined
+
+  const payload: SubmitPayload = {
+    gameId: gameStore.currentGameId || 'steelman',
+    teamId: myTeamId.value,
+    submission: {
+      text: argumentText.value,
+      techniques: [...selectedAntidotes.value],
+      topicId,
+      position,
+      sourceHistoryKey: source ? getHistoryKey(source) : undefined
+    }
   }
-  gameStore.saveState()
+
+  ws.send('game:submit', payload)
 }
 
 function castVote(choice: 'fallacious' | 'steelman') {
   vote.value = choice
   if (currentRound.value && sessionStore.currentParticipantId) {
     currentRound.value.persuasionVotes[sessionStore.currentParticipantId] = choice
-    gameStore.saveState()
+    const rounds = (gameStore.gameData.rounds as SteelmanRound[]) || []
+    gameStore.updateGameData({ rounds: [...rounds] })
   }
 }
 </script>

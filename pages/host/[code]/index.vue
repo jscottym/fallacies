@@ -288,7 +288,8 @@ const joinUrl = computed(() => {
 function broadcastSessionState() {
   const payload: SessionTeamsUpdatedPayload = {
     participants: [...sessionStore.participants],
-    teams: [...sessionStore.teams]
+    teams: [...sessionStore.teams],
+    argumentHistory: { ...sessionStore.argumentHistory }
   }
   ws.send('session:teams_updated', payload)
 }
