@@ -38,7 +38,16 @@
     </div>
 
     <div v-else-if="currentSlide.type === 'antidote-how'" class="space-y-8">
-      <h2 class="text-3xl font-bold text-white">How to Apply: {{ currentAntidote?.name }}</h2>
+      <div class="flex items-center gap-6">
+        <div class="text-7xl">💊</div>
+        <div>
+          <h2 class="text-3xl font-bold text-white">{{ currentAntidote?.name }}</h2>
+          <p class="text-lg text-green-400 mt-2">Counters: {{ currentAntidote?.counters.join(', ') }}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mb-2">
+        <h3 class="text-2xl font-bold text-white">How to Apply</h3>
+      </div>
       <div class="space-y-4">
         <div 
           v-for="(step, index) in currentAntidote?.howToApply" 
@@ -54,7 +63,16 @@
     </div>
 
     <div v-else-if="currentSlide.type === 'antidote-example'" class="space-y-8">
-      <h2 class="text-2xl font-bold text-white">{{ currentAntidote?.name }} in Action</h2>
+      <div class="flex items-center gap-6">
+        <div class="text-7xl">💊</div>
+        <div>
+          <h2 class="text-3xl font-bold text-white">{{ currentAntidote?.name }}</h2>
+          <p class="text-lg text-green-400 mt-2">Counters: {{ currentAntidote?.counters.join(', ') }}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mb-2">
+        <h3 class="text-2xl font-bold text-white">{{ currentAntidote?.name }} in Action</h3>
+      </div>
       <div class="grid md:grid-cols-2 gap-6">
         <div class="game-card border-red-500/30">
           <h3 class="text-lg font-semibold text-red-400 mb-3">❌ Before (Fallacious)</h3>
@@ -201,7 +219,7 @@ function pickRandomParticipant() {
 
 function updateHostContext() {
   let context = ''
-  if (currentSlide.value.type === 'antidote-intro' || currentSlide.value.type === 'antidote-how') {
+  if (currentSlide.value.type === 'antidote-intro' || currentSlide.value.type === 'antidote-how' || currentSlide.value.type === 'antidote-example') {
     context = currentAntidote.value?.name || ''
   } else if (currentSlide.value.type === 'discussion') {
     context = 'Discussion'

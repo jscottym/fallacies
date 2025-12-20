@@ -33,10 +33,41 @@
 
     <div v-else-if="roundPhase === 'building'" class="flex-1 flex flex-col">
       <div class="mb-4">
-        <div class="text-xs text-neutral-500 uppercase tracking-wide">Step 2: Build Your Argument</div>
-        <div class="font-semibold text-white text-lg mt-1">{{ ourTopicName }}</div>
-        <div class="text-xs text-neutral-400 mt-1">{{ ourTopicExplanation }}</div>
-        <div class="text-sm text-indigo-400 mt-2 font-medium">Your Position: {{ ourPosition }}</div>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-neutral-500 uppercase tracking-wide">Step 2: Build Your Argument</div>
+            <div class="font-semibold text-white text-lg mt-1">{{ ourTopicName }}</div>
+            <div class="text-xs text-neutral-400 mt-1">{{ ourTopicExplanation }}</div>
+            <div class="text-sm text-indigo-400 mt-2 font-medium">Your Position: {{ ourPosition }}</div>
+          </div>
+          <UButton
+            size="xs"
+            variant="soft"
+            @click="showTopicSwitcher = !showTopicSwitcher"
+          >
+            Switch Topic
+          </UButton>
+        </div>
+        <div v-if="showTopicSwitcher" class="mt-3 space-y-2">
+          <div class="text-xs text-neutral-400">Pick a different topic (only unclaimed topics are available).</div>
+          <div class="space-y-2 max-h-40 overflow-y-auto">
+            <button
+              v-for="topic in availableTopics"
+              :key="topic.id"
+              class="w-full p-3 rounded-lg border text-left text-sm transition-all"
+              :class="getTopicButtonClass(topic.id)"
+              :disabled="isTopicClaimed(topic.id) && !isOurTopic(topic.id)"
+              @click="selectTopic(topic.id)"
+            >
+              <div class="font-medium text-white">{{ topic.name }}</div>
+              <div class="text-xs text-neutral-400 mt-1">{{ topic.explanation }}</div>
+              <div v-if="isTopicClaimed(topic.id)" class="text-xs mt-1">
+                <span v-if="isOurTopic(topic.id)" class="text-green-400">✓ Your selection</span>
+                <span v-else class="text-neutral-500">Claimed</span>
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="flex-1 flex flex-col gap-2">
@@ -274,6 +305,7 @@ const ws = useWebSocket()
 const argumentText = ref('')
 const selectedFallacies = ref<string[]>([])
 const reviewSelections = reactive<Record<string, string[]>>({})
+const showTopicSwitcher = ref(false)
 const showAiSuggest = ref(false)
 const aiSuggestion = ref('')
 const aiSuggestionsHistory = ref<string[]>([])

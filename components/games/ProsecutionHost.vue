@@ -540,6 +540,11 @@ function startBuilding() {
 
 function returnToTopicSelection() {
   if (!currentRound.value) return
+  const hasArguments = Object.keys(currentRound.value.arguments).length > 0
+  const message = hasArguments
+    ? 'Return to topic selection? Existing topic choices and any submitted arguments will be kept, but teams will be able to change topics.'
+    : 'Return to topic selection? Existing topic choices will be kept.'
+  if (!confirm(message)) return
   currentRound.value.phase = 'topic_selection'
   gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
   timer.start(60)
