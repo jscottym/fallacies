@@ -1,7 +1,7 @@
 {
   "id": "immigration",
   "name": "Immigration & Deportation",
-  "explanation": "The question of how to handle undocumented immigrants, particularly whether to prioritize enforcement and deportation or focus on pathways to legal status. Debates involve rule of law, economic impact, and humanitarian concerns.",
+  "explanation": "Should we prioritize strict deportation enforcement or pathways to legal status, balancing law, the economy, and humanitarian concerns?",
   "positionA": {
     "label": "For strict enforcement",
     "statement": "Strict enforcement and deportation are necessary and effective policies.",
