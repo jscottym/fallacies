@@ -1,0 +1,43 @@
+{
+  "id": "friend-group-chats",
+  "name": "Friend Groups & Group Chats",
+  "explanation": "When friend groups and group chats get messy, is it better to call things out directly or quietly create distance?",
+  "positionA": {
+    "label": "Call things out directly",
+    "statement": "When a group chat or friend group turns toxic, it's better to name the problem directly and ask for change.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "People who hate confrontation are just immature babies who ___." },
+      { "fallacy": "straw-man", "starter": "If we don't call this out right now, everyone will think it's totally fine to ___." },
+      { "fallacy": "slippery-slope", "starter": "If we let one mean joke slide, soon the whole group will be ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we confront them publicly or we let them walk all over us and ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "People who prefer quiet distance have real reasons, like wanting to avoid ___, and I should address that directly." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between total silence and full-on confrontation in the group chat, options could include ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific way that naming the problem out loud could actually improve the group is ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Quiet distance is safer",
+    "statement": "When a friend group or group chat gets toxic, it's usually better to quietly step back instead of confronting it.",
+    "fallacyPrompts": [
+      { "fallacy": "ad-hominem", "starter": "People who love confrontation are just drama addicts who ___." },
+      { "fallacy": "whataboutism", "starter": "Everyone is mad at this one joke, but what about when they all laughed at ___ last week?" },
+      { "fallacy": "causation-con", "starter": "Every time someone confronted the group directly, the whole thing blew up, which proves ___." },
+      { "fallacy": "false-dilemma", "starter": "Either you just leave quietly or you get sucked into never-ending drama that ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "People who want to talk things through directly care about honesty and trust, especially when ___." },
+      { "antidote": "separate-claim-claimant", "starter": "Regardless of who is saying it, the core concern about people getting hurt in the group is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "There are middle options between ghosting and full confrontation, like ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Does direct confrontation usually fix friend group issues or just create new drama?",
+    "When does quietly stepping back protect your peace versus just avoiding important conversations?",
+    "How much responsibility do you have to warn others if someone is being consistently cruel?",
+    "Is it better for long-term friendships to be brutally honest or selectively quiet?"
+  ]
+}
+
+

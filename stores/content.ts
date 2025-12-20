@@ -16,11 +16,14 @@ import stayInLane from '~/content/antidotes/stay-in-lane.json'
 import steelmanning from '~/content/antidotes/steelmanning.json'
 
 import cancelCulture from '~/content/topics/cancel-culture.json'
+import friendGroupChats from '~/content/topics/friend-group-chats.json'
+import gradesAndPressure from '~/content/topics/grades-and-pressure.json'
 import housingMarket from '~/content/topics/housing-market.json'
 import immigration from '~/content/topics/immigration.json'
 import influencerHealth from '~/content/topics/influencer-health.json'
 import politicalViolence from '~/content/topics/political-violence.json'
 import prisonReform from '~/content/topics/prison-reform.json'
+import screenTimeIndependence from '~/content/topics/screen-time-independence.json'
 
 import warmupData from '~/content/warmup/quotes.json'
 
@@ -44,8 +47,11 @@ export const useContentStore = defineStore('content', {
     ] as Antidote[],
     topics: [
       immigration,
+      friendGroupChats,
       cancelCulture,
+      screenTimeIndependence,
       prisonReform,
+      gradesAndPressure,
       influencerHealth,
       housingMarket,
       politicalViolence

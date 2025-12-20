@@ -60,13 +60,22 @@
     <div v-else-if="roundPhase === 'building'" class="space-y-8">
       <div class="flex items-center justify-between">
         <h2 class="text-3xl font-bold text-white">Step 2: Build Your Arguments</h2>
-        <Timer 
-          v-if="timerActive"
-          :remaining="timerRemaining"
-          :show-controls="true"
-          @extend="extendTimer"
-          @stop="stopTimer"
-        />
+        <div class="flex items-center gap-3">
+          <Timer 
+            v-if="timerActive"
+            :remaining="timerRemaining"
+            :show-controls="true"
+            @extend="extendTimer"
+            @stop="stopTimer"
+          />
+          <UButton
+            size="sm"
+            variant="soft"
+            @click="returnToTopicSelection"
+          >
+            Back to Topic Selection
+          </UButton>
+        </div>
       </div>
       <p class="text-neutral-400">All teams building simultaneously. Pack in those fallacies!</p>
 
@@ -527,6 +536,14 @@ function startBuilding() {
   gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
   timer.start(180)
   gameStore.setHostContext('Step 2: Build Your Arguments')
+}
+
+function returnToTopicSelection() {
+  if (!currentRound.value) return
+  currentRound.value.phase = 'topic_selection'
+  gameStore.updateGameData({ rounds: [...(gameStore.gameData.rounds as ProsecutionRound[])] })
+  timer.start(60)
+  gameStore.setHostContext('Step 1: Select Your Topics')
 }
 
 function startAllReviewing() {

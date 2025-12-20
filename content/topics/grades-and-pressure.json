@@ -1,0 +1,43 @@
+{
+  "id": "grades-and-pressure",
+  "name": "Grades, Pressure & Self-Worth",
+  "explanation": "Should grades and achievements be treated as a big deal that shapes your future, or just one small part of who you are?",
+  "positionA": {
+    "label": "Grades really matter",
+    "statement": "Grades and achievements should be taken very seriously because they strongly shape future options.",
+    "fallacyPrompts": [
+      { "fallacy": "slippery-slope", "starter": "If you stop caring about grades now, soon you'll have no options and end up ___." },
+      { "fallacy": "appeal-to-authority", "starter": "Every successful person says school and grades are what made them ___." },
+      { "fallacy": "false-dilemma", "starter": "Either you push yourself hard in school or you waste your potential and ___." },
+      { "fallacy": "causation-con", "starter": "People with high GPAs usually get into better colleges, which proves that ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "People who worry about pressure and burnout have real concerns, especially when ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific way that strong grades can open doors later is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between obsessing over perfection and not caring at all, balanced approaches could include ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Pressure is the bigger problem",
+    "statement": "Treating grades as everything creates unhealthy pressure and doesn't reflect someone's real worth.",
+    "fallacyPrompts": [
+      { "fallacy": "straw-man", "starter": "People who care about grades think a B is a total failure and means you're ___." },
+      { "fallacy": "ad-hominem", "starter": "Parents who obsess over grades are just trying to live through their kids because they ___." },
+      { "fallacy": "whataboutism", "starter": "Everyone talks about GPAs, but what about kindness, creativity, or how you handle it when ___?" },
+      { "fallacy": "false-dilemma", "starter": "Either you reject grades completely or you let school define who you are and ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "People who emphasize achievement usually care about future opportunities like ___." },
+      { "antidote": "separate-claim-claimant", "starter": "Regardless of who says it, the research on stress and constant pressure shows ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "It's possible to value effort and achievement without tying your entire self-worth to grades by ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "How strongly do grades in middle or high school actually affect future options?",
+    "What level of academic pressure becomes mentally unhealthy?",
+    "Can someone care a lot about doing well without tying their self-worth to performance?",
+    "How should families talk about grades in a way that motivates without crushing people?"
+  ]
+}
+
+

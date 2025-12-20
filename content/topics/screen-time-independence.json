@@ -1,0 +1,43 @@
+{
+  "id": "screen-time-independence",
+  "name": "Screen Time & Independence",
+  "explanation": "Should parents tightly control teens' screen time and phone use, or mostly trust them to manage it themselves?",
+  "positionA": {
+    "label": "Tight limits protect teens",
+    "statement": "Parents should set strict rules around screen time and apps to keep teens healthy and safe.",
+    "fallacyPrompts": [
+      { "fallacy": "slippery-slope", "starter": "If parents don't set hard limits now, teens will end up totally addicted to ___." },
+      { "fallacy": "ad-hominem", "starter": "Parents who \"trust\" teens with no limits are just lazy and don't care that their kids ___." },
+      { "fallacy": "causation-con", "starter": "Kids spend more time on phones now and are more anxious, which proves phones are the main reason ___." },
+      { "fallacy": "false-dilemma", "starter": "Either we enforce strict rules or we let social media raise our kids and ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Teens who want more freedom have real points about learning self-control, especially when ___." },
+      { "antidote": "demand-mechanism", "starter": "The specific way that limits could help mental health or sleep is ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "Between total control and zero rules, reasonable approaches could include ___." }
+    ]
+  },
+  "positionB": {
+    "label": "Trust builds independence",
+    "statement": "Teens should mostly manage their own screen time, with guidance instead of strict control.",
+    "fallacyPrompts": [
+      { "fallacy": "straw-man", "starter": "Parents who set limits basically want their kids to live like it's 1980 and never ___." },
+      { "fallacy": "ad-hominem", "starter": "Strict parents are control freaks who just want to spy on everything and ___." },
+      { "fallacy": "whataboutism", "starter": "Parents complain about screen time but spend hours scrolling themselves when they ___." },
+      { "fallacy": "false-dilemma", "starter": "Either teens manage their own phones completely or they will never learn to be responsible adults who ___." }
+    ],
+    "soundPrompts": [
+      { "antidote": "steelmanning", "starter": "Parents who push for limits are genuinely worried about specific harms, like ___." },
+      { "antidote": "separate-claim-claimant", "starter": "Regardless of who says it, the evidence about sleep and late-night screen time shows ___." },
+      { "antidote": "acknowledge-spectrum", "starter": "There are many ways to share power over phones, such as ___." }
+    ]
+  },
+  "cruxQuestions": [
+    "Do strict rules actually build better long-term habits, or just obedience while parents are watching?",
+    "How much should parents prioritize short-term safety versus long-term independence?",
+    "What evidence is there that specific kinds of screen use are more or less harmful?",
+    "When should teens have real privacy on their devices, and when is monitoring justified?"
+  ]
+}
+
+
