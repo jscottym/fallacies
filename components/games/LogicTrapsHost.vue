@@ -114,20 +114,24 @@
         </div>
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <h3 class="text-2xl font-bold text-white">Example {{ currentExampleIndex + 1 }}</h3>
+        <h3 class="text-2xl font-bold text-white">Examples</h3>
       </div>
-      <div class="game-card border-indigo-500/30">
-        <p class="text-2xl text-white italic leading-relaxed">"{{ currentExample?.text }}"</p>
+      <div class="space-y-4">
+        <div
+          v-for="(example, index) in currentFallacy?.examples || []"
+          :key="index"
+          class="game-card border-indigo-500/30"
+        >
+          <p class="text-xl text-white italic leading-relaxed">"{{ example.text }}"</p>
+          <p v-if="showAnalysis" class="text-neutral-300 mt-3">{{ example.analysis }}</p>
+        </div>
       </div>
-      <div v-if="showAnalysis" class="game-card border-green-500/30 animate-fade-in">
-        <h3 class="text-lg font-semibold text-green-400 mb-3">Analysis</h3>
-        <p class="text-neutral-300">{{ currentExample?.analysis }}</p>
-      </div>
-      <div v-else class="text-center">
-        <UButton size="lg" @click="showAnalysis = true">
+      <div class="text-center">
+        <UButton v-if="!showAnalysis" size="lg" @click="showAnalysis = true">
           <UIcon name="i-heroicons-eye" class="mr-2" />
-          Reveal Analysis
+          Reveal Analyses
         </UButton>
+        <p v-else class="text-neutral-400">All analyses revealed.</p>
       </div>
     </div>
 
@@ -223,9 +227,7 @@ const slides = computed((): Slide[] => {
   contentStore.fallacies.forEach((fallacy, fIndex) => {
     result.push({ type: 'fallacy-intro', fallacyIndex: fIndex })
     result.push({ type: 'fallacy-why', fallacyIndex: fIndex })
-    fallacy.examples.slice(0, 2).forEach((_, eIndex) => {
-      result.push({ type: 'fallacy-example', fallacyIndex: fIndex, exampleIndex: eIndex })
-    })
+    result.push({ type: 'fallacy-example', fallacyIndex: fIndex })
     result.push({ 
       type: 'discussion', 
       fallacyIndex: fIndex,
@@ -282,7 +284,7 @@ function updateHostContext() {
   if (currentSlide.value.type === 'fallacy-intro' || currentSlide.value.type === 'fallacy-why') {
     context = `${currentFallacy.value?.name} - "${currentFallacy.value?.nickname}"`
   } else if (currentSlide.value.type === 'fallacy-example') {
-    context = `${currentFallacy.value?.name} - Example ${currentExampleIndex.value + 1}`
+    context = `${currentFallacy.value?.name} - Examples`
   } else if (currentSlide.value.type === 'discussion') {
     context = `Discussion: ${currentFallacy.value?.name}`
   } else if (currentSlide.value.type === 'recap') {

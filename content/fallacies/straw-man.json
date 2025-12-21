@@ -16,6 +16,16 @@
       "analysis": "Asking for less screen time isn't the same as wanting you isolated. The exaggeration avoids the real conversation."
     },
     {
+      "text": "People who worry about grades think no one should ever relax or have fun.",
+      "topic": "grades-and-pressure",
+      "analysis": "Most people who care about grades still think breaks and hobbies are important. The extreme version is easier to attack."
+    },
+    {
+      "text": "Screen time critics just want kids to live like it's the 1800s with no technology at all.",
+      "topic": "screen-time-independence",
+      "analysis": "Most just want better balance, not a total ban on tech. Turning them into cartoon villains avoids their actual point."
+    },
+    {
       "text": "Cancel culture critics think people should be able to say anything with zero consequences.",
       "topic": "cancel-culture",
       "analysis": "Most critics just want proportional responses, not zero accountability. The extreme version is easier to dismiss."
@@ -29,6 +39,21 @@
       "text": "Health skeptics think all natural supplements are snake oil and only trust Big Pharma.",
       "topic": "influencer-health",
       "analysis": "Most just want evidence-based claims. Wanting proof isn't the same as being anti-natural."
+    },
+    {
+      "text": "Immigration supporters want totally open borders where anyone can enter with zero checks.",
+      "topic": "immigration",
+      "analysis": "Most support some rules and screening. Painting them as wanting 'no border at all' is a straw man."
+    },
+    {
+      "text": "People concerned about political violence just want to ban any strong language against politicians.",
+      "topic": "political-violence",
+      "analysis": "Most worry about threats and dehumanizing language, not all criticism. The straw man skips that nuance."
+    },
+    {
+      "text": "People who criticize influencers think every wellness creator is a scammer.",
+      "topic": "influencer-health",
+      "analysis": "Most just want honesty and evidence. They aren't saying all influencers are bad."
     }
   ],
   "antidoteId": "steelmanning",

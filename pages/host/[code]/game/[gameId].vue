@@ -220,10 +220,13 @@ onMounted(() => {
     return
   }
 
+  const totalSteps = getTotalSteps(gameId.value)
   const existingState = gameStore.loadState(code.value, gameId.value)
   if (!existingState) {
-    const totalSteps = getTotalSteps(gameId.value)
     gameStore.startGame(code.value, gameId.value, totalSteps)
+  } else {
+    // Ensure totalSteps matches current slide structure, even for resumed games
+    gameStore.totalSteps = totalSteps
   }
 
   ws.on('host:sync_request', (message: WSMessage<HostSyncRequestPayload>) => {
@@ -371,8 +374,8 @@ watch(
 function getTotalSteps(gameId: GameId): number {
   switch (gameId) {
     case 'logic-traps':
-      // 3 intro slides (title + 2 intros) + 5 slides per fallacy (intro, why, 2 examples, discussion) + 1 recap
-      return 3 + contentStore.fallacies.length * 5 + 1
+      // 3 intro slides (title + 2 intros) + 4 slides per fallacy (intro, why, all-examples, discussion) + 1 recap
+      return 3 + contentStore.fallacies.length * 4 + 1
     case 'warmup': return 14
     case 'prosecution': return 20
     case 'antidotes': return 22

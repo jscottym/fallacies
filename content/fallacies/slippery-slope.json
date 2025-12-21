@@ -8,7 +8,7 @@
     {
       "text": "If I let you borrow my notes once, you'll expect me to do all your work for you.",
       "topic": "grades-and-pressure",
-      "analysis": "Sharing notes once doesn't mean you'll become someone's personal tutor. You can help once and still set boundaries."
+      "analysis": "Sharing notes once doesn't mean you'll become someone's personal tutor. You can help and still set limits."
     },
     {
       "text": "If your parents let you stay out until midnight once, next you'll want to stay out all night, and then you'll stop coming home at all.",
@@ -18,7 +18,7 @@
     {
       "text": "If we allow any path to legal status for undocumented immigrants, soon there will be no border at all.",
       "topic": "immigration",
-      "analysis": "Many countries have paths to legal status without open borders. Assumes no stopping points are possible."
+      "analysis": "Many countries have paths to legal status without open borders. It assumes we can't set or keep limits."
     },
     {
       "text": "If we reduce sentences for non-violent drug offenses, violent crime will explode.",
@@ -29,6 +29,31 @@
       "text": "If the government can regulate one health supplement, they'll eventually ban all natural medicine.",
       "topic": "influencer-health",
       "analysis": "Requiring evidence for claims is different from banning products. Regulation exists on a spectrum."
+    },
+    {
+      "text": "If we let teens question whether grades matter, soon no one will study and school will fall apart.",
+      "topic": "grades-and-pressure",
+      "analysis": "Talking honestly about pressure doesn't mean giving up on learning. You can care about both well-being and effort."
+    },
+    {
+      "text": "If we stop cancelling people for bad opinions, hate speech will take over everything.",
+      "topic": "cancel-culture",
+      "analysis": "You can push back on harmful ideas in many ways. It's not guaranteed that less cancellation leads to total chaos."
+    },
+    {
+      "text": "If you let one friend get away with a rude joke, soon they'll be bullying you every day.",
+      "topic": "friend-group-chats",
+      "analysis": "One unchallenged joke doesn't guarantee long-term bullying. It depends on how people respond over time."
+    },
+    {
+      "text": "If we let landlords face any limits on rent, no one will build new housing and cities will die.",
+      "topic": "housing-market",
+      "analysis": "Some regulation doesn't mean zero profit. There are many possible balances between profit and protection."
+    },
+    {
+      "text": "If we allow this kind of political protest, soon there will be constant riots and the country will collapse.",
+      "topic": "political-violence",
+      "analysis": "History shows protests can exist without society collapsing. It jumps from a small step to the worst outcome."
     }
   ],
   "antidoteId": "demand-mechanism",

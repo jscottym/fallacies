@@ -16,6 +16,11 @@
       "analysis": "There are lots of middle grounds: check-ins, gradual freedom, agreed-upon limits. Trust isn't binary."
     },
     {
+      "text": "If you care about grades, you either aim for straight A's or you're not trying.",
+      "topic": "grades-and-pressure",
+      "analysis": "You can care about school without being perfect. Effort and results come in many levels, not just two."
+    },
+    {
       "text": "You either support mass deportation or you want open borders. There's no in-between.",
       "topic": "immigration",
       "analysis": "There are lots of options between these two extremes that get ignored."
@@ -29,6 +34,26 @@
       "text": "Young people either need to work harder and stop complaining, or admit they want everything handed to them.",
       "topic": "housing-market",
       "analysis": "Ignores that both personal effort AND bigger economic forces can matter at the same time."
+    },
+    {
+      "text": "Either you cancel people for harmful speech, or you support that speech.",
+      "topic": "cancel-culture",
+      "analysis": "You can disagree with speech, respond, or set boundaries without erasing someone completely."
+    },
+    {
+      "text": "Either influencers can say whatever they want, or we live under censorship.",
+      "topic": "influencer-health",
+      "analysis": "There are in-between options, like clearer labels, fact-checking, or limited rules about dangerous claims."
+    },
+    {
+      "text": "Either you back the police no matter what, or you hate law and order.",
+      "topic": "political-violence",
+      "analysis": "You can support safety and still want accountability and reform. It's not a simple for-or-against choice."
+    },
+    {
+      "text": "Either we allow all immigration or we shut the border completely.",
+      "topic": "immigration",
+      "analysis": "Real policies usually sit somewhere in the middle, with limits, rules, and tradeoffs."
     }
   ],
   "antidoteId": "acknowledge-spectrum",

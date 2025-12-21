@@ -13,7 +13,7 @@
     {
       "text": "This fitness protocol is backed by Dr. Andrew Huberman, a Stanford neuroscientist.",
       "topic": "influencer-health",
-      "analysis": "He's a real scientist, but neuroscience credentials don't automatically make nutrition advice correct. Check the actual evidence."
+      "analysis": "He's a real scientist, but neuroscience credentials don't automatically make nutrition advice correct. You still need good evidence."
     },
     {
       "text": "9 out of 10 doctors recommend this supplement.",
@@ -23,12 +23,37 @@
     {
       "text": "A retired federal judge says our sentencing guidelines are just right.",
       "topic": "prison-reform",
-      "analysis": "One judge's opinion isn't consensus. They can have biases like anyone else."
+      "analysis": "One judge's opinion isn't consensus. Judges can disagree, and they have their own values and blind spots."
     },
     {
       "text": "This investment strategy is used by billionaires like Warren Buffett.",
       "topic": "housing-market",
-      "analysis": "You don't hear about the strategies that failed. Their situation (billions of dollars, insider access) is totally different from most people's."
+      "analysis": "You don't hear about the strategies that failed. Billionaires' situation and risks are totally different from most people's."
+    },
+    {
+      "text": "My favorite YouTuber says this diet works—she has millions of followers, so she must know what she's talking about.",
+      "topic": "influencer-health",
+      "analysis": "Follower count isn't a nutrition degree. Popularity doesn't prove the claims are true."
+    },
+    {
+      "text": "Our principal says social media is always toxic, so it has to be true.",
+      "topic": "screen-time-independence",
+      "analysis": "Principals have authority at school, but that doesn't make them experts on every topic, including mental health research."
+    },
+    {
+      "text": "A Nobel Prize–winning economist says deportations will crash the economy.",
+      "topic": "immigration",
+      "analysis": "Awards don't make every opinion automatically right, especially on complex policies with many moving parts."
+    },
+    {
+      "text": "A best-selling author says cancel culture is destroying free speech.",
+      "topic": "cancel-culture",
+      "analysis": "Selling lots of books shows popularity, not necessarily that their take is carefully researched or balanced."
+    },
+    {
+      "text": "A major bank's research team says housing is still affordable for most people.",
+      "topic": "housing-market",
+      "analysis": "Institutional reports can be biased too. You still need to look at how they measured 'affordable' and what they left out."
     }
   ],
   "antidoteId": "separate-claim-claimant",

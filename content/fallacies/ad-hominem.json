@@ -8,27 +8,52 @@
     {
       "text": "You're just saying we should study together because you have no friends.",
       "topic": "friend-group-chats",
-      "analysis": "Even if true, it doesn't change whether studying together is actually a good idea. Attack the suggestion, not the person."
+      "analysis": "Even if that insult were true, it doesn't answer whether studying together is actually a good idea."
     },
     {
       "text": "Of course she supports prison reform—she's never been a victim of violent crime.",
       "topic": "prison-reform",
-      "analysis": "Her personal experience doesn't determine whether her arguments are valid. The data matters regardless of who presents it."
+      "analysis": "Her personal experience doesn't decide whether her arguments are good. The reasons and evidence matter, not her biography."
     },
     {
       "text": "Why would anyone listen to that influencer about nutrition? They're just a college dropout trying to sell supplements.",
       "topic": "influencer-health",
-      "analysis": "Their background is worth knowing, but doesn't automatically make their claims false. Check the claims themselves."
+      "analysis": "Their background is worth knowing, but it doesn't automatically make each claim false. You still have to check the claim itself."
     },
     {
       "text": "You only think housing prices are too high because you're bitter you can't afford one.",
       "topic": "housing-market",
-      "analysis": "Someone's situation doesn't change whether the math on housing costs is right or wrong."
+      "analysis": "Someone's situation doesn't change whether the numbers on housing costs are right or wrong."
     },
     {
       "text": "She's criticizing cancel culture now, but she participated in pile-ons five years ago. Total hypocrite.",
       "topic": "cancel-culture",
-      "analysis": "Past behavior may be relevant, but doesn't address whether her current argument is sound."
+      "analysis": "Pointing out hypocrisy doesn't answer whether her current argument about cancel culture makes sense."
+    },
+    {
+      "text": "Why listen to him about cancel culture? He's just an old boomer who doesn't get the internet.",
+      "topic": "cancel-culture",
+      "analysis": "Age and tech fluency don't automatically make his points wrong. You still need to look at what he's actually saying."
+    },
+    {
+      "text": "You can't take her views on political violence seriously—she's just a radical activist.",
+      "topic": "political-violence",
+      "analysis": "Calling her an activist labels her, but it doesn't show what's wrong with her arguments about violence."
+    },
+    {
+      "text": "You only care about immigration because you're scared of people who look different.",
+      "topic": "immigration",
+      "analysis": "Accusing someone of bad motives doesn't prove their specific claims about immigration are wrong."
+    },
+    {
+      "text": "Of course you're against regulating influencers—you make money from sponsorships.",
+      "topic": "influencer-health",
+      "analysis": "Financial incentives might be relevant, but they don't automatically refute any particular point about regulation."
+    },
+    {
+      "text": "Teachers who talk about the housing crisis just want excuses for their low pay.",
+      "topic": "housing-market",
+      "analysis": "Questioning teachers' motives doesn't engage with their actual arguments about housing costs."
     }
   ],
   "antidoteId": "separate-claim-claimant",

@@ -16,6 +16,11 @@
       "analysis": "Their screen time doesn't justify yours. Both could be problems, but the deflection avoids the actual conversation."
     },
     {
+      "text": "You want to talk about my grades? What about how your grades were when you were my age?",
+      "topic": "grades-and-pressure",
+      "analysis": "Dragging up their past doesn't answer the question about how you're doing now."
+    },
+    {
       "text": "You're criticizing influencer health claims? Pharmaceutical companies have killed way more people with opioids.",
       "topic": "influencer-health",
       "analysis": "True, but doesn't make bad health advice okay. Two wrongs don't make a right."
@@ -29,6 +34,26 @@
       "text": "Young people complaining about housing prices? Try buying a house with 18% interest rates like Boomers did.",
       "topic": "housing-market",
       "analysis": "Different challenge, different context. Pointing to the past doesn't address today's problem."
+    },
+    {
+      "text": "You're worried about political violence on our side? What about when their side used violent rhetoric last year?",
+      "topic": "political-violence",
+      "analysis": "Past problems on the other side don't answer concerns about what's happening now."
+    },
+    {
+      "text": "You say we cancel people too harshly—what about all the times no one was punished at all?",
+      "topic": "cancel-culture",
+      "analysis": "Bringing up the opposite problem doesn't evaluate whether current reactions are fair."
+    },
+    {
+      "text": "You care about immigrants now? What about homeless veterans?",
+      "topic": "immigration",
+      "analysis": "We can care about more than one group at a time. Pointing to another issue dodges the original question."
+    },
+    {
+      "text": "You're asking influencers to show evidence? What about all the unhealthy foods the government still allows?",
+      "topic": "influencer-health",
+      "analysis": "Pointing to a different inconsistency doesn't answer whether this specific claim needs evidence."
     }
   ],
   "antidoteId": "stay-in-lane",
