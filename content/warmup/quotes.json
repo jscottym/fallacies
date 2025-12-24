@@ -77,6 +77,7 @@
       "text": "Anyone questioning strict enforcement clearly doesn't care about American workers. These open-borders academics—mostly privileged elites who live in gated communities—want to lecture working-class families about compassion while crime surges in their neighborhoods. We saw what happened in the 90s when we got tough: the economy boomed. Either we enforce our laws or we become a failed state like Venezuela.",
       "correctFallacies": ["ad-hominem", "straw-man", "causation-con", "false-dilemma", "slippery-slope"],
       "topic": "immigration",
+      "position": "A",
       "explanations": {
         "ad-hominem": "Attacks critics as 'privileged academics' and 'elites' rather than addressing their arguments.",
         "straw-man": "Misrepresents the position as 'open-borders' when most critics support some enforcement.",
@@ -90,6 +91,7 @@
       "text": "Dr. Smith, who has 3 million followers and a bestselling book, says intermittent fasting is the key to longevity. Critics are mostly overweight people who don't want to put in the work, or they're shills for Big Food who profit from you eating all day. Look at traditional cultures—they ate less and lived well. You either commit to a disciplined eating window or accept that you're choosing sickness and early death.",
       "correctFallacies": ["appeal-to-authority", "ad-hominem", "causation-con", "false-dilemma"],
       "topic": "influencer-health",
+      "position": "B",
       "explanations": {
         "appeal-to-authority": "Followers and book sales don't validate health claims; peer-reviewed evidence would.",
         "ad-hominem": "Dismisses critics as 'overweight' or 'shills' rather than engaging with their arguments.",
@@ -102,6 +104,7 @@
       "text": "A former police chief with 30 years of experience says our sentences are too lenient. Since California reduced some sentences, crime went up—the numbers don't lie. Reformers, who mostly live in safe suburban neighborhoods and have never been crime victims, think hugging criminals will solve everything. We tried being soft on crime in the 70s and it was chaos. Either we get serious about punishment or our cities become lawless.",
       "correctFallacies": ["appeal-to-authority", "causation-con", "ad-hominem", "straw-man", "false-dilemma"],
       "topic": "prison-reform",
+      "position": "A",
       "explanations": {
         "appeal-to-authority": "One police chief's opinion isn't consensus; law enforcement can have biases too.",
         "causation-con": "California's crime increase had multiple simultaneous causes; sentence changes are one factor.",

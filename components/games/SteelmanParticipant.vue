@@ -3,33 +3,24 @@
     <div v-if="phase === 'building'" class="flex-1 flex flex-col">
       <div class="mb-4">
         <div class="text-sm text-neutral-400">Your Challenge</div>
-        <div class="font-semibold text-white">Argue the OPPOSITE side—with sound logic!</div>
+        <div class="font-semibold text-white">Repair this argument—remove fallacies and use antidotes.</div>
       </div>
 
       <div class="flex-1 flex flex-col">
-        <div v-if="teamHistory.length" class="mb-4 space-y-2">
-          <div class="text-xs text-neutral-400">Select a prior argument to steelman</div>
-          <select
-            v-model="selectedHistoryId"
-            class="w-full bg-neutral-900 border border-neutral-700 rounded-md px-3 py-2 text-sm text-neutral-100"
-          >
-            <option
-              v-for="entry in teamHistory"
-              :key="getHistoryKey(entry)"
-              :value="getHistoryKey(entry)"
-            >
-              {{ getHistoryLabel(entry) }}
-            </option>
-          </select>
+        <div class="mb-4 space-y-2">
+          <div class="text-xs text-neutral-400">Topic</div>
+          <div class="text-sm text-white">{{ topicName }}</div>
+          <div class="text-xs text-neutral-400 mt-1">Position</div>
+          <div class="text-sm text-green-400">{{ positionLabel }}</div>
           <div class="mt-2 text-xs text-neutral-400">
-            Original argument:
+            Original fallacious argument:
           </div>
           <div class="text-xs text-neutral-300 italic max-h-24 overflow-y-auto">
-            "{{ selectedSourceText }}"
+            "{{ originalArgumentText }}"
           </div>
-          <div v-if="selectedFallacies.length" class="mt-2 flex flex-wrap gap-1">
+          <div v-if="fallacyIds.length" class="mt-2 flex flex-wrap gap-1">
             <UBadge
-              v-for="fallacyId in selectedFallacies"
+              v-for="fallacyId in fallacyIds"
               :key="fallacyId"
               class="border border-red-500/40 bg-red-500/10 text-red-300"
             >
@@ -37,7 +28,6 @@
             </UBadge>
           </div>
         </div>
-        <div class="text-sm text-green-400 mt-1">New Position: {{ oppositePosition }}</div>
 
         <label class="text-sm text-neutral-400 mb-2">Your Sound Argument (no fallacies!)</label>
         <textarea
@@ -124,7 +114,7 @@ import { useWebSocket } from '~/composables/useWebSocket'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { ArgumentHistoryEntry, SteelmanRound, SubmitPayload } from '~/types'
+import type { SteelmanRound, SubmitPayload } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -148,47 +138,42 @@ const currentRound = computed((): SteelmanRound | undefined => {
 
 const myTeamId = computed(() => sessionStore.currentTeam?.id)
 
-const teamHistory = computed<ArgumentHistoryEntry[]>(() => {
-  if (!myTeamId.value) return []
-  return (sessionStore.argumentHistory[myTeamId.value] as ArgumentHistoryEntry[] | undefined) || []
+const assignedExampleId = computed(() => {
+  if (!currentRound.value || !currentRound.value.assignedExamples || !myTeamId.value) return null
+  return currentRound.value.assignedExamples[myTeamId.value]?.exampleId || null
 })
 
-const selectedHistoryId = ref<string | null>(null)
-
-function getHistoryKey(entry: ArgumentHistoryEntry): string {
-  return `${entry.gameId}-${entry.topicId}-${entry.createdAt}`
-}
-
-const selectedHistoryEntry = computed<ArgumentHistoryEntry | null>(() => {
-  const entries = teamHistory.value
-  if (!entries.length) return null
-  const id = selectedHistoryId.value
-  if (!id) {
-    return entries[entries.length - 1] ?? null
-  }
-  const found = entries.find(e => getHistoryKey(e) === id)
-  return found ?? entries[entries.length - 1] ?? null
+const assignedExample = computed(() => {
+  const id = assignedExampleId.value
+  if (!id) return null
+  return contentStore.complexExamples.find(e => e.id === id) || null
 })
 
-const oppositePosition = computed(() => {
-  const entry = selectedHistoryEntry.value
-  if (!entry) return 'The opposite of your previous position'
-  const topic = contentStore.getTopicById(entry.topicId)
-  return topic?.positionB.label || 'The opposite of your previous position'
+const topicForExample = computed(() => {
+  const example = assignedExample.value
+  if (!example) return null
+  return contentStore.getTopicById(example.topic) || null
 })
 
-const selectedSourceText = computed(() => {
-  return selectedHistoryEntry.value?.text || ''
+const topicName = computed(() => {
+  return topicForExample.value?.name || 'Topic TBD'
 })
 
-function getHistoryLabel(entry: ArgumentHistoryEntry): string {
-  const topic = contentStore.getTopicById(entry.topicId)
-  const topicName = topic?.name || 'Unknown topic'
-  return `${topicName} – ${entry.position}`
-}
+const positionLabel = computed(() => {
+  const topic = topicForExample.value
+  const example = assignedExample.value
+  if (!topic || !example) return 'Position TBD'
+  if (example.position === 'A') return topic.positionA.label
+  if (example.position === 'B') return topic.positionB.label
+  return 'Position TBD'
+})
 
-const selectedFallacies = computed(() => {
-  return selectedHistoryEntry.value?.fallaciesUsed || []
+const originalArgumentText = computed(() => {
+  return assignedExample.value?.text || ''
+})
+
+const fallacyIds = computed(() => {
+  return assignedExample.value?.correctFallacies || []
 })
 
 function getFallacyName(id: string): string {
@@ -215,10 +200,15 @@ function toggleAntidote(id: string) {
 
 function submitArgument() {
   if (!myTeamId.value || !canSubmit.value) return
-  const source = selectedHistoryEntry.value
-  const topicId = source?.topicId
-  const topic = topicId ? contentStore.getTopicById(topicId) : null
-  const position = topic?.positionB.label || undefined
+  const example = assignedExample.value
+  const topic = topicForExample.value
+  const topicId = example?.topic
+  let position: string | undefined
+  if (topic && example?.position === 'A') {
+    position = topic.positionA.label
+  } else if (topic && example?.position === 'B') {
+    position = topic.positionB.label
+  }
 
   const payload: SubmitPayload = {
     gameId: gameStore.currentGameId || 'steelman',
@@ -228,7 +218,7 @@ function submitArgument() {
       techniques: [...selectedAntidotes.value],
       topicId,
       position,
-      sourceHistoryKey: source ? getHistoryKey(source) : undefined
+      sourceHistoryKey: example ? `example:${example.id}` : undefined
     }
   }
 

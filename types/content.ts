@@ -61,6 +61,7 @@ export interface ComplexExample {
   correctFallacies: string[]
   topic: string
   explanations: Record<string, string>
+  position?: 'A' | 'B'
 }
 
 export interface SlideContent {

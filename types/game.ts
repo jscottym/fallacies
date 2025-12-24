@@ -184,6 +184,9 @@ export interface SteelmanRound {
   }>
   persuasionVotes: Record<string, 'fallacious' | 'steelman'>
   currentReviewTargetIndex: number
+  assignedExamples?: Record<string, {
+    exampleId: string
+  }>
 }
 
 export interface SteelmanState extends GameState {

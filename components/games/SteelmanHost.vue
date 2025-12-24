@@ -3,13 +3,13 @@
     <div v-if="phase === 'intro'" class="text-center space-y-6">
       <div class="text-6xl mb-6">🛡️</div>
       <h1 class="text-4xl font-bold text-white">Steelman Showdown</h1>
-      <p class="text-xl text-neutral-400">Now argue the OTHER side—with sound logic!</p>
+      <p class="text-xl text-neutral-400">Take a fallacy-packed argument and make it strong and fair.</p>
       <div class="game-card max-w-2xl mx-auto text-left space-y-4">
         <h3 class="font-semibold text-white">The Challenge:</h3>
         <ol class="list-decimal list-inside text-neutral-300 space-y-2">
-          <li>You'll argue the <strong>opposite</strong> position from before</li>
-          <li>Use antidotes and sound reasoning—<strong>no fallacies!</strong></li>
-          <li>Others will judge: Was it more persuasive than the fallacious version?</li>
+          <li>Each team gets a <strong>fallacy-filled</strong> argument on a real topic</li>
+          <li>Keep the same basic position, but remove fallacies and add antidotes</li>
+          <li>Others will judge: Is your repaired version more persuasive than the original?</li>
         </ol>
       </div>
     </div>
@@ -36,7 +36,7 @@
         >
           <div class="font-semibold mb-2" :style="{ color: team.color }">{{ team.name }}</div>
           <div class="text-sm text-neutral-400">{{ getTeamTopic(team.id) }}</div>
-          <div class="text-xs text-green-400 mt-1">Arguing: {{ getOppositePosition(team.id) }}</div>
+          <div class="text-xs text-green-400 mt-1">Position: {{ getTeamPosition(team.id) }}</div>
           <div class="mt-3 flex items-center gap-2">
             <span class="text-sm" :class="hasSubmitted(team.id) ? 'text-green-400' : 'text-neutral-500'">
               {{ hasSubmitted(team.id) ? '✓ Submitted' : 'Building...' }}
@@ -114,7 +114,7 @@ import { useTimer } from '~/composables/useTimer'
 import { useContentStore } from '~/stores/content'
 import { useGameStore } from '~/stores/game'
 import { useSessionStore } from '~/stores/session'
-import type { ArgumentHistoryEntry, SteelmanRound, Team } from '~/types'
+import type { SteelmanRound, Team } from '~/types'
 
 const gameStore = useGameStore()
 const sessionStore = useSessionStore()
@@ -130,10 +130,6 @@ const timerRemaining = computed(() => timer.remaining.value)
 const currentRound = computed((): SteelmanRound | undefined => {
   const rounds = (gameStore.gameData.rounds as SteelmanRound[]) || []
   return rounds[rounds.length - 1]
-})
-
-const historyByTeam = computed<Record<string, ArgumentHistoryEntry[]>>(() => {
-  return sessionStore.argumentHistory
 })
 
 const allTeamsSubmitted = computed(() => {
@@ -181,18 +177,25 @@ watch(
 )
 
 function getTeamTopic(teamId: string): string {
-  const entries = historyByTeam.value[teamId] || []
-  const last = entries[entries.length - 1]
-  if (!last) return 'TBD'
-  return contentStore.getTopicById(last.topicId)?.name || 'TBD'
+  if (!currentRound.value || !currentRound.value.assignedExamples) return 'TBD'
+  const assignment = currentRound.value.assignedExamples[teamId]
+  if (!assignment) return 'TBD'
+  const example = contentStore.complexExamples.find(e => e.id === assignment.exampleId)
+  if (!example) return 'TBD'
+  return contentStore.getTopicById(example.topic)?.name || 'TBD'
 }
 
-function getOppositePosition(teamId: string): string {
-  const entries = historyByTeam.value[teamId] || []
-  const last = entries[entries.length - 1]
-  if (!last) return ''
-  const topic = contentStore.getTopicById(last.topicId)
-  return topic?.positionB.label || ''
+function getTeamPosition(teamId: string): string {
+  if (!currentRound.value || !currentRound.value.assignedExamples) return ''
+  const assignment = currentRound.value.assignedExamples[teamId]
+  if (!assignment) return ''
+  const example = contentStore.complexExamples.find(e => e.id === assignment.exampleId)
+  if (!example) return ''
+  const topic = contentStore.getTopicById(example.topic)
+  if (!topic) return ''
+  if (example.position === 'A') return topic.positionA.label
+  if (example.position === 'B') return topic.positionB.label
+  return ''
 }
 
 function hasSubmitted(teamId: string): boolean {
@@ -201,10 +204,12 @@ function hasSubmitted(teamId: string): boolean {
 }
 
 function getFallaciousArgument(teamId: string): string {
-  const entries = historyByTeam.value[teamId] || []
-  const last = entries[entries.length - 1]
-  if (!last) return ''
-  return last.text || 'No argument recorded'
+  if (!currentRound.value || !currentRound.value.assignedExamples) return ''
+  const assignment = currentRound.value.assignedExamples[teamId]
+  if (!assignment) return ''
+  const example = contentStore.complexExamples.find(e => e.id === assignment.exampleId)
+  if (!example) return ''
+  return example.text || 'No argument recorded'
 }
 
 function getSteelmanArgument(teamId: string): string {
@@ -220,11 +225,25 @@ function startBuilding() {
     arguments: {},
     reviews: [],
     persuasionVotes: {},
-    currentReviewTargetIndex: 0
+    currentReviewTargetIndex: 0,
+    assignedExamples: assignExamplesToTeams()
   }
   gameStore.updateGameData({ rounds: [newRound] })
   timer.start(180)
   gameStore.setHostContext('Building Sound Arguments')
+}
+
+function assignExamplesToTeams() {
+  const examples = [...contentStore.complexExamples]
+  const assigned: Record<string, { exampleId: string }> = {}
+  if (!examples.length) {
+    return assigned
+  }
+  sessionStore.teams.forEach((team, index) => {
+    const example = examples[index % examples.length]
+    assigned[team.id] = { exampleId: example.id }
+  })
+  return assigned
 }
 
 function startComparison() {
